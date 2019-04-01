@@ -1,6 +1,7 @@
 #+STARTUP: overview
-#+TITLE: Uncle Dave's Emacs
-#+CREATOR: Dawid 'daedreth' Eckert
+#+TITLE: Taymacs 
+#+MAINTAINER: Taylor Hardy
+#+Original CREATOR: Dawid 'daedreth' Eckert
 #+LANGUAGE: en
 #+OPTIONS: num:nil
 #+ATTR_HTML: :style margin-left: auto; margin-right: auto;
@@ -84,10 +85,116 @@ ex.g EXWM, Audio Control, EMMS and all the launchers.
 There is barely any learning curve to using =exwm=, since it makes x-windows act as regular buffers as much as possible,
 so chances are, as long as you know your way around emacs itself, you will instinctively know how to make use of its features.
 
-** On the keybindings
-I do my best to not pollute keymaps with my own keybindings. Most of the bindings I defined myself utilize the Super key (noted as =s-=).
-This is the least used modifier key together with Shift (noted as =S-=), thus using those, chances are all the bindings you already know
-and love are going to work flawlessly. For all the others, just keep on reading.
+* Logic behind keybindings
+** Modifier keys
+*** Ctrl
+/ do, atomic, common, simple /
+
+Ctrl-[key] should do a single action, no chaining. For the most common actions that manipulate buffers/files in buffers and the cursor.
+
+Do small things (see Shift)
+
+Typically is the base level of a modifier chain but can mean do atomically if it is not
+
+*** Meta (Alt) 
+/ meta-actions, do more complicated, meta-control, opposite, deep /
+
+Meta is for meta-actions that are slightly dependent on code, and actions that require chaining of keys
+
+when modifying other modifiers, it means either alter or deeper
+
+*** Shift
+-- More, bigger, whole, all, expand --
+
+Shift modifies other modifers to make them do bigger things
+
+*** Super (windows key)
+-- WM, windows, frames, buffer manipulation --
+
+Super is used for movement around emacs and other wm-like features. It is a conceptual level above meta and control. it does not manipulate what is in the buffers, at the cursor, or the state of files
+
+It manipulates the state of the editor/os itself
+
+*** Hyper (you should rewrite its purpose for yourself) 
+-- OS level, hotkeys --
+
+only does custom stuff that is highly suited to my specific needs 
+
+*** gigA (Emacs Alt internally, )
+-- generative, fancy stuff --
+
+todo - generative actions
+
+
+** Leader Keys
+Todo
+*** viper (mode/state switch)
+*** Option? (menu key)
+
+** Design Patterns
+*** Text-based movement
+hjkl represent text based movement - vim style
+
+*** concept based movement (Orgy mode)
+a section (function, list, entry, variable, object, statement) of code is a body. There are bodies inside of bodies. Bodies next to each other are stacked sUperior-Inferior
+
+when traversing inward choose the closest to cursor or the middle if no cursor
+bodies also have non spatial relationships with other bodies? declaration/spawner, parent, child, kind
+multiple bodies at a time? rainbow colored
+highlight in varrying shades of alpha
+ -highlight current body, superficial, closest deep
+
+selected list:
+a- open paren 
+p- close paren
+pd - last item
+ad - first item
+
+todo terms for rotations
+todo enlongate shoRten
+**** a - anterior
+/ front, beginning, head /
+header, definition, label, beginning
+internally head-wise
+**** p - posterior
+/ end, tail, feet /
+internally tail-wise
+**** s - superficial
+/ outward, surface /
+**** d - deeper
+/ inward, core-wise /
+**** u - superior
+/above/
+externally above body
+**** i - inferior 
+/below/
+externally below body
+**** skin
+**** g - finGer/heh
+the thing that performs the action
+**** fascia delimiters?
+**** go back to last selected body
+
+*** concept based action (Orgy mode)
+**** duplicate
+**** chaNge
+**** c - Copy/kill/yank
+**** v - paste/yank (riVet)
+**** e - enlongate/extend 
+add items, digits
+
+**** r - shoRten/reduce
+**** w - wiggle
+move around (sup context)
+**** + - increment/rot+
+**** - - decrement/rot-
+**** stroke?
+highlight
+**** j - insert outside body (follow inferior or superior)
+put new body inferior or superior
+**** b - spawn a body
+b again for blank, select direction, select kind
+** 
 
 * Theme
 The most important part of every configuration.
@@ -358,6 +465,21 @@ The only time I actually had to use comments, this is for ease of removal if you
       ;; this just enables exwm, it started automatically once everything is ready
       (exwm-enable))
 #+END_SRC
+** Multi monitor
+#+BEGIN_SRC emacs-lisp
+(require 'exwm-randr)
+(setq exwm-randr-workspace-output-plist '(0 "HDMI-0" 1 "DP-4"))
+(add-hook 'exwm-randr-screen-change-hook
+          (lambda ()
+            (start-process-shell-command
+             "xrandr" nil "xrandr --output HDMI-0 --left-of DP-4 --auto")))
+(exwm-randr-enable)
+#+END_SRC
+** System tray
+#+BEGIN_SRC emacs-lisp
+  (require 'exwm-systemtray)
+(exwm-systemtray-enable)
+#+END_SRC
 
 ** Launchers
 Since I do not use a GUI launcher and do not have an external one like dmenu or rofi,
@@ -439,7 +561,7 @@ You can also change those if you'd like, but I highly recommend keeping 'em the 
 (global-set-key (kbd "<XF86AudioRaiseVolume>") 'audio/raise-volume)
 (global-set-key (kbd "<XF86AudioLowerVolume>") 'audio/lower-volume)
 #+END_SRC
-
+fdfg
 ** Screenshots
 I don't need scrot to take screenshots, or shutter or whatever tools you might have. This is enough.
 These won't work in the terminal version or the virtual console, obvious reasons.
@@ -479,7 +601,7 @@ These won't work in the terminal version or the virtual console, obvious reasons
 I use qutebrowser, so that's what I'll set up.
 #+BEGIN_SRC emacs-lisp
   (setq browse-url-browser-function 'browse-url-generic
-        browse-url-generic-program "qutebrowser")
+        browse-url-generic-program "chromium")
 #+END_SRC
 
 * Projectile
@@ -516,7 +638,7 @@ change the numbers to suit your liking, I find 5 to be enough.
       (setq dashboard-banner-logo-title ""))
 #+END_SRC
 
-* Modeline
+* Model_ine
 The modeline is the heart of emacs, it offers information at all times, it's persistent
 and verbose enough to gain a full understanding of modes and states you are in.
 
@@ -547,7 +669,7 @@ This enables spaceline, it looks better and works very well with my theme of cho
 
 ** No separator!
 #+BEGIN_SRC emacs-lisp
-  (setq powerline-default-separator nil)
+  ;;(setq powerline-default-separator nil)
 #+END_SRC
 
 ** Cursor position
@@ -1491,3 +1613,120 @@ and only invoke it manually when needed.
     (message "MPD Database Updated!"))
   (global-set-key (kbd "s-m u") 'mpd/update-database)
 #+END_SRC
+
+
+
+* Movement packages
+** golden ratio
+#+BEGIN_SRC emacs-lisp
+    (use-package golden-ratio-scroll-screen
+      :ensure t
+      )
+#+END_SRC
+
+#+RESULTS:
+
+
+* Keymap
+** text movement (hjkl) 
+#+BEGIN_SRC emacs-lisp
+
+(require 'golden-ratio-scroll-screen)
+(defvar hjkl-mode-map
+  (let ((map(make-sparse-keymap)))
+     
+     (define-key map (kbd "C-h") 'backward-char)
+     (define-key map (kbd "C-j") 'next-line)
+     (define-key map (kbd "C-k") 'previous-line)
+     (define-key map (kbd "C-l") 'forward-char) 
+     
+     (define-key map (kbd "C-S-h") 'backward-word)
+     (define-key map (kbd "C-S-j") 'golden-ratio-scroll-screen-up)
+     (define-key map (kbd "C-S-k") 'golden-ratio-scroll-screen-down)
+     (define-key map (kbd "C-S-l") 'forward-word) 
+
+   map)
+"hjkl-mode keymap.")
+
+(define-minor-mode hjkl-mode
+  "Use ctrl+hjkl to move around files. Overrides other keymaps"
+  :init-value t
+  :lighter "hjkl"
+  :keymap hjkl-mode-map)
+
+;; https://github.com/jwiegley/use-package/blob/master/bind-key.el
+;; The keymaps in `emulation-mode-map-alists' take precedence over
+;; `minor-mode-map-alist'
+(add-to-list 'emulation-mode-map-alists `((hjkl-mode . ,hjkl-mode-map)))
+
+;; Turn off the minor mode in the minibuffer
+;;(defun turn-off-hjkl-mode ()
+;;  "Turn off hjkl-mode."
+;;  (hjkl-mode -1))
+;;(add-hook 'minibuffer-setup-hook #'turn-off-my-mode)
+
+(provide 'hjkl-mode)
+
+
+;;(my-keys-minor-mode 1)
+#+END_SRC
+
+
+** super modifier for windows and buffers (snav)
+#+BEGIN_SRC emacs-lisp
+(defvar snav-mode-map
+  (let ((map(make-sparse-keymap)))
+     
+     (define-key map (kbd "s-n") 'ibuffer)
+     (define-key map (kbd "s-m") 'next-buffer)
+     (define-key map (kbd "s-,") 'previous-buffer)
+     (define-key map (kbd "s-.") 'kill-current-buffer) 
+     
+     (define-key map (kbd "s-h") 'windmove-left)
+     (define-key map (kbd "s-j") 'windmove-down)
+     (define-key map (kbd "s-k") 'windmove-up)
+     (define-key map (kbd "s-l") 'windmove-right) 
+     (define-key map (kbd "s-;") 'delete-window) 
+     
+     
+     (define-key map (kbd "s-s h") 'split-window-right)
+     (define-key map (kbd "s-s j") 'split-window-below)
+     (define-key map (kbd "s-s k") 'split-and-follow-horizontally)
+     (define-key map (kbd "s-s l") 'split-and-follow-vertically)
+
+     ;;(define-key map (kbd "s-S-h") 'backward-word)
+     ;;(define-key map (kbd "s-S-j") 'golden-ratio-scroll-screen-up)
+     ;;(define-key map (kbd "s-S-k") 'golden-ratio-scroll-screen-down)
+     ;;(define-key map (kbd "s-S-l") 'forward-word) 
+
+   map)
+"snav-mode keymap.")
+
+(define-minor-mode snav-mode
+  "navigation of frames, windows, and buffers like default settings for tiling wms"
+  :init-value t
+  :lighter "snav"
+  :keymap snav-mode-map)
+
+;; https://github.com/jwiegley/use-package/blob/master/bind-key.el
+;; The keymaps in `emulation-mode-map-alists' take precedence over
+;; `minor-mode-map-alist'
+(add-to-list 'emulation-mode-map-alists `((snav-mode . ,snav-mode-map)))
+
+;; Turn off the minor mode in the minibuffer
+;;(defun turn-off-hjkl-mode ()
+;;  "Turn off hjkl-mode."
+;;  (hjkl-mode -1))
+;;(add-hook 'minibuffer-setup-hook #'turn-off-my-mode)
+
+(provide 'snav-mode)
+
+
+;;(my-keys-minor-mode 1)
+#+END_SRC
+
+#+RESULTS:
+: snav-mode
+
+
+* WM startup
