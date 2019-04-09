@@ -1769,57 +1769,45 @@ and only invoke it manually when needed.
 ;;uncomment this line to enable
 (provide 'subl-mode)
 #+END_SRC
-
-** ergoemacs
-#;+BEGIN_SRC emacs-lisp
-      (use-package ergoemacs-mode
-        :ensure t
-        :config
-          (setq ergoemacs-theme nil) ;; Uses Standard Ergoemacs keyboard theme
-          (setq ergoemacs-keyboard-layout "us") ;; Assumes QWERTY keyboard layout
-          (ergoemacs-mode 1)
-    
-        )
-#;+END_SRC
 ** text movement (hjkl) 
 #+BEGIN_SRC emacs-lisp
 
-(require 'golden-ratio-scroll-screen)
-(defvar hjkl-mode-map
-  (let ((map(make-sparse-keymap)))
+  ;; (require 'golden-ratio-scroll-screen)
+  ;; (defvar hjkl-mode-map
+  ;;   (let ((map(make-sparse-keymap)))
      
-     (define-key map (kbd "C-h") 'backward-char)
-     (define-key map (kbd "C-j") 'next-line)
-     (define-key map (kbd "C-k") 'previous-line)
-     (define-key map (kbd "C-l") 'forward-char) 
+  ;;      (define-key map (kbd "C-h") 'backward-char)
+  ;;      (define-key map (kbd "C-j") 'next-line)
+  ;;      (define-key map (kbd "C-k") 'previous-line)
+  ;;      (define-key map (kbd "C-l") 'forward-char) 
      
-     (define-key map (kbd "C-S-h") 'backward-word)
-     (define-key map (kbd "C-S-j") 'golden-ratio-scroll-screen-up)
-     (define-key map (kbd "C-S-k") 'golden-ratio-scroll-screen-down)
-     (define-key map (kbd "C-S-l") 'forward-word) 
+  ;;      (define-key map (kbd "C-S-h") 'backward-word)
+  ;;      (define-key map (kbd "C-S-j") 'golden-ratio-scroll-screen-up)
+  ;;      (define-key map (kbd "C-S-k") 'golden-ratio-scroll-screen-down)
+  ;;      (define-key map (kbd "C-S-l") 'forward-word) 
 
-   map)
-"hjkl-mode keymap.")
+  ;;    map)
+  ;; "hjkl-mode keymap.")
 
-(define-minor-mode hjkl-mode
-  "Use ctrl+hjkl to move around files. Overrides other keymaps"
-  :init-value t
-  :lighter "hjkl"
-  :keymap hjkl-mode-map)
+  ;; (define-minor-mode hjkl-mode
+  ;;   "Use ctrl+hjkl to move around files. Overrides other keymaps"
+  ;;   :init-value t
+  ;;   :lighter "hjkl"
+  ;;   :keymap hjkl-mode-map)
 
-;; https://github.com/jwiegley/use-package/blob/master/bind-key.el
-;; The keymaps in `emulation-mode-map-alists' take precedence over
-;; `minor-mode-map-alist'
-(add-to-list 'emulation-mode-map-alists `((hjkl-mode . ,hjkl-mode-map)))
+  ;; ;; https://github.com/jwiegley/use-package/blob/master/bind-key.el
+  ;; ;; The keymaps in `emulation-mode-map-alists' take precedence over
+  ;; ;; `minor-mode-map-alist'
+  ;; (add-to-list 'emulation-mode-map-alists `((hjkl-mode . ,hjkl-mode-map)))
 
-;; Turn off the minor mode in the minibuffer
-;;(defun turn-off-hjkl-mode ()
-;;  "Turn off hjkl-mode."
-;;  (hjkl-mode -1))
-;;(add-hook 'minibuffer-setup-hook #'turn-off-my-mode)
+  ;; Turn off the minor mode in the minibuffer
+  ;;(defun turn-off-hjkl-mode ()
+  ;;  "Turn off hjkl-mode."
+  ;;  (hjkl-mode -1))
+  ;;(add-hook 'minibuffer-setup-hook #'turn-off-my-mode)
 
-;;uncomment this line to enable
-;;(provide 'hjkl-mode)
+  ;;uncomment this line to enable
+  ;;(provide 'hjkl-mode)
 #+END_SRC
 
 
@@ -1882,8 +1870,8 @@ and only invoke it manually when needed.
 
 * WM startup
 * Tabs
-
 #+BEGIN_SRC emacs-lisp
-  (setq-default indent-tabs-mode nil)
-      (setq tab-stop-list (number-sequence 2 120 2))
+
+(setq-default indent-tabs-mode nil)
+    (setq tab-stop-list (number-sequence 2 120 2))
 #+END_SRC
