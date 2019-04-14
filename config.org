@@ -1,7 +1,7 @@
 #+STARTUP: overview
 #+TITLE: Taymacs 
-#+MAINTAINER: Taylor Hardy
-#+Original CREATOR: Dawid 'daedreth' Eckert
+#+CREATOR: Taylor Hardy
+#+Based_on_config_by: Dawid 'daedreth' Eckert
 #+LANGUAGE: en
 #+OPTIONS: num:nil
 #+ATTR_HTML: :style margin-left: auto; margin-right: auto;
@@ -85,6 +85,14 @@ ex.g EXWM, Audio Control, EMMS and all the launchers.
 There is barely any learning curve to using =exwm=, since it makes x-windows act as regular buffers as much as possible,
 so chances are, as long as you know your way around emacs itself, you will instinctively know how to make use of its features.
 
+* import manually installed packages
+#+BEGIN_SRC emacs-lisp
+(let ((default-directory  (concat user-emacs-directory
+        (convert-standard-filename "lisp/"))))
+  (normal-top-level-add-to-load-path '("."))
+  (normal-top-level-add-subdirs-to-load-path))
+
+#+END_SRC
 * Logic behind keybindings
 ** Modifier keys
 *** Ctrl
@@ -198,15 +206,87 @@ b again for blank, select direction, select kind
 
 * Theme
 The most important part of every configuration.
+** DOOM themes are pretty cool and integrate with a lot of our packages
+#+BEGIN_SRC emacs-lisp
+  (use-package doom-themes
+  :ensure t
+  :config
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+  ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
+  ;; may have their own settings.
+   ;; doom-one
+   ;; doom-one-light
+   ;; doom-vibrant
+
+   ;; doom-city-lights
+   ;; doom-dracula
+   ;; doom-Iosvkem
+   ;; doom-molokai
+   ;; doom-nord
+   ;; doom-nord-light 
+   ;; doom-opera 
+   ;; doom-opera-light 
+   ;; doom-nova
+   ;; doom-peacock
+   ;; doom-solarized-light
+   ;; doom-sourcerer
+   ;; doom-spacegrey
+   ;; doom-tomorrow-night
+   ;; doom-tomorrow-day
+   ;; doom-mono-dark / doom-mono-light
+   ;; doom-tron
+  (load-theme 'doom-dracula t)
+
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+
+  ;; Enable custom neotree theme (all-the-icons must be installed!)
+  (doom-themes-neotree-config)
+  ;; or for treemacs users
+  ;;(doom-themes-treemacs-config)
+
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
+
+#+END_SRC
+** Solaire mode makes buffers brighter
+originally part of doom, it makes code buffers brighter and side bar stuff darker.
+M-x package-install RET solaire-mode
+#+BEGIN_SRC emacs-lisp
+(use-package solaire-mode
+:ensure t
+:hook
+  ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
+  (minibuffer-setup . solaire-mode-in-minibuffer)
+  :config
+  (solaire-mode-swap-bg)
+(solaire-global-mode +1)
+
+
+ ;; (setq solaire-mode-remap-modeline nil)
+)
+#+END_SRC
 ** A nice theme
 My new favourite one I guess, really decent default values.
-#+BEGIN_SRC emacs-lisp
+#;+BEGIN_SRC emacs-lisp
   (use-package dracula-theme
     :ensure t
     :init
       (load-theme 'dracula t))
-#+END_SRC
+#;+END_SRC
 
+** Font
+#+BEGIN_SRC emacs-lisp
+;; Set default font
+(set-face-attribute 'default nil
+                    :family "Inconsolata"
+                    :height 150
+                    :weight 'normal
+                    :width 'normal)
+
+#+END_SRC
 ** Some customization
 The theme is great, really, but some of the concepts just suck with powerline.
 #;+BEGIN_SRC emacs-lisp
@@ -636,7 +716,7 @@ change the numbers to suit your liking, I find 5 to be enough.
       (setq dashboard-startup-banner "~/.emacs.d/img/dashLogo.png")
       (setq dashboard-items '((recents  . 5)
                               (projects . 5)))
-      (setq dashboard-banner-logo-title ""))
+      (setq dashboard-banner-logo-title "TAYMACS"))
 #+END_SRC
 
 * Modeline
@@ -656,50 +736,51 @@ I may not use spacemacs, since I do not like evil-mode and find spacemacs incred
 however it would be stupid not to acknowledge the best parts about it, the theme and their modified powerline setup.
 
 This enables spaceline, it looks better and works very well with my theme of choice.
-#+BEGIN_SRC emacs-lisp
+;BEGIN_SRC emacs-lisp
   (use-package spaceline
     :ensure t
     :config
     (require 'spaceline-config)
-      (setq spaceline-buffer-encoding-abbrev-p nil)
-      (setq spaceline-line-column-p nil)
-      (setq spaceline-line-p nil)
-      (setq powerline-default-separator (quote arrow))
-      (spaceline-spacemacs-theme))
-#+END_SRC
+;;      (setq spaceline-buffer-encoding-abbrev-p nil)
+;;      (setq spaceline-line-column-p nil)
+;;      (setq spaceline-line-p nil)
+;;      (setq powerline-default-separator (quote arrow))
+;;      (spaceline-spacemacs-theme)
+)
+;END_SRC
 
 ** No separator!
-#+BEGIN_SRC emacs-lisp
+;BEGIN_SRC emacs-lisp
   ;;(setq powerline-default-separator nil)
-#+END_SRC
+;END_SRC
 
 ** Cursor position
 Show the current line and column for your cursor.
 We are not going to have =relative-linum-mode= in every major mode, so this is useful.
-#+BEGIN_SRC emacs-lisp
+;BEGIN_SRC emacs-lisp
   (setq line-number-mode t)
   (setq column-number-mode t)
-#+END_SRC
+;END_SRC
 
 ** Clock
 If you prefer the 12hr-format, change the variable to =nil= instead of =t=.
 
 *** Time format
-#+BEGIN_SRC emacs-lisp
-  (setq display-time-24hr-format t)
+;BEGIN_SRC emacs-lisp
+  (setq display-time-24hr-format nil)
   (setq display-time-format "%H:%M - %d %B %Y")
-#+END_SRC
+;END_SRC
 
 *** Enabling the mode
 This turns on the clock globally.
-#+BEGIN_SRC emacs-lisp
+;BEGIN_SRC emacs-lisp
   (display-time-mode 1)
-#+END_SRC
+;END_SRC
 
 ** Battery indicator
 A package called =fancy-battery= will be used if we are in GUI emacs, otherwise the built in battery-mode will be used.
 Fancy battery has very odd colors if used in the tty, hence us disabling it.
-#+BEGIN_SRC emacs-lisp
+;BEGIN_SRC emacs-lisp
   (use-package fancy-battery
     :ensure t
     :config
@@ -708,20 +789,54 @@ Fancy battery has very odd colors if used in the tty, hence us disabling it.
       (if window-system
         (fancy-battery-mode)
         (display-battery-mode)))
-#+END_SRC
+;END_SRC
 
 ** System monitor
 A teeny-tiny system monitor that can be enabled or disabled at runtime, useful for checking performance
 with power-hungry processes in ansi-term
 
 symon can be toggled on and off with =Super + h=.
-#+BEGIN_SRC emacs-lisp
+;BEGIN_SRC emacs-lisp
   (use-package symon
     :ensure t
     :bind
     ("s-h" . symon-mode))
-#+END_SRC
+;END_SRC
 
+** eyeliner abstraction on top of spacemacs
+;BEGIN_SRC emacs-lisp 
+(use-package dash
+:ensure t)
+
+(use-package eyeliner
+  :ensure t
+  :config
+  (require 'eyeliner)
+  (eyeliner/install))
+;END_SRC
+** use telephone-line as the powerline
+#+BEGIN_SRC emacs-lisp
+(use-package telephone-line
+:ensure t
+:config
+(setq telephone-line-primary-left-separator 'telephone-line-abs-left
+      telephone-line-secondary-left-separator 'telephone-line-abs-hollow-left
+      telephone-line-primary-right-separator 'telephone-line-abs-right
+      telephone-line-secondary-right-separator 'telephone-line-abs-hollow-right)
+(setq telephone-line-lhs
+      '((evil   . (telephone-line-evil-tag-segment))
+        (accent . (telephone-line-vc-segment
+                   telephone-line-erc-modified-channels-segment
+                   telephone-line-process-segment))
+        (nil    . (telephone-line-minor-mode-segment
+                   telephone-line-buffer-segment))))
+(setq telephone-line-rhs
+      '((nil    . (telephone-line-misc-info-segment))
+        (accent . (telephone-line-major-mode-segment))
+        (evil   . (telephone-line-airline-position-segment))))
+(telephone-line-mode 1)
+)
+#+END_SRC
 * File manager
 Abandoning sunrise-commander.
 The repos are dead and I'm looking for something better anyway.
@@ -1219,7 +1334,7 @@ I prefer =C-n= and =C-p= to move around the items, so I remap those accordingly.
     (define-key company-active-map (kbd "C-p") #'company-select-previous)
     (define-key company-active-map (kbd "SPC") #'company-abort))
 #+END_SRC
-
+emacs
 ** specific languages
 Be it for code or prose, completion is a must.
 After messing around with =auto-completion= for a while I decided to drop it
@@ -1431,6 +1546,10 @@ Requires libclang to be installed.
   :config (js2r-add-keybindings-with-prefix "C-c ."))
 #+END_SRC
 
+*** drools
+#+BEGIN_SRC emacs-lisp
+  (load "drools-mode")
+#+END_SRC
 * Git integration
 Countless are the times where I opened ansi-term to use =git= on something.
 These times are also something that I'd prefer stay in the past, since =magit= is
@@ -1676,9 +1795,41 @@ and only invoke it manually when needed.
     (message "MPD Database Updated!"))
   (global-set-key (kbd "s-m u") 'mpd/update-database)
 #+END_SRC
+* UI modernization
 
+** Icons to make things pretty
+M-x all-the-icons-install-fonts
+#+BEGIN_SRC emacs-lisp
+(use-package all-the-icons)
+#+END_SRC
 
+** file tree
+#+BEGIN_SRC emacs-lisp
 
+(use-package neotree
+      :ensure t
+      :config
+        (global-set-key [f8] 'neotree-toggle)
+        (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+        (setq neo-smart-open t)
+)
+#+END_SRC
+** buffer tabs
+#+BEGIN_SRC emacs-lisp
+(use-package tabbar
+   :ensure t)
+
+#+END_SRC
+** basic tabs theme
+you should really do this in the theme el, but this is a good default
+#+BEGIN_SRC emacs-lisp
+(load "tabbar-tweak")
+#+END_SRC
+* focus follows mouse
+#+BEGIN_SRC emacs-lisp
+  (setq mouse-autoselect-window t
+      focus-follows-mouse t)
+#+END_SRC
 * Movement packages
 ** golden ratio
 #+BEGIN_SRC emacs-lisp
@@ -1688,7 +1839,8 @@ and only invoke it manually when needed.
 #+END_SRC
 
 #+RESULTS:
-* Duplicate Line atomically
+* Atomic actions
+** Duplicate Line atomically
 #+BEGIN_SRC emacs-lisp
 ;; https://stackoverflow.com/questions/88399/how-do-i-duplicate-a-whole-line-in-emacs
 (defun duplicate-line (arg)
@@ -1740,34 +1892,38 @@ and only invoke it manually when needed.
 #+BEGIN_SRC emacs-lisp
 
 
-(defvar subl-mode-map
-  (let ((map(make-sparse-keymap)))
-     
-     (define-key map (kbd "C-d") 'mark-next-like-this)
-     (define-key map (kbd "C-S-d") 'duplicate-line)
+  (defvar subl-mode-map
+    (let ((map(make-sparse-keymap)))
 
-   map)
-"subl-mode keymap.")
+       (define-key map (kbd "C-d") 'mark-next-like-this)
+       (define-key map (kbd "C-S-d") 'duplicate-line)
+       (define-key map (kbd "C-/") 'comment-line)
+       (define-key map (kbd "C-S-/") 'comment-dwim)
+       ;; save C-s
+       ;; rebind enter to alt
 
-(define-minor-mode subl-mode
-  "Use ctrl+hjkl to move around files. Overrides other keymaps"
-  :init-value t
-  :lighter "subl"
-  :keymap subl-mode-map)
+     map)
+  "subl-mode keymap.")
 
-;; https://github.com/jwiegley/use-package/blob/master/bind-key.el
-;; The keymaps in `emulation-mode-map-alists' take precedence over
-;; `minor-mode-map-alist'
-(add-to-list 'emulation-mode-map-alists `((subl-mode . ,subl-mode-map)))
+  (define-minor-mode subl-mode
+    "Use ctrl+hjkl to move around files. Overrides other keymaps"
+    :init-value t
+    :lighter "subl"
+    :keymap subl-mode-map)
 
-;; Turn off the minor mode in the minibuffer
-;;(defun turn-off-hjkl-mode ()
-;;  "Turn off hjkl-mode."
-;;  (hjkl-mode -1))
-;;(add-hook 'minibuffer-setup-hook #'turn-off-my-mode)
+  ;; https://github.com/jwiegley/use-package/blob/master/bind-key.el
+  ;; The keymaps in `emulation-mode-map-alists' take precedence over
+  ;; `minor-mode-map-alist'
+  (add-to-list 'emulation-mode-map-alists `((subl-mode . ,subl-mode-map)))
 
-;;uncomment this line to enable
-(provide 'subl-mode)
+  ;; Turn off the minor mode in the minibuffer
+  ;;(defun turn-off-hjkl-mode ()
+  ;;  "Turn off hjkl-mode."
+  ;;  (hjkl-mode -1))
+  ;;(add-hook 'minibuffer-setup-hook #'turn-off-my-mode)
+
+  ;;uncomment this line to enable
+  (provide 'subl-mode)
 #+END_SRC
 ** text movement (hjkl) 
 #+BEGIN_SRC emacs-lisp
@@ -1809,7 +1965,9 @@ and only invoke it manually when needed.
   ;;uncomment this line to enable
   ;;(provide 'hjkl-mode)
 #+END_SRC
-
+** advanced
+enter is alt
+bindings for new line above and below and at point
 
 ** super modifier for windows and buffers (snav)
 #+BEGIN_SRC emacs-lisp
@@ -1819,7 +1977,7 @@ and only invoke it manually when needed.
      (define-key map (kbd "s-n") 'ibuffer)
      (define-key map (kbd "s-m") 'next-buffer)
      (define-key map (kbd "s-,") 'previous-buffer)
-     (define-key map (kbd "s-.") 'kill-current-buffer) 
+     (define-key map (kbd "s-/") 'kill-current-buffer) 
      
      (define-key map (kbd "s-h") 'windmove-left)
      (define-key map (kbd "s-j") 'windmove-down)
@@ -1874,4 +2032,11 @@ and only invoke it manually when needed.
 
 (setq-default indent-tabs-mode nil)
     (setq tab-stop-list (number-sequence 2 120 2))
+#+END_SRC
+* editorconfig
+#+BEGIN_SRC emacs-lisp
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
 #+END_SRC
