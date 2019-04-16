@@ -478,13 +478,29 @@ The only time I actually had to use comments, this is for ease of removal if you
       (exwm-config-ido)
 
       ;; a number between 1 and 9, exwm creates workspaces dynamically so I like starting out with 1
-      (setq exwm-workspace-number 1)
+      (setq exwm-workspace-number 9)
 
       ;; this is a way to declare truly global/always working keybindings
       ;; this is a nifty way to go back from char mode to line mode without using the mouse
       (exwm-input-set-key (kbd "s-r") #'exwm-reset)
       (exwm-input-set-key (kbd "s-k") #'exwm-workspace-delete)
       (exwm-input-set-key (kbd "s-w") #'exwm-workspace-swap)
+     (exwm-input-set-key (kbd "s-n") 'ibuffer)
+     (exwm-input-set-key (kbd "s-m") 'next-buffer)
+     (exwm-input-set-key (kbd "s-,") 'previous-buffer)
+     (exwm-input-set-key (kbd "s-/") 'kill-current-buffer) 
+     
+     (exwm-input-set-key (kbd "s-j") 'windmove-left)
+     (exwm-input-set-key (kbd "s-k") 'windmove-down)
+     (exwm-input-set-key (kbd "s-i") 'windmove-up)
+     (exwm-input-set-key (kbd "s-l") 'windmove-right) 
+     (exwm-input-set-key (kbd "s-;") 'delete-window) 
+     
+     
+     (exwm-input-set-key (kbd "s-s h") 'split-window-right)
+     (exwm-input-set-key (kbd "s-s j") 'split-window-below)
+     (exwm-input-set-key (kbd "s-s k") 'split-and-follow-horizontally)
+     (exwm-input-set-key (kbd "s-s l") 'split-and-follow-vertically)
 
       ;; the next loop will bind s-<number> to switch to the corresponding workspace
       (dotimes (i 10)
@@ -524,7 +540,7 @@ The only time I actually had to use comments, this is for ease of removal if you
          ([?\M-w] . ?\C-c)
          ([?\C-y] . ?\C-v)
          ;; search
-         ;;([?\C-s] . ?\C-f)
+         ([?\C-f] . ?\C-f)
 	 ))
 
       ;; this little bit will make sure that XF86 keys work in exwm buffers as well
@@ -549,7 +565,16 @@ The only time I actually had to use comments, this is for ease of removal if you
 ** Multi monitor
 #+BEGIN_SRC emacs-lisp
 (require 'exwm-randr)
-(setq exwm-randr-workspace-output-plist '(0 "HDMI-0" 1 "DP-4"))
+(setq exwm-randr-workspace-output-plist '(0 "HDMI-0" 
+1 "HDMI-0"
+2 "DP-4"
+3 "DP-4"
+4 "DP-4"
+5 "DP-4"
+6 "DP-4"
+7 "DP-4"
+8 "DP-4"
+9 "DP-4"))
 (add-hook 'exwm-randr-screen-change-hook
           (lambda ()
             (start-process-shell-command
@@ -1688,7 +1713,7 @@ This also hides some of the channel messages to avoid cluttering the buffer.
 The other line changes the prompt for each channel buffer to match the channel name,
 this way you always know who you are typing to.
 #+BEGIN_SRC emacs-lisp
-  (setq erc-nick "daedreth")
+  (setq erc-nick "janTela")
   (setq erc-prompt (lambda () (concat "[" (buffer-name) "]")))
   (setq erc-hide-list '("JOIN" "PART" "QUIT"))
 #+END_SRC
@@ -1743,9 +1768,9 @@ Obviously you might have to adjust /server-name/ and /server-port/ to fit your c
       (setq emms-player-mpd-server-name "localhost")
       (setq emms-player-mpd-server-port "6601")
     :bind
-      ("s-m p" . emms)
-      ("s-m b" . emms-smart-browse)
-      ("s-m r" . emms-player-mpd-update-all-reset-cache)
+      ;; ("s-m p" . emms)
+      ;; ("s-m b" . emms-smart-browse)
+      ;; ("s-m r" . emms-player-mpd-update-all-reset-cache)
       ("<XF86AudioPrev>" . emms-previous)
       ("<XF86AudioNext>" . emms-next)
       ("<XF86AudioPlay>" . emms-pause)
@@ -1773,7 +1798,7 @@ and only invoke it manually when needed.
     (emms-player-mpd-connect)
     (emms-cache-set-from-mpd-all)
     (message "MPD Started!"))
-  (global-set-key (kbd "s-m c") 'mpd/start-music-daemon)
+  ;;(global-set-key (kbd "s-m c") 'mpd/start-music-daemon)
 #+END_SRC
 
 **** Killing the daemon from within emacs
@@ -1784,7 +1809,7 @@ and only invoke it manually when needed.
     (emms-stop)
     (call-process "killall" nil nil nil "mpd")
     (message "MPD Killed!"))
-  (global-set-key (kbd "s-m k") 'mpd/kill-music-daemon)
+  ;;(global-set-key (kbd "s-m k") 'mpd/kill-music-daemon)
 #+END_SRC
 **** Updating the database easily.
 #+BEGIN_SRC emacs-lisp
@@ -1793,7 +1818,7 @@ and only invoke it manually when needed.
     (interactive)
     (call-process "mpc" nil nil nil "update")
     (message "MPD Database Updated!"))
-  (global-set-key (kbd "s-m u") 'mpd/update-database)
+  ;;(global-set-key (kbd "s-m u") 'mpd/update-database)
 #+END_SRC
 * UI modernization
 
@@ -1878,6 +1903,52 @@ you should really do this in the theme el, but this is a good default
   ;; put the point in the lowest line and return
   (next-line arg))
 #+END_SRC
+** making new lines
+#+BEGIN_SRC emacs-lisp
+(defun newline-below-go ()
+  "1. move to end of the line.
+  2. insert newline with index"
+
+  (interactive)
+  (let ((oldpos (point)))
+    (end-of-line)
+    (newline-and-indent)))
+
+(defun newline-above-go ()
+  "1. move to end of the line.
+  2. insert newline with index"
+
+  (interactive)
+  (let ((oldpos (point)))
+    (beginning-of-line)
+    (newline-and-indent) ;;fixme indent the new line
+    (previous-line)
+    (end-of-line)))
+
+#+END_SRC
+** deleting lines
+#+BEGIN_SRC emacs-lisp
+
+(defun kill-previous-line ()
+  "1. move to end of the line.
+  2. insert newline with index"
+
+  (interactive)
+  (let ((oldpos (point)))
+    (previous-line)
+    (kill-whole-line)))
+
+
+(defun kill-next-line ()
+  "1. move to end of the line.
+  2. insert newline with index"
+
+  (interactive)
+  (let ((oldpos (point)))
+    (next-line)
+    (kill-whole-line)))
+
+#+END_SRC
 * Keymap
 ** cua mode for more familiar copy-paste
 
@@ -1925,7 +1996,7 @@ you should really do this in the theme el, but this is a good default
   ;;uncomment this line to enable
   (provide 'subl-mode)
 #+END_SRC
-** text movement (hjkl) 
+** text movement (hjkl)
 #+BEGIN_SRC emacs-lisp
 
   ;; (require 'golden-ratio-scroll-screen)
@@ -1965,62 +2036,83 @@ you should really do this in the theme el, but this is a good default
   ;;uncomment this line to enable
   ;;(provide 'hjkl-mode)
 #+END_SRC
+** text movement (ergo like)
+#+BEGIN_SRC emacs-lisp
+
+  (require 'golden-ratio-scroll-screen)
+  (defvar emo-mode-map
+    (let ((map(make-sparse-keymap)))
+
+       (define-key map (kbd "M-h") 'newline-and-indent)
+       (define-key map (kbd "M-n") 'newline-below-go)
+       (define-key map (kbd "M-y") 'newline-above-go)
+
+       (define-key map (kbd "M-j") 'backward-char)
+       (define-key map (kbd "M-k") 'next-line)
+       (define-key map (kbd "M-i") 'previous-line)
+       (define-key map (kbd "M-l") 'forward-char)
+       (define-key map (kbd "M-o") 'end-of-line)
+       (define-key map (kbd "M-u") 'beginning-of-line-text) ;;todo dwim
+
+       ;; (define-key map (kbd "M-S-j") 'backward-word)
+       ;; (define-key map (kbd "M-S-i") 'golden-ratio-scroll-screen-up)
+       ;; (define-key map (kbd "M-S-k") 'golden-ratio-scroll-screen-down)
+       ;; (define-key map (kbd "M-S-l") 'forward-word)  
+       ;; (define-key map (kbd "M-S-o") 'forward-list) 
+       ;; (define-key map (kbd "M-S-u") 'backward-list)
+       (define-key map (kbd "M-J") 'backward-word)
+       (define-key map (kbd "M-I") 'golden-ratio-scroll-screen-down)
+       (define-key map (kbd "M-K") 'golden-ratio-scroll-screen-up)
+       (define-key map (kbd "M-L") 'forward-word)  
+       (define-key map (kbd "M-O") 'forward-list) 
+       (define-key map (kbd "M-U") 'backward-list) 
+
+       ;; killing
+       (define-key map (kbd "M-g") 'kill-whole-line)
+       (define-key map (kbd "M-t") 'kill-previous-line)
+       (define-key map (kbd "M-b") 'kill-next-line)
+
+       (define-key map (kbd "M-s") 'backward-char)
+       (define-key map (kbd "M-d") 'next-line)
+       (define-key map (kbd "M-e") 'previous-line)
+       (define-key map (kbd "M-f") 'forward-char)
+       (define-key map (kbd "M-r") 'end-of-line)
+       (define-key map (kbd "M-w") 'beginning-of-line-text) ;;todo dwim
+
+       (define-key map (kbd "M-S-s") 'backward-word)
+       (define-key map (kbd "M-S-e") 'golden-ratio-scroll-screen-up)
+       (define-key map (kbd "M-S-d") 'golden-ratio-scroll-screen-down)
+       (define-key map (kbd "M-S-f") 'forward-word)  
+       (define-key map (kbd "M-S-r") 'forward-list) 
+       (define-key map (kbd "M-S-w") 'backward-list) 
+
+     map)
+  "emo-mode keymap.")
+
+  (define-minor-mode emo-mode
+    "Use ctrl+emo to move around files. Overrides other keymaps"
+    :init-value t
+    :lighter "emo"
+    :keymap emo-mode-map)
+
+  ;; https://github.com/jwiegley/use-package/blob/master/bind-key.el
+  ;; The keymaps in `emulation-mode-map-alists' take precedence over
+  ;; `minor-mode-map-alist'
+  (add-to-list 'emulation-mode-map-alists `((emo-mode . ,emo-mode-map)))
+
+  ;; Turn off the minor mode in the minibuffer
+  ;; (defun turn-off-emo-mode ()
+  ;;  "Turn off emo-mode."
+  ;;  (emo-mode -1))
+  ;; (add-hook 'minibuffer-setup-hook #'turn-off-my-mode)
+
+  (provide 'emo-mode)
+#+END_SRC
 ** advanced
 enter is alt
 bindings for new line above and below and at point
 
-** super modifier for windows and buffers (snav)
-#+BEGIN_SRC emacs-lisp
-(defvar snav-mode-map
-  (let ((map(make-sparse-keymap)))
-     
-     (define-key map (kbd "s-n") 'ibuffer)
-     (define-key map (kbd "s-m") 'next-buffer)
-     (define-key map (kbd "s-,") 'previous-buffer)
-     (define-key map (kbd "s-/") 'kill-current-buffer) 
-     
-     (define-key map (kbd "s-h") 'windmove-left)
-     (define-key map (kbd "s-j") 'windmove-down)
-     (define-key map (kbd "s-k") 'windmove-up)
-     (define-key map (kbd "s-l") 'windmove-right) 
-     (define-key map (kbd "s-;") 'delete-window) 
-     
-     
-     (define-key map (kbd "s-s h") 'split-window-right)
-     (define-key map (kbd "s-s j") 'split-window-below)
-     (define-key map (kbd "s-s k") 'split-and-follow-horizontally)
-     (define-key map (kbd "s-s l") 'split-and-follow-vertically)
 
-     ;;(define-key map (kbd "s-S-h") 'backward-word)
-     ;;(define-key map (kbd "s-S-j") 'golden-ratio-scroll-screen-up)
-     ;;(define-key map (kbd "s-S-k") 'golden-ratio-scroll-screen-down)
-     ;;(define-key map (kbd "s-S-l") 'forward-word) 
-
-   map)
-"snav-mode keymap.")
-
-(define-minor-mode snav-mode
-  "navigation of frames, windows, and buffers like default settings for tiling wms"
-  :init-value t
-  :lighter "snav"
-  :keymap snav-mode-map)
-
-;; https://github.com/jwiegley/use-package/blob/master/bind-key.el
-;; The keymaps in `emulation-mode-map-alists' take precedence over
-;; `minor-mode-map-alist'
-(add-to-list 'emulation-mode-map-alists `((snav-mode . ,snav-mode-map)))
-
-;; Turn off the minor mode in the minibuffer
-;;(defun turn-off-hjkl-mode ()
-;;  "Turn off hjkl-mode."
-;;  (hjkl-mode -1))
-;;(add-hook 'minibuffer-setup-hook #'turn-off-my-mode)
-
-(provide 'snav-mode)
-
-
-;;(my-keys-minor-mode 1)
-#+END_SRC
 
 #+RESULTS:
 : snav-mode
