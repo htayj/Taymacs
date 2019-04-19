@@ -93,6 +93,7 @@ so chances are, as long as you know your way around emacs itself, you will insti
   (normal-top-level-add-subdirs-to-load-path))
 
 #+END_SRC
+
 * Logic behind keybindings
 ** Modifier keys
 *** Ctrl
@@ -1321,6 +1322,7 @@ npm i -g typescript-language-server; npm i -g typescript
 (require 'lsp-clients)
 
 (add-hook 'js2-mode-hook 'lsp)
+;;(add-hook 'vue-mode-hook 'lsp)
 
 #+END_SRC
 
@@ -1419,6 +1421,7 @@ Requires libclang to be installed.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'python-mode-hook 'flycheck-mode)
 #+END_SRC
+
 **** company
 #+BEGIN_SRC emacs-lisp
   (with-eval-after-load 'company
@@ -1573,8 +1576,65 @@ Requires libclang to be installed.
 
 *** drools
 #+BEGIN_SRC emacs-lisp
-  (load "drools-mode")
+(autoload 'drools-mode "drools-mode")
+
+(defun set-extension-mode (extension mode)
+  (setq auto-mode-alist
+	(cons (cons (concat "\\" extension "\\'") mode)
+	      auto-mode-alist) ) )
+
+(set-extension-mode ".drl" 'drools-mode)
+(set-extension-mode ".dslr" 'drools-mode)
+
+(add-hook 'drools-mode-hook 'my-drools-hook)
+
+(defun drools-return-and-indent()
+  (interactive)
+  (newline) (indent-for-tab-command) )
+
+(defun my-drools-hook ()
+  (setq indent-tabs-mode nil)
+  (local-set-key [?\C-m] 'drools-return-and-indent) )
 #+END_SRC
+
+** web programming
+*** vue
+**** vue-mode
+#+BEGIN_SRC emacs-lisp
+(use-package vue-mode
+:ensure t
+)
+#+END_SRC
+**** vue-html-mode
+
+#+BEGIN_SRC emacs-lisp
+(use-package vue-html-mode
+:ensure t
+)
+#+END_SRC
+**** vue lsp?
+#+BEGIN_SRC emacs-lisp
+
+
+#+end_src
+
+#+BEGIN_SRC emacs-lisp
+(use-package vue-mode
+:ensure t
+)
+#+END_SRC
+
+*** emmet
+
+#+BEGIN_SRC emacs-lisp
+(use-package emmet-mode
+:ensure t
+)
+#+END_SRC
+
+*** coffee?
+*** web-mode
+
 * Git integration
 Countless are the times where I opened ansi-term to use =git= on something.
 These times are also something that I'd prefer stay in the past, since =magit= is
@@ -1602,6 +1662,7 @@ Pretty self-explanatory, useful as hell if you use exwm.
     :bind
       ("s-e" . sudo-edit))
 #+END_SRC
+
 * Org
 One of the absolute greatest features of emacs is called "org-mode".
 This very file has been written in org-mode, a lot of other configurations are written in org-mode, same goes for
@@ -1850,11 +1911,13 @@ you should really do this in the theme el, but this is a good default
 #+BEGIN_SRC emacs-lisp
 (load "tabbar-tweak")
 #+END_SRC
+
 * focus follows mouse
 #+BEGIN_SRC emacs-lisp
   (setq mouse-autoselect-window t
       focus-follows-mouse t)
 #+END_SRC
+
 * Movement packages
 ** golden ratio
 #+BEGIN_SRC emacs-lisp
@@ -2125,6 +2188,7 @@ bindings for new line above and below and at point
 (setq-default indent-tabs-mode nil)
     (setq tab-stop-list (number-sequence 2 120 2))
 #+END_SRC
+
 * editorconfig
 #+BEGIN_SRC emacs-lisp
 (use-package editorconfig
@@ -2132,3 +2196,4 @@ bindings for new line above and below and at point
   :config
   (editorconfig-mode 1))
 #+END_SRC
+
