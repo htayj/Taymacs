@@ -454,7 +454,7 @@ Lets us use asynchronous processes wherever possible, pretty useful.
     :init (dired-async-mode 1))
 #+END_SRC
 
-* Window Manager
+* Window =Manager
 Everything regarding the WM or DE-like functionality is bundled here, remove the entire section if you do not wish to use =exwm=.
 
 ** exwm
@@ -1699,6 +1699,7 @@ Edit this list as you see fit!
 #+END_SRC
 
 * Instant messaging
+
 I like IRC, I also like other protocols but I enjoy IRC most, it's obvious that I long
 for a way to do my messaging from within emacs.
 There is plenty of IRC clients in the repositories, and some more in the emacs repositories
