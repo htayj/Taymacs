@@ -2012,6 +2012,11 @@ you should really do this in the theme el, but this is a good default
     (next-line)
     (kill-whole-line)))
 
+(defun backward-kill-line (arg)
+  "Kill ARG lines backward."
+  (interactive "p")
+  (kill-line (- 1 arg)))
+
 #+END_SRC
 * Keymap
 ** cua mode for more familiar copy-paste
@@ -2136,19 +2141,19 @@ you should really do this in the theme el, but this is a good default
        (define-key map (kbd "M-t") 'kill-previous-line)
        (define-key map (kbd "M-b") 'kill-next-line)
 
-       (define-key map (kbd "M-s") 'backward-char)
-       (define-key map (kbd "M-d") 'next-line)
-       (define-key map (kbd "M-e") 'previous-line)
-       (define-key map (kbd "M-f") 'forward-char)
-       (define-key map (kbd "M-r") 'end-of-line)
-       (define-key map (kbd "M-w") 'beginning-of-line-text) ;;todo dwim
+       (define-key map (kbd "M-s") 'delete-backward-char)
+       (define-key map (kbd "M-d") 'backward-kill-word)
+       (define-key map (kbd "M-e") 'kill-word)
+       (define-key map (kbd "M-f") 'delete-char)
+       (define-key map (kbd "M-r") 'kill-line)
+       (define-key map (kbd "M-w") 'backward-kill-line) ;;todo dwim
 
-       (define-key map (kbd "M-S-s") 'backward-word)
-       (define-key map (kbd "M-S-e") 'golden-ratio-scroll-screen-up)
-       (define-key map (kbd "M-S-d") 'golden-ratio-scroll-screen-down)
-       (define-key map (kbd "M-S-f") 'forward-word)  
-       (define-key map (kbd "M-S-r") 'forward-list) 
-       (define-key map (kbd "M-S-w") 'backward-list) 
+       (define-key map (kbd "M-S") 'backward-word)
+       (define-key map (kbd "M-E") 'golden-ratio-scroll-screen-up)
+       (define-key map (kbd "M-D") 'golden-ratio-scroll-screen-down)
+       (define-key map (kbd "M-F") 'forward-word)  
+       (define-key map (kbd "M-R") 'forward-list) 
+       (define-key map (kbd "M-W") 'backward-list) 
 
      map)
   "emo-mode keymap.")
