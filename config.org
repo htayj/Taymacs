@@ -455,7 +455,7 @@ Lets us use asynchronous processes wherever possible, pretty useful.
     :init (dired-async-mode 1))
 #+END_SRC
 
-* Window =Manager
+* Window Manager
 Everything regarding the WM or DE-like functionality is bundled here, remove the entire section if you do not wish to use =exwm=.
 
 ** exwm
@@ -1603,6 +1603,8 @@ Requires libclang to be installed.
 #+BEGIN_SRC emacs-lisp
 (use-package vue-mode
 :ensure t
+:config
+(setq mmm-submode-decoration-level 0)
 )
 #+END_SRC
 **** vue-html-mode
