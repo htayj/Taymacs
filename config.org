@@ -94,117 +94,6 @@ so chances are, as long as you know your way around emacs itself, you will insti
 
 #+END_SRC
 
-* Logic behind keybindings
-** Modifier keys
-*** Ctrl
-/ do, atomic, common, simple /
-
-Ctrl-[key] should do a single action, no chaining. For the most common actions that manipulate buffers/files in buffers and the cursor.
-
-Do small things (see Shift)
-
-Typically is the base level of a modifier chain but can mean do atomically if it is not
-
-*** Meta (Alt) 
-/ meta-actions, do more complicated, meta-control, opposite, deep /
-
-Meta is for meta-actions that are slightly dependent on code, and actions that require chaining of keys
-
-when modifying other modifiers, it means either alter or deeper
-
-*** Shift
--- More, bigger, whole, all, expand --
-
-Shift modifies other modifers to make them do bigger things
-
-*** Super (windows key)
--- WM, windows, frames, buffer manipulation --
-
-Super is used for movement around emacs and other wm-like features. It is a conceptual level above meta and control. it does not manipulate what is in the buffers, at the cursor, or the state of files
-
-It manipulates the state of the editor/os itself
-
-*** Hyper (you should rewrite its purpose for yourself) 
--- OS level, hotkeys --
-
-only does custom stuff that is highly suited to my specific needs 
-
-*** gigA (Emacs Alt internally, )
--- generative, fancy stuff --
-
-todo - generative actions
-
-
-** Leader Keys
-Todo
-*** viper (mode/state switch)
-*** Option? (menu key)
-
-** Design Patterns
-*** Text-based movement
-hjkl represent text based movement - vim style
-
-*** concept based movement (Orgy mode)
-a section (function, list, entry, variable, object, statement) of code is a body. There are bodies inside of bodies. Bodies next to each other are stacked sUperior-Inferior
-
-when traversing inward choose the closest to cursor or the middle if no cursor
-bodies also have non spatial relationships with other bodies? declaration/spawner, parent, child, kind
-multiple bodies at a time? rainbow colored
-highlight in varrying shades of alpha
- -highlight current body, superficial, closest deep
-
-selected list:
-a- open paren 
-p- close paren
-pd - last item
-ad - first item
-
-todo terms for rotations
-todo enlongate shoRten
-**** a - anterior
-/ front, beginning, head /
-header, definition, label, beginning
-internally head-wise
-**** p - posterior
-/ end, tail, feet /
-internally tail-wise
-**** s - superficial
-/ outward, surface /
-**** d - deeper
-/ inward, core-wise /
-**** u - superior
-/above/
-externally above body
-**** i - inferior 
-/below/
-externally below body
-**** skin
-**** g - finGer/heh
-the thing that performs the action
-**** fascia delimiters?
-**** go back to last selected body
-
-*** concept based action (Orgy mode)
-**** duplicate
-**** chaNge
-**** c - Copy/kill/yank
-**** v - paste/yank (riVet)
-**** e - enlongate/extend 
-add items, digits
-
-**** r - shoRten/reduce
-**** w - wiggle
-move around (sup context)
-**** + - increment/rot+
-**** - - decrement/rot-
-**** stroke?
-highlight
-**** j - insert outside body (follow inferior or superior)
-put new body inferior or superior
-**** b - spawn a body
-b again for blank, select direction, select kind
-** 
-
 * Theme
 The most important part of every configuration.
 ** DOOM themes are pretty cool and integrate with a lot of our packages
@@ -2192,7 +2081,7 @@ bindings for new line above and below and at point
 * WM startup
 * Tabs
 #+BEGIN_SRC emacs-lisp
-
+;; abolish tabs
 (setq-default indent-tabs-mode nil)
     (setq tab-stop-list (number-sequence 2 120 2))
 #+END_SRC
