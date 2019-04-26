@@ -1,7 +1,6 @@
 #+STARTUP: overview
 #+TITLE: Taymacs 
 #+CREATOR: Taylor Hardy
-#+Based_on_config_by: Dawid 'daedreth' Eckert
 #+LANGUAGE: en
 #+OPTIONS: num:nil
 #+ATTR_HTML: :style margin-left: auto; margin-right: auto;
