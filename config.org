@@ -1084,7 +1084,11 @@ it's rather similar to ido-vertical though.
   (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
   (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
 #+END_SRC
-
+** silver searcher helm
+#+BEGIN_SRC emacs-lisp
+  (use-package helm-ag
+    :ensure t)
+#+END_SRC
 ** avy and why it's the best thing in existence
 Many times have I pondered how I can move around buffers even quicker.
 I'm glad to say, that avy is precisely what I needed, and it's precisely what you need as well.
@@ -1993,6 +1997,7 @@ you should really do this in the theme el, but this is a good default
 
 #+END_SRC
 ** deleting lines
+
 #+BEGIN_SRC emacs-lisp
 
 (defun kill-previous-line ()
@@ -2018,6 +2023,13 @@ you should really do this in the theme el, but this is a good default
   "Kill ARG lines backward."
   (interactive "p")
   (kill-line (- 1 arg)))
+
+#+END_SRC
+** dwim duplicate
+#+BEGIN_SRC emacs-lisp
+  ;; (defun duplicate-dwim (arg)
+  ;;     (duplicate-line (arg))
+  ;;   )
 
 #+END_SRC
 * Keymap
@@ -2124,6 +2136,8 @@ you should really do this in the theme el, but this is a good default
        (define-key map (kbd "M-l") 'forward-char)
        (define-key map (kbd "M-o") 'end-of-line)
        (define-key map (kbd "M-u") 'beginning-of-line-text) ;;todo dwim
+     
+       (define-key map (kbd "M-p") 'duplicate-line) ;;todo dwim
 
        ;; (define-key map (kbd "M-S-j") 'backward-word)
        ;; (define-key map (kbd "M-S-i") 'golden-ratio-scroll-screen-up)
