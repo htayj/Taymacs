@@ -359,7 +359,7 @@ The only time I actually had to use comments, this is for ease of removal if you
 
       ;; fringe size, most people prefer 1 
       (fringe-mode 3)
-      
+
       ;; emacs as a daemon, use "emacsclient <filename>" to seamlessly edit files from the terminal directly in the exwm instance
       (server-start)
 
@@ -378,14 +378,14 @@ The only time I actually had to use comments, this is for ease of removal if you
      (exwm-input-set-key (kbd "s-m") 'next-buffer)
      (exwm-input-set-key (kbd "s-,") 'previous-buffer)
      (exwm-input-set-key (kbd "s-/") 'kill-current-buffer) 
-     
+
      (exwm-input-set-key (kbd "s-j") 'windmove-left)
      (exwm-input-set-key (kbd "s-k") 'windmove-down)
      (exwm-input-set-key (kbd "s-i") 'windmove-up)
      (exwm-input-set-key (kbd "s-l") 'windmove-right) 
      (exwm-input-set-key (kbd "s-;") 'delete-window) 
-     
-     
+
+
      (exwm-input-set-key (kbd "s-s h") 'split-window-right)
      (exwm-input-set-key (kbd "s-s j") 'split-window-below)
      (exwm-input-set-key (kbd "s-s k") 'split-and-follow-horizontally)
@@ -430,7 +430,15 @@ The only time I actually had to use comments, this is for ease of removal if you
          ([?\C-y] . ?\C-v)
          ;; search
          ([?\C-f] . ?\C-f)
-	 ))
+         ;; movement
+       ([?\M-h] . return)
+       ([?\M-m] . return)
+       ([?\M-l] . right)
+       ([?\M-k] . down)
+       ([?\M-j] . left)
+       ([?\M-\\] . prior)
+       ([?\M-'] . next)
+         ))
 
       ;; this little bit will make sure that XF86 keys work in exwm buffers as well
       (dolist (k '(XF86AudioLowerVolume
@@ -447,7 +455,7 @@ The only time I actually had to use comments, this is for ease of removal if you
                  Scroll_Lock
                  print))
       (cl-pushnew k exwm-input-prefix-keys))
-      
+
       ;; this just enables exwm, it started automatically once everything is ready
       (exwm-enable))
 #+END_SRC
