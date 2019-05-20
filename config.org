@@ -1000,7 +1000,11 @@ I like =M-s= for it, same as =C-s= is for moving by searching string, now =M-s= 
   (use-package avy
     :ensure t
     :bind
-      ("M-s" . avy-goto-char))
+      ("C-s" . avy-goto-char)
+      ;; ("C-a C-s" . avy-goto-char)
+      ;; ("C-a C-d" . avy-goto-char)
+
+      )
 #+END_SRC
 
 * Text manipulation
@@ -1658,6 +1662,7 @@ Edit this list as you see fit!
     (diminish 'page-break-lines-mode)
     (diminish 'auto-revert-mode)
     (diminish 'rainbow-delimiters-mode)
+    (diminish 'editor-config-mode)
     (diminish 'rainbow-mode))
 #+END_SRC
 
