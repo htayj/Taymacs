@@ -1001,10 +1001,21 @@ I like =M-s= for it, same as =C-s= is for moving by searching string, now =M-s= 
     :ensure t
     :bind
       ("C-s" . avy-goto-char)
-      ;; ("C-a C-s" . avy-goto-char)
+      ;; ("C-a C-a" . avy-move-line)
+      ;; ("C-a C-s" . avy-move-region)
       ;; ("C-a C-d" . avy-goto-char)
 
       )
+#+END_SRC
+** ace windows mode
+#+BEGIN_SRC emacs-lisp
+  (use-package ace-window
+    :ensure t
+    :bind
+    ("C-e" . ace-select-window)
+    ("C-M-e" . ace-window)
+    )
+
 #+END_SRC
 
 * Text manipulation
@@ -2119,4 +2130,13 @@ bindings for new line above and below and at point
   :config
   (editorconfig-mode 1))
 #+END_SRC
+* aggressive indent
+#+BEGIN_SRC emacs-lisp
 
+    (use-package aggressive-indent
+      :ensure t
+      :config
+    (global-aggressive-indent-mode 1)
+    (add-to-list 'aggressive-indent-excluded-modes 'org-mode))
+
+#+END_SRC
