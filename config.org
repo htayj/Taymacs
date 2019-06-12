@@ -1011,6 +1011,7 @@ I like =M-s= for it, same as =C-s= is for moving by searching string, now =M-s= 
 #+BEGIN_SRC emacs-lisp
   (use-package ace-window
     :ensure t
+    :config (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
     :bind
     ("C-e" . ace-select-window)
     ("C-M-e" . ace-window)
@@ -1074,6 +1075,16 @@ Regardless of where your cursor is, this quickly copies a line.
 And this quickly deletes a line.
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-c l k") 'kill-whole-line)
+#+END_SRC
+
+* multiple cursors
+#+BEGIN_SRC emacs-lisp
+  (use-package multiple-cursors
+    :ensure t
+    :bind
+    ("C-d" . 'mc/mark-next-like-this)
+    ("C-M-d C-M-d" . 'mc/mark-next-like-this)
+    )
 #+END_SRC
 
 * Minor conveniences
@@ -1961,7 +1972,7 @@ you should really do this in the theme el, but this is a good default
   (defvar subl-mode-map
     (let ((map(make-sparse-keymap)))
 
-       (define-key map (kbd "C-d") 'mark-next-like-this)
+       ;; (define-key map (kbd "C-d") 'mark-next-like-this)
        (define-key map (kbd "C-S-d") 'duplicate-line)
        (define-key map (kbd "C-/") 'comment-line)
        (define-key map (kbd "C-S-/") 'comment-dwim)
