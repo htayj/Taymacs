@@ -1083,7 +1083,7 @@ And this quickly deletes a line.
     :ensure t
     :bind
     ("C-d" . 'mc/mark-next-like-this)
-    ("C-M-d C-M-d" . 'mc/mark-next-like-this)
+    ;; ("C-M-d C-M-d" . 'mc/mark-next-like-this)
     )
 #+END_SRC
 
@@ -1230,25 +1230,25 @@ Minor, non-completion related settings and plugins for writing code.
 ** lsp-mode
 npm i -g typescript-language-server; npm i -g typescript
 #+BEGIN_SRC emacs-lisp
-          (use-package lsp-mode
-            :commands lsp
-            :ensure t
-            :init
-        )
+            ;; (use-package lsp-mode
+  ;;             :commands lsp
+  ;;             :ensure t
+  ;;             :init
+  ;;         )
 
 
-    (use-package lsp-ui 
-      :commands lsp-ui-mode
-      :ensure t)
+  ;;     (use-package lsp-ui 
+  ;;       :commands lsp-ui-mode
+  ;;       :ensure t)
 
-    (use-package company-lsp :commands company-lsp :ensure t)
+  ;;     (use-package company-lsp :commands company-lsp :ensure t)
 
 
-(require 'lsp)
-(require 'lsp-clients)
+  ;; (require 'lsp)
+  ;; (require 'lsp-clients)
 
-(add-hook 'js2-mode-hook 'lsp)
-;;(add-hook 'vue-mode-hook 'lsp)
+  ;; (add-hook 'js2-mode-hook 'lsp)
+  ;;(add-hook 'vue-mode-hook 'lsp)
 
 #+END_SRC
 
