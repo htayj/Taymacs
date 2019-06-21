@@ -785,7 +785,7 @@ symon can be toggled on and off with =Super + h=.
             (accent . (telephone-line-erc-modified-channels-segment))
             (red . (telephone-line-flycheck-segment))
             (orange . (telephone-line-process-segment))
-                       
+
             (yellow    . (telephone-line-minor-mode-segment))
             (green    . (telephone-line-buffer-segment))
 
