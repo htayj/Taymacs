@@ -738,26 +738,63 @@ symon can be toggled on and off with =Super + h=.
 ;END_SRC
 ** use telephone-line as the powerline
 #+BEGIN_SRC emacs-lisp
-(use-package telephone-line
-:ensure t
-:config
-(setq telephone-line-primary-left-separator 'telephone-line-abs-left
-      telephone-line-secondary-left-separator 'telephone-line-abs-hollow-left
-      telephone-line-primary-right-separator 'telephone-line-abs-right
-      telephone-line-secondary-right-separator 'telephone-line-abs-hollow-right)
-(setq telephone-line-lhs
-      '((evil   . (telephone-line-evil-tag-segment))
-        (accent . (telephone-line-vc-segment
-                   telephone-line-erc-modified-channels-segment
-                   telephone-line-process-segment))
-        (nil    . (telephone-line-minor-mode-segment
-                   telephone-line-buffer-segment))))
-(setq telephone-line-rhs
-      '((nil    . (telephone-line-misc-info-segment))
-        (accent . (telephone-line-major-mode-segment))
-        (evil   . (telephone-line-airline-position-segment))))
-(telephone-line-mode 1)
-)
+  (use-package telephone-line
+    :ensure t
+    :config
+    (setq telephone-line-primary-left-separator 'telephone-line-halfsin-left
+          telephone-line-secondary-left-separator 'telephone-line-halfsin-hollow-left
+          telephone-line-primary-right-separator 'telephone-line-halfsin-right
+          telephone-line-secondary-right-separator 'telephone-line-halfsin-hollow-right)
+
+    (defface tl-red '((t (:foreground "white" :background "red"))) "")
+    (defface tl-orangered '((t (:foreground "white" :background "orange red"))) "")
+    (defface tl-orange '((t (:foreground "dim grey" :background "orange"))) "")
+    (defface tl-gold '((t (:foreground "dim grey" :background "gold"))) "")
+    (defface tl-yellow '((t (:foreground "dim grey" :background "yellow"))) "")
+    (defface tl-chartreuse '((t (:foreground "dim grey" :background "chartreuse"))) "")
+    (defface tl-green '((t (:foreground "dim grey" :background "green"))) "")
+    (defface tl-sgreen '((t (:foreground "dim grey" :background "spring green"))) "")
+    (defface tl-cyan '((t (:foreground "dim grey" :background "cyan"))) "")
+    (defface tl-blue '((t (:foreground "white" :background "blue"))) "")
+    (defface tl-dmagenta '((t (:foreground "white" :background "dark magenta"))) "")
+
+    (setq telephone-line-faces
+          '((red . (tl-red . tl-red))
+            (ored . (tl-orangered . tl-orangered))
+            (orange . (tl-orange . tl-orange))
+            (gold . (tl-gold . tl-gold))
+            (yellow . (tl-yellow . tl-yellow))
+            (chartreuse . (tl-chartreuse . tl-chartreuse))
+            (green . (tl-green . tl-green))
+            (sgreen . (tl-sgreen . tl-sgreen))
+            (cyan . (tl-cyan . tl-cyan))
+            (blue . (tl-blue . tl-blue))
+            (dmagenta . (tl-dmagenta . tl-dmagenta))
+            (evil . telephone-line-evil-face)
+            (accent . (telephone-line-accent-active . telephone-line-accent-inactive))
+            (nil . (mode-line . mode-line-inactive))))
+    (setq telephone-line-lhs
+          '((evil   . (telephone-line-evil-tag-segment))
+            (accent . (telephone-line-vc-segment))
+            ))
+    (setq telephone-line-rhs
+
+
+
+          '(
+            (accent . (telephone-line-erc-modified-channels-segment))
+            (red . (telephone-line-flycheck-segment))
+            (orange . (telephone-line-process-segment))
+                       
+            (yellow    . (telephone-line-minor-mode-segment))
+            (green    . (telephone-line-buffer-segment))
+
+            (blue    . (telephone-line-misc-info-segment))
+            (dmagenta . (telephone-line-major-mode-segment))
+            (evil   . (telephone-line-airline-position-segment))))
+    (telephone-line-mode 1)
+    )
+
 #+END_SRC
 * File manager
 Abandoning sunrise-commander.
@@ -1578,6 +1615,16 @@ great. It's easy and intuitive to use, shows its options at a keypress and much 
     ("M-g" . magit-status))
 #+END_SRC
 
+** git gutter
+#+BEGIN_SRC emacs-lisp
+  (use-package diff-hl
+    :ensure t
+    :config
+    (global-diff-hl-mode)
+    )
+
+
+#+END_SRC
 * Remote editing
 I have no need to directly edit files over SSH, but what I do need is a way to edit files as root.
 Opening up nano in a terminal as root to play around with grubs default settings is a no-no, this solves that.
@@ -1660,32 +1707,6 @@ Here is how we add more of them!
 #+BEGIN_SRC emacs-lisp
   (use-package ox-twbs
     :ensure t)
-#+END_SRC
-
-* Diminishing modes
-Your modeline is sacred, and if you have a lot of modes enabled, as you will if you use this config,
-you might end up with a lot of clutter there, the package =diminish= disables modes on the mode line but keeps
-them running, it just prevents them from showing up and taking up space.
-
-*THIS WILL BE REMOVED SOON AS USE-PACKAGE HAS THE FUNCTIONALITY BUILT IN*
-
-Edit this list as you see fit!
-#+BEGIN_SRC emacs-lisp
-  (use-package diminish
-    :ensure t
-    :init
-    (diminish 'which-key-mode)
-    (diminish 'linum-relative-mode)
-    (diminish 'hungry-delete-mode)
-    (diminish 'visual-line-mode)
-    (diminish 'subword-mode)
-    (diminish 'beacon-mode)
-    (diminish 'irony-mode)
-    (diminish 'page-break-lines-mode)
-    (diminish 'auto-revert-mode)
-    (diminish 'rainbow-delimiters-mode)
-    (diminish 'editor-config-mode)
-    (diminish 'rainbow-mode))
 #+END_SRC
 
 * Instant messaging
@@ -1973,6 +1994,7 @@ you should really do this in the theme el, but this is a good default
     (let ((map(make-sparse-keymap)))
 
        ;; (define-key map (kbd "C-d") 'mark-next-like-this)
+       (define-key map (kbd "C-e")  'ace-select-window)
        (define-key map (kbd "C-S-d") 'duplicate-line)
        (define-key map (kbd "C-/") 'comment-line)
        (define-key map (kbd "C-S-/") 'comment-dwim)
@@ -2126,6 +2148,31 @@ bindings for new line above and below and at point
 : snav-mode
 
 
+* linum gutter
+** linum by default
+#+BEGIN_SRC emacs-lisp
+    ;; (when (version<= "26.0.50" emacs-version )
+    ;;   (global-display-line-numbers-mode))
+  ;; (global-linum-mode)
+
+#+END_SRC
+** git gutter
+#+BEGIN_SRC emacs-lisp
+
+  ;;   (use-package git-gutter-fringe
+  ;;     :ensure t
+  ;;     :config
+  ;;     (custom-set-variables
+  ;;  '(git-gutter-fr:modified-sign " ") ;; two space
+  ;;  '(git-gutter-fr:added-sign "+")    ;; multiple character is OK
+  ;;  '(git-gutter-fr:deleted-sign "-"))
+
+  ;; (set-face-background 'git-gutter-fr:modified "purple") ;; background color
+  ;; (set-face-foreground 'git-gutter-fr:added "green")
+  ;; (set-face-foreground 'git-gutter-fr:deleted "red")
+  ;; (global-git-gutter-mode +1)
+  ;;     )
+#+END_SRC
 * WM startup
 * Tabs
 #+BEGIN_SRC emacs-lisp
@@ -2136,10 +2183,11 @@ bindings for new line above and below and at point
 
 * editorconfig
 #+BEGIN_SRC emacs-lisp
-(use-package editorconfig
-  :ensure t
-  :config
-  (editorconfig-mode 1))
+  (use-package editorconfig
+    :ensure t
+    :config
+    (editorconfig-mode 1))
+:lighter
 #+END_SRC
 * aggressive indent
 #+BEGIN_SRC emacs-lisp
@@ -2150,4 +2198,40 @@ bindings for new line above and below and at point
     (global-aggressive-indent-mode 1)
     (add-to-list 'aggressive-indent-excluded-modes 'org-mode))
 
+#+END_SRC
+
+* Diminishing modes
+Your modeline is sacred, and if you have a lot of modes enabled, as you will if you use this config,
+you might end up with a lot of clutter there, the package =diminish= disables modes on the mode line but keeps
+them running, it just prevents them from showing up and taking up space.
+
+*THIS WILL BE REMOVED SOON AS USE-PACKAGE HAS THE FUNCTIONALITY BUILT IN*
+
+Edit this list as you see fit!
+#+BEGIN_SRC emacs-lisp
+  (use-package diminish
+    :ensure t
+    :init
+    (diminish 'which-key-mode)
+    (diminish 'linum-relative-mode)
+    (diminish 'hungry-delete-mode)
+    (diminish 'visual-line-mode)
+    (diminish 'subword-mode)
+    (diminish 'beacon-mode)
+    (diminish 'irony-mode)
+    (diminish 'page-break-lines-mode)
+    (diminish 'auto-revert-mode)
+    (diminish 'rainbow-delimiters-mode)
+    (diminish 'editorconfig-mode)
+    (diminish 'subl-mode)
+    (diminish 'emo-mode)
+    (diminish 'org-indent-mode)
+    (diminish 'projectile-mode "P'")
+    (diminish 'helm-mode "H'")
+    (diminish 'company-mode "C'")
+
+    ;; (diminish 'projectile-mode "➶")
+    ;; (diminish 'helm-mode "⛫")
+    ;; (diminish 'company-mode "✓")
+    (diminish 'rainbow-mode))
 #+END_SRC
