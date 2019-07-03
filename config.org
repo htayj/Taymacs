@@ -1980,10 +1980,10 @@ you should really do this in the theme el, but this is a good default
 ** cua mode for more familiar copy-paste
 
 #+BEGIN_SRC emacs-lisp    
-(cua-mode t)
-    (setq cua-auto-tabify-rectangles nil) ;; Don't tabify after rectangle commands
-    (transient-mark-mode 1) ;; No region when it is not highlighted
-    (setq cua-keep-region-after-copy nil) ;; Standard Windows behaviour
+  (cua-mode t)
+      (setq cua-auto-tabify-rectangles nil) ;; Don't tabify after rectangle commands
+      (transient-mark-mode 1) ;; No region when it is not highlighted
+      ;; (setq cua-keep-region-after-copy nil) ;; Standard Windows behaviour
 #+END_SRC
 
 ** subl-mode (add some common sublimetext/atom keybindings)
@@ -2081,7 +2081,7 @@ you should really do this in the theme el, but this is a good default
        (define-key map (kbd "M-l") 'forward-char)
        (define-key map (kbd "M-o") 'end-of-line)
        (define-key map (kbd "M-u") 'beginning-of-line-text) ;;todo dwim
-     
+
        (define-key map (kbd "M-p") 'duplicate-line) ;;todo dwim
 
        ;; (define-key map (kbd "M-S-j") 'backward-word)
@@ -2114,7 +2114,11 @@ you should really do this in the theme el, but this is a good default
        (define-key map (kbd "M-D") 'golden-ratio-scroll-screen-down)
        (define-key map (kbd "M-F") 'forward-word)  
        (define-key map (kbd "M-R") 'forward-list) 
-       (define-key map (kbd "M-W") 'backward-list) 
+       (define-key map (kbd "M-W") 'backward-list)
+
+       ;; basic kill stuff
+       (define-key map (kbd "C-r") 'kill-region)
+       (define-key map (kbd "C-w") 'kill-ring-save)
 
      map)
   "emo-mode keymap.")
@@ -2235,3 +2239,11 @@ Edit this list as you see fit!
     ;; (diminish 'company-mode "✓")
     (diminish 'rainbow-mode))
 #+END_SRC
+
+
+* todo:
+** org mode bindings
+** kill ring management (avy kill ring?)
+** mark ring management
+** secondary selection???
+
