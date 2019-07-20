@@ -2244,6 +2244,14 @@ Edit this list as you see fit!
 * todo:
 ** org mode bindings
 ** kill ring management (avy kill ring?)
+popup killring thing
+avy buttons simple more recent
+support secondary selection
+*** actions:
+kill to position
+reorg ring
+remove from position
+yank from position
+
 ** mark ring management
 ** secondary selection???
-
