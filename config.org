@@ -2255,3 +2255,5 @@ yank from position
 
 ** mark ring management
 ** secondary selection???
+** ryo 
+https://github.com/Kungsgeten/ryo-modal
