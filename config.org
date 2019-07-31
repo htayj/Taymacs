@@ -2257,3 +2257,9 @@ yank from position
 ** secondary selection???
 ** ryo 
 https://github.com/Kungsgeten/ryo-modal
+*** normal mode
+*** correlation mode?
+*** manipulation mode?
+*** vim mode?
+*** avy mode?
+*** org mode?
