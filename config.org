@@ -2248,6 +2248,10 @@ Edit this list as you see fit!
 
 * todo:
 ** org mode bindings
+** undo redo things
+** exwm destroy window
+** exwm move and resize window
+** ace window in exwm
 ** kill ring management (avy kill ring?)
 popup killring thing
 avy buttons simple more recent
@@ -2260,3 +2264,6 @@ yank from position
 
 ** mark ring management
 ** secondary selection???
+*** ace select start -  ace select end?
+** keyboard layout generator
+
