@@ -724,76 +724,76 @@ symon can be toggled on and off with =Super + h=.
     :bind
     ("s-h" . symon-mode))
 ;END_SRC
-
-** eyeliner abstraction on top of spacemacs
-;BEGIN_SRC emacs-lisp 
-(use-package dash
-:ensure t)
-
-(use-package eyeliner
-  :ensure t
-  :config
-  (require 'eyeliner)
-  (eyeliner/install))
-;END_SRC
-** use telephone-line as the powerline
+** doom modeline is cool
 #+BEGIN_SRC emacs-lisp
-  (use-package telephone-line
-    :ensure t
-    :config
-    (setq telephone-line-primary-left-separator 'telephone-line-halfsin-left
-          telephone-line-secondary-left-separator 'telephone-line-halfsin-hollow-left
-          telephone-line-primary-right-separator 'telephone-line-halfsin-right
-          telephone-line-secondary-right-separator 'telephone-line-halfsin-hollow-right)
+  (use-package doom-modeline
+        :ensure t
+        :hook (after-init . doom-modeline-mode)
+        :config
+        (setq doom-modeline-icon t)
+        (setq doom-modeline-buffer-file-name-style 'file-name)
+      (setq doom-modeline-minor-modes t)
+        )
 
-    (defface tl-red '((t (:foreground "white" :background "red"))) "")
-    (defface tl-orangered '((t (:foreground "white" :background "orange red"))) "")
-    (defface tl-orange '((t (:foreground "dim grey" :background "orange"))) "")
-    (defface tl-gold '((t (:foreground "dim grey" :background "gold"))) "")
-    (defface tl-yellow '((t (:foreground "dim grey" :background "yellow"))) "")
-    (defface tl-chartreuse '((t (:foreground "dim grey" :background "chartreuse"))) "")
-    (defface tl-green '((t (:foreground "dim grey" :background "green"))) "")
-    (defface tl-sgreen '((t (:foreground "dim grey" :background "spring green"))) "")
-    (defface tl-cyan '((t (:foreground "dim grey" :background "cyan"))) "")
-    (defface tl-blue '((t (:foreground "white" :background "blue"))) "")
-    (defface tl-dmagenta '((t (:foreground "white" :background "dark magenta"))) "")
+#+END_SRC
+** use telephone-line as the powerline (old)
+#+BEGIN_SRC emacs-lisp
+  ;; (use-package telephone-line
+  ;;   :ensure t
+  ;;   :config
+  ;;   (setq telephone-line-primary-left-separator 'telephone-line-halfsin-left
+  ;;         telephone-line-secondary-left-separator 'telephone-line-halfsin-hollow-left
+  ;;         telephone-line-primary-right-separator 'telephone-line-halfsin-right
+  ;;         telephone-line-secondary-right-separator 'telephone-line-halfsin-hollow-right)
 
-    (setq telephone-line-faces
-          '((red . (tl-red . tl-red))
-            (ored . (tl-orangered . tl-orangered))
-            (orange . (tl-orange . tl-orange))
-            (gold . (tl-gold . tl-gold))
-            (yellow . (tl-yellow . tl-yellow))
-            (chartreuse . (tl-chartreuse . tl-chartreuse))
-            (green . (tl-green . tl-green))
-            (sgreen . (tl-sgreen . tl-sgreen))
-            (cyan . (tl-cyan . tl-cyan))
-            (blue . (tl-blue . tl-blue))
-            (dmagenta . (tl-dmagenta . tl-dmagenta))
-            (evil . telephone-line-evil-face)
-            (accent . (telephone-line-accent-active . telephone-line-accent-inactive))
-            (nil . (mode-line . mode-line-inactive))))
-    (setq telephone-line-lhs
-          '((evil   . (telephone-line-evil-tag-segment))
-            (accent . (telephone-line-vc-segment))
-            ))
-    (setq telephone-line-rhs
+  ;;   (defface tl-red '((t (:foreground "white" :background "red"))) "")
+  ;;   (defface tl-orangered '((t (:foreground "white" :background "orange red"))) "")
+  ;;   (defface tl-orange '((t (:foreground "dim grey" :background "orange"))) "")
+  ;;   (defface tl-gold '((t (:foreground "dim grey" :background "gold"))) "")
+  ;;   (defface tl-yellow '((t (:foreground "dim grey" :background "yellow"))) "")
+  ;;   (defface tl-chartreuse '((t (:foreground "dim grey" :background "chartreuse"))) "")
+  ;;   (defface tl-green '((t (:foreground "dim grey" :background "green"))) "")
+  ;;   (defface tl-sgreen '((t (:foreground "dim grey" :background "spring green"))) "")
+  ;;   (defface tl-cyan '((t (:foreground "dim grey" :background "cyan"))) "")
+  ;;   (defface tl-blue '((t (:foreground "white" :background "blue"))) "")
+  ;;   (defface tl-dmagenta '((t (:foreground "white" :background "dark magenta"))) "")
+
+  ;;   (setq telephone-line-faces
+  ;;         '((red . (tl-red . tl-red))
+  ;;           (ored . (tl-orangered . tl-orangered))
+  ;;           (orange . (tl-orange . tl-orange))
+  ;;           (gold . (tl-gold . tl-gold))
+  ;;           (yellow . (tl-yellow . tl-yellow))
+  ;;           (chartreuse . (tl-chartreuse . tl-chartreuse))
+  ;;           (green . (tl-green . tl-green))
+  ;;           (sgreen . (tl-sgreen . tl-sgreen))
+  ;;           (cyan . (tl-cyan . tl-cyan))
+  ;;           (blue . (tl-blue . tl-blue))
+  ;;           (dmagenta . (tl-dmagenta . tl-dmagenta))
+  ;;           (evil . telephone-line-evil-face)
+  ;;           (accent . (telephone-line-accent-active . telephone-line-accent-inactive))
+  ;;           (nil . (mode-line . mode-line-inactive))))
+  ;;   (setq telephone-line-lhs
+  ;;         '((evil   . (telephone-line-evil-tag-segment))
+  ;;           (accent . (telephone-line-vc-segment))
+  ;;           ))
+  ;;   (setq telephone-line-rhs
 
 
 
-          '(
-            (accent . (telephone-line-erc-modified-channels-segment))
-            (red . (telephone-line-flycheck-segment))
-            (orange . (telephone-line-process-segment))
+  ;;         '(
+  ;;           (accent . (telephone-line-erc-modified-channels-segment))
+  ;;           (red . (telephone-line-flycheck-segment))
+  ;;           (orange . (telephone-line-process-segment))
 
-            (yellow    . (telephone-line-minor-mode-segment))
-            (green    . (telephone-line-buffer-segment))
+  ;;           (yellow    . (telephone-line-minor-mode-segment))
+  ;;           (green    . (telephone-line-buffer-segment))
 
-            (blue    . (telephone-line-misc-info-segment))
-            (dmagenta . (telephone-line-major-mode-segment))
-            (evil   . (telephone-line-airline-position-segment))))
-    (telephone-line-mode 1)
-    )
+  ;;           (blue    . (telephone-line-misc-info-segment))
+  ;;           (dmagenta . (telephone-line-major-mode-segment))
+  ;;           (evil   . (telephone-line-airline-position-segment))))
+  ;;   (telephone-line-mode 1)
+  ;;   )
 
 #+END_SRC
 * File manager
@@ -2266,4 +2266,11 @@ yank from position
 ** secondary selection???
 *** ace select start -  ace select end?
 ** keyboard layout generator
-
+** ryo 
+https://github.com/Kungsgeten/ryo-modal
+*** normal mode
+*** correlation mode?
+*** manipulation mode?
+*** vim mode?
+*** avy mode?
+*** org mode?
