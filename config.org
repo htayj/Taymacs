@@ -93,6 +93,26 @@ so chances are, as long as you know your way around emacs itself, you will insti
 
 #+END_SRC
 
+* 666
+#+BEGIN_SRC emacs-lisp
+  (use-package evil
+    :ensure t
+    :config
+    (evil-mode 1)
+(evil-define-key)
+  )
+
+#+END_SRC
+* key chording for evil mode
+#+BEGIN_SRC emacs-lisp
+    (use-package key-chord
+    :ensure t
+    :config
+    (setq key-chord-two-keys-delay 0.5)
+  (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
+  (key-chord-mode 1)
+      )
+#+END_SRC
 * Theme
 The most important part of every configuration.
 ** DOOM themes are pretty cool and integrate with a lot of our packages
@@ -915,9 +935,12 @@ This annoyed me so much I wrote these two, they take care of it.
 ** swiper and why is the default search so lame
 I like me some searching, the default search is very meh. In emacs, you mostly use search to get around your buffer, much like with avy, but sometimes it doesn't hurt to search for entire words or mode, swiper makes sure this is more efficient.
 #+BEGIN_SRC emacs-lisp
-  (use-package swiper
-    :ensure t
-    :bind ("C-f" . 'swiper))
+    (use-package swiper
+      :ensure t
+      :bind ("C-f" . 'swiper)
+      :config 
+        (define-key evil-normal-state-map (kbd "C-f") 'swiper)
+  )
 #+END_SRC
 
 ** buffers and why I hate list-buffers
@@ -1046,7 +1069,8 @@ I like =M-s= for it, same as =C-s= is for moving by searching string, now =M-s= 
       ;; ("C-a C-a" . avy-move-line)
       ;; ("C-a C-s" . avy-move-region)
       ;; ("C-a C-d" . avy-goto-char)
-
+    :config
+      (define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
       )
 #+END_SRC
 ** ace windows mode
@@ -1057,7 +1081,10 @@ I like =M-s= for it, same as =C-s= is for moving by searching string, now =M-s= 
     :bind
     ("C-e" . ace-select-window)
     ("C-M-e" . ace-window)
-    )
+:config
+      (define-key evil-normal-state-map (kbd "C-e") 'ace-select-window)
+      )
+    
 
 #+END_SRC
 
@@ -1982,13 +2009,17 @@ you should really do this in the theme el, but this is a good default
 
 #+END_SRC
 * Keymap
+** avy in evil
+#+BEGIN_SRC emacs-lisp
+
+#+END_SRC
 ** cua mode for more familiar copy-paste
 
 #+BEGIN_SRC emacs-lisp    
-  (cua-mode t)
-      (setq cua-auto-tabify-rectangles nil) ;; Don't tabify after rectangle commands
-      (transient-mark-mode 1) ;; No region when it is not highlighted
-      ;; (setq cua-keep-region-after-copy nil) ;; Standard Windows behaviour
+  ;; (cua-mode t)
+  ;;     (setq cua-auto-tabify-rectangles nil) ;; Don't tabify after rectangle commands
+  ;;     (transient-mark-mode 1) ;; No region when it is not highlighted
+  ;;     ;; (setq cua-keep-region-after-copy nil) ;; Standard Windows behaviour
 #+END_SRC
 
 ** subl-mode (add some common sublimetext/atom keybindings)
@@ -2245,7 +2276,15 @@ Edit this list as you see fit!
     (diminish 'rainbow-mode))
 #+END_SRC
 
+* gimp
+#+BEGIN_SRC emacs-lisp
 
+(load "/home/taylor/gimpmode/gimp-init.el")
+
+;; Uncomment following line to globally use `gimp-selector':
+;; (global-set-key "\C-cg" 'gimp-selector)
+
+#+END_SRC
 * todo:
 ** org mode bindings
 ** undo redo things
