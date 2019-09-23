@@ -85,6 +85,7 @@ There is barely any learning curve to using =exwm=, since it makes x-windows act
 so chances are, as long as you know your way around emacs itself, you will instinctively know how to make use of its features.
 
 * import manually installed packages
+
 #+BEGIN_SRC emacs-lisp
 (let ((default-directory  (concat user-emacs-directory
         (convert-standard-filename "lisp/"))))
@@ -93,13 +94,22 @@ so chances are, as long as you know your way around emacs itself, you will insti
 
 #+END_SRC
 
+* undo tree
+#+BEGIN_SRC emacs-lisp
+  (use-package undo-tree
+    :ensure t
+    :config
+    (global-undo-tree-mode)
+  )
+
+#+END_SRC
 * 666
 #+BEGIN_SRC emacs-lisp
   (use-package evil
     :ensure t
     :config
+    (setq evil-default-state 'emacs)
     (evil-mode 1)
-(evil-define-key)
   )
 
 #+END_SRC
@@ -2279,7 +2289,7 @@ Edit this list as you see fit!
 * gimp
 #+BEGIN_SRC emacs-lisp
 
-(load "/home/taylor/gimpmode/gimp-init.el")
+;; (load "/home/taylor/gimpmode/gimp-init.el")
 
 ;; Uncomment following line to globally use `gimp-selector':
 ;; (global-set-key "\C-cg" 'gimp-selector)
