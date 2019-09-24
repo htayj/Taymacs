@@ -379,7 +379,7 @@ Everything regarding the WM or DE-like functionality is bundled here, remove the
 ** exwm
 The only time I actually had to use comments, this is for ease of removal if you happen to not like exwm.
 *** Installation
-#+BEGIN_SRC emacs-lisp
+##+BEGIN_SRC emacs-lisp
   (use-package exwm
     :ensure t
     :config
@@ -490,7 +490,7 @@ The only time I actually had to use comments, this is for ease of removal if you
       (exwm-enable))
 #+END_SRC
 ** Multi monitor
-#+BEGIN_SRC emacs-lisp
+##+BEGIN_SRC emacs-lisp
 (require 'exwm-randr)
 (setq exwm-randr-workspace-output-plist '(0 "HDMI-0" 
 1 "HDMI-0"
@@ -509,7 +509,7 @@ The only time I actually had to use comments, this is for ease of removal if you
 (exwm-randr-enable)
 #+END_SRC
 ** System tray
-#+BEGIN_SRC emacs-lisp
+##+BEGIN_SRC emacs-lisp
   (require 'exwm-systemtray)
 (exwm-systemtray-enable)
 #+END_SRC
@@ -522,7 +522,7 @@ keybindings.
 *** dmenu for emacs
 Who would've thought this was available, together with ido-vertical it's a nice large menu
 with its own cache for most launched applications.
-#+BEGIN_SRC emacs-lisp
+##+BEGIN_SRC emacs-lisp
   (use-package dmenu
     :ensure t
     :bind
@@ -532,7 +532,7 @@ with its own cache for most launched applications.
 *** Functions to start processes
 I guess this goes without saying but you absolutely have to change the arguments
 to suit the software that you are using. What good is a launcher for discord if you don't use it at all.
-#+BEGIN_SRC emacs-lisp
+##+BEGIN_SRC emacs-lisp
   (defun exwm-async-run (name)
     (interactive)
     (start-process name nil name))
@@ -556,7 +556,7 @@ to suit the software that you are using. What good is a launcher for discord if 
 
 *** Keybindings to start processes
 These can be modified as well, suit yourself.
-#+BEGIN_SRC emacs-lisp
+##+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "s-d") 'daedreth/launch-discord)
   (global-set-key (kbd "<s-tab>") 'daedreth/launch-browser)
   (global-set-key (kbd "<XF86ScreenSaver>") 'daedreth/lock-screen)
@@ -568,12 +568,12 @@ This is a set of bindings to my XF86 keys that invokes pulsemixer with the corre
 
 *** Volume modifier
 It goes without saying that you are free to modify the modifier as you see fit, 4 is good enough for me though.
-#+BEGIN_SRC emacs-lisp
+##+BEGIN_SRC emacs-lisp
 (defconst volumeModifier "4")
 #+END_SRC
 
 *** Functions to start processes
-#+BEGIN_SRC emacs-lisp
+##+BEGIN_SRC emacs-lisp
   (defun audio/mute ()
     (interactive)
     (start-process "audio-mute" nil "pulsemixer" "--toggle-mute"))
@@ -589,7 +589,7 @@ It goes without saying that you are free to modify the modifier as you see fit, 
 
 *** Keybindings to start processes
 You can also change those if you'd like, but I highly recommend keeping 'em the same, chances are, they will just work.
-#+BEGIN_SRC emacs-lisp
+##+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "<XF86AudioMute>") 'audio/mute)
 (global-set-key (kbd "<XF86AudioRaiseVolume>") 'audio/raise-volume)
 (global-set-key (kbd "<XF86AudioLowerVolume>") 'audio/lower-volume)
@@ -632,7 +632,7 @@ These won't work in the terminal version or the virtual console, obvious reasons
 
 ** Default browser
 I use qutebrowser, so that's what I'll set up.
-#+BEGIN_SRC emacs-lisp
+##+BEGIN_SRC emacs-lisp
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "chromium")
 #+END_SRC
