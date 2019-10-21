@@ -1725,7 +1725,16 @@ Those are all rather self-explanatory.
   (setq org-src-window-setup 'current-window)
   (add-hook 'org-mode-hook 'org-indent-mode)
 #+END_SRC
-
+** org journal
+#+BEGIN_SRC emacs-lisp
+(use-package org-journal 
+      :ensure t
+      :defer t
+      :custom
+      (org-journal-dir "~/notes/journal/")
+      (org-journal-date-format "%A, %d %B %Y")
+)
+#+END_SRC
 ** Syntax highlighting for documents exported to HTML
 #+BEGIN_SRC emacs-lisp
   (use-package htmlize
@@ -1775,7 +1784,7 @@ Here is how we add more of them!
   (use-package ox-twbs
     :ensure t)
 #+END_SRC
-
+#+END_SRC
 * Instant messaging
 
 I like IRC, I also like other protocols but I enjoy IRC most, it's obvious that I long
