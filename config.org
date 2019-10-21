@@ -1608,7 +1608,7 @@ Requires libclang to be installed.
 ** web programming
 *** vue
 **** vue-mode
-##+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package vue-mode
 :ensure t
 :init (add-hook 'vue-mode-hook 'company-mode)
@@ -1619,7 +1619,7 @@ Requires libclang to be installed.
 #+END_SRC
 **** vue-html-mode
 
-##+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package vue-html-mode
 :ensure t
 )
@@ -1630,7 +1630,7 @@ Requires libclang to be installed.
 
 #+end_src
 
-##+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package vue-mode
 :ensure t
 )
@@ -1648,22 +1648,24 @@ Requires libclang to be installed.
 *** web-mode
 #+BEGIN_SRC emacs-lisp
 
-(use-package web-mode
-:ensure t
-:init
-(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
-(add-hook 'editorconfig-custom-hooks
-          (lambda (hash) (setq web-mode-block-padding 0)))
-(add-hook 'web-mode-hook 'company-mode)
-(add-hook 'web-mode-hook 'yas-minor-mode)
-)
+  (use-package web-mode
+    :ensure t
+    :init
+    (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
+    (add-hook 'editorconfig-custom-hooks
+              (lambda (hash) (setq web-mode-block-padding 0)))
+    (add-hook 'web-mode-hook 'company-mode)
+    (add-hook 'web-mode-hook 'yas-minor-mode)
+  :config
+  (setq web-mode-enable-auto-indentation nil)
+    )
 
 #+END_SRC
 
@@ -1691,6 +1693,16 @@ great. It's easy and intuitive to use, shows its options at a keypress and much 
     )
 
 
+#+END_SRC
+
+** support for merge requests
+#+BEGIN_SRC emacs-lisp
+(use-package forge
+:after magit
+:ensure t
+:config
+(add-to-list 'forge-alist '("git.codemettle.com" "git.codemettle.com/api/v4" "git.codemettle.com" forge-gitlab-repository))
+)
 #+END_SRC
 * Remote editing
 I have no need to directly edit files over SSH, but what I do need is a way to edit files as root.
