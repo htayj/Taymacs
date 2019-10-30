@@ -1858,6 +1858,17 @@ Memes, but it's fun and tiny.
   (use-package elcord
     :ensure t)
 #+END_SRC
+** rcirc
+#+BEGIN_SRC emacs-lisp
+(setq rcirc-default-nick "nobodynogroup")
+(setq rcirc-server-alist
+      '(("irc.freenode.net" :port 6697 :encryption tls
+	 :channels ("#rcirc" "#emacs" "#emacswiki"))))
+
+#+END_SRC
+
+#+RESULTS:
+| irc.freenode.net | :port | 6697 | :encryption | tls | :channels | (#rcirc #emacs #emacswiki) |
 
 * Media
 Why bother with an external media manager when emacs is a thing.
