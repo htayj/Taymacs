@@ -2317,11 +2317,11 @@ bindings for new line above and below and at point
 * aggressive indent
 #+BEGIN_SRC emacs-lisp
 
-    (use-package aggressive-indent
-      :ensure t
-      :config
-    (global-aggressive-indent-mode 1)
-    (add-to-list 'aggressive-indent-excluded-modes 'org-mode))
+  (use-package aggressive-indent
+    :ensure t
+    :config
+  (global-aggressive-indent-mode nil)
+  (add-to-list 'aggressive-indent-excluded-modes 'org-mode))
 
 #+END_SRC
 
