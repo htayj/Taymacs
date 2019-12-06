@@ -6,6 +6,7 @@
         beginning-of-line-text
         cua--prefix-override-handler
         cua-paste
+        helm-M-x
         hungry-delete-backward
         hungry-delete-forward
         org-self-insert-command
@@ -15,6 +16,7 @@
 
 (setq mc/cmds-to-run-once
       '(
+        ace-select-window
         handle-select-window
         scheme-compile-definition-and-go
         ))
