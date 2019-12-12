@@ -8,6 +8,7 @@
         cua--prefix-override-handler
         cua-paste
         fill-paragraph
+        helm-M-x
         hungry-delete-backward
         hungry-delete-forward
         kill-region
