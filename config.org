@@ -1484,7 +1484,11 @@ Requires libclang to be installed.
       (require 'company)
       (slime-setup '(slime-fancy slime-company)))
 #+END_SRC
-
+*** clojure
+#+BEGIN_SRC emacs-lisp
+  (use-package cider
+    :ensure t)
+      #+END_SRC
 *** lua
 **** yasnippet
 #+BEGIN_SRC emacs-lisp
