@@ -4,7 +4,6 @@
 #+LANGUAGE: en
 #+OPTIONS: num:nil
 #+ATTR_HTML: :style margin-left: auto; margin-right: auto;
-[[./img/screen.png]]
 * Installation
 ** Quick Installation
 =git clone https://github.com/daedreth/UncleDavesEmacs ~/.emacs.d=
@@ -36,7 +35,6 @@ Since we are going to use emacs as our window manager, it would be nice to have 
 - =imagemagick=, if you are going to be using emacs to take screenshots.
 - =ibus-daemon=, if you need multiple keyboard input options (emacs handles them well on its own but ibus is nice).
 - =terminus-font=, for it to work out of the box, if you don't want terminus you need to edit your =init.el=.
-
 **** Optional
 - A browser (sadly, the built in xwidgets-webkit thingie is unreliable).
 - A composite manager (highly recommended, I personally use =compton=, the built in one does not work as intended.).
@@ -85,13 +83,11 @@ There is barely any learning curve to using =exwm=, since it makes x-windows act
 so chances are, as long as you know your way around emacs itself, you will instinctively know how to make use of its features.
 
 * import manually installed packages
-
 #+BEGIN_SRC emacs-lisp
 (let ((default-directory  (concat user-emacs-directory
         (convert-standard-filename "lisp/"))))
   (normal-top-level-add-to-load-path '("."))
   (normal-top-level-add-subdirs-to-load-path))
-
 #+END_SRC
 
 * undo tree
@@ -101,93 +97,10 @@ so chances are, as long as you know your way around emacs itself, you will insti
     :config
     (global-undo-tree-mode)
   )
+#+END_SRC
 
-#+END_SRC
-* 666
-#+BEGIN_SRC emacs-lisp
-  (use-package evil
-    :ensure t
-    :config
-    (setq evil-default-state 'emacs)
-    (evil-mode 1)
-  )
-
-#+END_SRC
-* key chording for evil mode
-#+BEGIN_SRC emacs-lisp
-    (use-package key-chord
-    :ensure t
-    :config
-    (setq key-chord-two-keys-delay 0.5)
-  (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
-  (key-chord-mode 1)
-      )
-#+END_SRC
 * Theme
 The most important part of every configuration.
-** DOOM themes are pretty cool and integrate with a lot of our packages
-#;+BEGIN_SRC emacs-lisp
-  (use-package doom-themes
-  :ensure t
-  :config
-  ;; (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-  ;;       doom-themes-enable-italic t) ; if nil, italics is universally disabled
-
-  ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
-  ;; may have their own settings.
-   ;; doom-one
-   ;; doom-one-light
-   ;; doom-vibrant
-
-   ;; doom-city-lights
-   ;; doom-dracula
-   ;; doom-Iosvkem
-   ;; doom-molokai
-   ;; doom-nord
-   ;; doom-nord-light 
-   ;; doom-opera 
-   ;; doom-opera-light 
-   ;; doom-nova
-   ;; doom-peacock
-   ;; doom-solarized-light
-   ;; doom-sourcerer
-   ;; doom-spacegrey
-   ;; doom-tomorrow-night
-   ;; doom-tomorrow-day
-   ;; doom-mono-dark / doom-mono-light
-   ;; doom-tron
-  ;; (load-theme 'doom-dracula t)
-
-  ;; Enable flashing mode-line on errors
-  ;; (doom-themes-visual-bell-config)
-
-  ;; Enable custom neotree theme (all-the-icons must be installed!)
-  ;; (doom-themes-neotree-config)
-  ;; or for treemacs users
-  ;;(doom-themes-treemacs-config)
-
-  ;; Corrects (and improves) org-mode's native fontification.
-  ;; (doom-themes-org-config)
-  )
-
-#;+END_SRC
-** Solaire mode makes buffers brighter
-originally part of doom, it makes code buffers brighter and side bar stuff darker.
-M-x package-install RET solaire-mode
-#+BEGIN_SRC emacs-lisp
-(use-package solaire-mode
-:ensure t
-:hook
-  ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
-  (minibuffer-setup . solaire-mode-in-minibuffer)
-  :config
-  (solaire-mode-swap-bg)
-(solaire-global-mode +1)
-
-
- ;; (setq solaire-mode-remap-modeline nil)
-)
-#+END_SRC
 ** high contrast
 My new favourite one I guess, really decent default values.
 #+BEGIN_SRC emacs-lisp
@@ -219,108 +132,108 @@ My new favourite one I guess, really decent default values.
                       ;; :height 150
                       ;; :weight 'normal
                       :width 'normal)
-
 #+END_SRC
+
 ** Some customization
 The theme is great, really, but some of the concepts just suck with powerline.
-#;+BEGIN_SRC emacs-lisp
-  (let ((class '((class color) (min-colors 89)))
-        (default (if (true-color-p) "#abb2bf" "#afafaf"))
-        (light (if (true-color-p) "#ccd4e3" "#d7d7d7"))
-        (background (if (true-color-p) "#282c34" "#333333"))
-        (background-dark (if (true-color-p) "#24282f" "#222222"))
-        (background-darker (if (true-color-p) "#22252c" "#222222"))
-        (mode-line-inactive (if "#1c2129" "#222222"))
-        (mode-line-active (if (true-color-p) "#6f337e" "#875f87"))
-        (background-lighter (if (true-color-p) "#3a3f4b" "#5f5f5f"))
-        (background-red (if (true-color-p) "#4c3840" "#5f5f5f"))
-        (bright-background-red (if (true-color-p) "#744a5b" "#744a5b"))
-        (background-purple (if (true-color-p) "#48384c" "#5f5f5f"))
-        (background-blue (if (true-color-p) "#38394c" "#444444"))
-        (bright-background-blue (if (true-color-p) "#4e5079" "#4e5079"))
-        (background-green (if (true-color-p) "#3d4a41" "#5f5f5f"))
-        (bright-background-green (if (true-color-p) "#3f6d54" "#3f6d54"))
-        (background-orange (if (true-color-p) "#4a473d" "#5f5f5f"))
-        (hl-line (if (true-color-p) "#2c323b" "#333333"))
-        (grey (if (true-color-p) "#cccccc" "#cccccc"))
-        (grey-dark (if (true-color-p) "#666666" "#666666"))
-        (highlight (if (true-color-p) "#3e4451" "#5f5f5f"))
-        (comment (if (true-color-p) "#687080" "#707070"))
-        (orange (if (true-color-p) "#da8548" "#d7875f"))
-        (orange-light (if (true-color-p) "#ddbd78" "#d7af87"))
-        (red (if (true-color-p) "#ff6c6b" "#ff5f5f"))
-        (purple (if (true-color-p) "#c678dd" "#d787d7"))
-        (purple-dark (if (true-color-p) "#64446d" "#5f5f5f"))
-        (blue (if (true-color-p) "#61afef" "#5fafff"))
-        (blue-dark (if (true-color-p) "#1f5582" "#005f87"))
-        (green (if (true-color-p) "#98be65" "#87af5f"))
-        (green-light (if (true-color-p) "#9eac8c" "#afaf87"))
-        (peach "PeachPuff3")
-        (diff-added-background (if (true-color-p) "#284437" "#284437"))
-        (diff-added-refined-background (if (true-color-p) "#1e8967" "#1e8967"))
-        (diff-removed-background (if (true-color-p) "#583333" "#580000"))
-        (diff-removed-refined-background (if (true-color-p) "#b33c49" "#b33c49"))
-        (diff-current-background (if (true-color-p) "#29457b" "#29457b"))
-        (diff-current-refined-background (if (true-color-p) "#4174ae" "#4174ae")))
+#+BEGIN_SRC emacs-lisp
+  ;; (let ((class '((class color) (min-colors 89)))
+  ;;       (default (if (true-color-p) "#abb2bf" "#afafaf"))
+  ;;       (light (if (true-color-p) "#ccd4e3" "#d7d7d7"))
+  ;;       (background (if (true-color-p) "#282c34" "#333333"))
+  ;;       (background-dark (if (true-color-p) "#24282f" "#222222"))
+  ;;       (background-darker (if (true-color-p) "#22252c" "#222222"))
+  ;;       (mode-line-inactive (if "#1c2129" "#222222"))
+  ;;       (mode-line-active (if (true-color-p) "#6f337e" "#875f87"))
+  ;;       (background-lighter (if (true-color-p) "#3a3f4b" "#5f5f5f"))
+  ;;       (background-red (if (true-color-p) "#4c3840" "#5f5f5f"))
+  ;;       (bright-background-red (if (true-color-p) "#744a5b" "#744a5b"))
+  ;;       (background-purple (if (true-color-p) "#48384c" "#5f5f5f"))
+  ;;       (background-blue (if (true-color-p) "#38394c" "#444444"))
+  ;;       (bright-background-blue (if (true-color-p) "#4e5079" "#4e5079"))
+  ;;       (background-green (if (true-color-p) "#3d4a41" "#5f5f5f"))
+  ;;       (bright-background-green (if (true-color-p) "#3f6d54" "#3f6d54"))
+  ;;       (background-orange (if (true-color-p) "#4a473d" "#5f5f5f"))
+  ;;       (hl-line (if (true-color-p) "#2c323b" "#333333"))
+  ;;       (grey (if (true-color-p) "#cccccc" "#cccccc"))
+  ;;       (grey-dark (if (true-color-p) "#666666" "#666666"))
+  ;;       (highlight (if (true-color-p) "#3e4451" "#5f5f5f"))
+  ;;       (comment (if (true-color-p) "#687080" "#707070"))
+  ;;       (orange (if (true-color-p) "#da8548" "#d7875f"))
+  ;;       (orange-light (if (true-color-p) "#ddbd78" "#d7af87"))
+  ;;       (red (if (true-color-p) "#ff6c6b" "#ff5f5f"))
+  ;;       (purple (if (true-color-p) "#c678dd" "#d787d7"))
+  ;;       (purple-dark (if (true-color-p) "#64446d" "#5f5f5f"))
+  ;;       (blue (if (true-color-p) "#61afef" "#5fafff"))
+  ;;       (blue-dark (if (true-color-p) "#1f5582" "#005f87"))
+  ;;       (green (if (true-color-p) "#98be65" "#87af5f"))
+  ;;       (green-light (if (true-color-p) "#9eac8c" "#afaf87"))
+  ;;       (peach "PeachPuff3")
+  ;;       (diff-added-background (if (true-color-p) "#284437" "#284437"))
+  ;;       (diff-added-refined-background (if (true-color-p) "#1e8967" "#1e8967"))
+  ;;       (diff-removed-background (if (true-color-p) "#583333" "#580000"))
+  ;;       (diff-removed-refined-background (if (true-color-p) "#b33c49" "#b33c49"))
+  ;;       (diff-current-background (if (true-color-p) "#29457b" "#29457b"))
+  ;;       (diff-current-refined-background (if (true-color-p) "#4174ae" "#4174ae")))
 
-    (custom-theme-set-faces
-     'zerodark
+  ;;   (custom-theme-set-faces
+  ;;    'zerodark
 
-     `(fancy-battery-charging ((,class (:background ,background-blue :height 1.0 :bold t))))
-     `(fancy-battery-discharging ((,class (:background ,background-blue :height 1.0))))
-     `(fancy-battery-critical ((,class (:background ,background-blue :height 1.0))))
-     
-     ;; mode line stuff
-     `(mode-line ((,class (:background ,background-blue :height 1.0 :foreground ,blue
-                                       :distant-foreground ,background-blue
-                                       :box ,(when zerodark-use-paddings-in-mode-line
-                                               (list :line-width 6 :color background-blue))))))
-     
-     `(mode-line-inactive ((,class (:background ,background-blue :height 1.0 :foreground ,default
-                                                :distant-foreground ,background-blue
-                                                :box ,(when zerodark-use-paddings-in-mode-line
-                                                        (list :line-width 6 :color background-blue))))))
+  ;;    `(fancy-battery-charging ((,class (:background ,background-blue :height 1.0 :bold t))))
+  ;;    `(fancy-battery-discharging ((,class (:background ,background-blue :height 1.0))))
+  ;;    `(fancy-battery-critical ((,class (:background ,background-blue :height 1.0))))
 
-     `(header-line ((,class (:inherit mode-line-inactive))))
+  ;;    ;; mode line stuff
+  ;;    `(mode-line ((,class (:background ,background-blue :height 1.0 :foreground ,blue
+  ;;                                      :distant-foreground ,background-blue
+  ;;                                      :box ,(when zerodark-use-paddings-in-mode-line
+  ;;                                              (list :line-width 6 :color background-blue))))))
 
-     `(powerline-active0 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
-                                           :distant-foreground ,background-blue))))
-     `(powerline-active1 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
-                                           :distant-foreground ,background-blue))))
-     `(powerline-active2 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
-                                           :distant-foreground ,background-blue))))
-     `(powerline-inactive0 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
-                                             :distant-foreground ,background-blue))))
-     `(powerline-inactive1 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
-                                             distant-foreground ,background-blue))))
-     `(powerline-inactive2 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
-                                             :distant-foreground ,background-blue))))
+  ;;    `(mode-line-inactive ((,class (:background ,background-blue :height 1.0 :foreground ,default
+  ;;                                               :distant-foreground ,background-blue
+  ;;                                               :box ,(when zerodark-use-paddings-in-mode-line
+  ;;                                                       (list :line-width 6 :color background-blue))))))
 
-     `(dashboard-heading-face ((,class (:background ,background :foreground ,blue
-                                                    :bold t :height 1.2))))
-     `(dashboard-banner-logo-title-face ((,class (:background ,background :foreground ,blue
-                                                              :bold t :height 1.2))))
-     `(widget-button ((,class (:background ,background :foreground ,default :bold nil
-                                           :underline t :height 0.9))))
-     
-     ;; erc stuff
-     `(erc-nick-default-face ((,class :foreground ,blue :background ,background :weight bold)))
+  ;;    `(header-line ((,class (:inherit mode-line-inactive))))
 
-     ;; org stuff
-     `(outline-1 ((,class (:foreground ,blue :weight bold :height 1.8 :bold nil))))
-     `(outline-2 ((,class (:foreground ,purple :weight bold :height 1.7 :bold nil))))
-     `(outline-3 ((,class (:foreground ,peach :weight bold :height 1.6 :bold nil))))
-     `(outline-4 ((,class (:foreground ,green-light :weight bold :height 1.5 :bold nil))))
-     `(outline-5 ((,class (:foreground ,blue :weight bold :height 1.4 :bold nil))))
-     `(outline-6 ((,class (:foreground ,purple :weight bold :height 1.3 :bold nil))))
-     `(outline-7 ((,class (:foreground ,peach :weight bold :height 1.2 :bold nil))))
-     `(outline-8 ((,class (:foreground ,green-light :weight bold :height 1.1 :bold nil))))
-     
-     `(org-block-begin-line ((,class (:background ,background-blue :foreground ,blue
-                                                  :bold t :height 1.0))))
-     `(org-block-end-line ((,class (:background ,background-blue :foreground ,blue
-                                                :bold t :height 1.0))))))
-#;+END_SRC
+  ;;    `(powerline-active0 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
+  ;;                                          :distant-foreground ,background-blue))))
+  ;;    `(powerline-active1 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
+  ;;                                          :distant-foreground ,background-blue))))
+  ;;    `(powerline-active2 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
+  ;;                                          :distant-foreground ,background-blue))))
+  ;;    `(powerline-inactive0 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
+  ;;                                            :distant-foreground ,background-blue))))
+  ;;    `(powerline-inactive1 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
+  ;;                                            distant-foreground ,background-blue))))
+  ;;    `(powerline-inactive2 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
+  ;;                                            :distant-foreground ,background-blue))))
+
+  ;;    `(dashboard-heading-face ((,class (:background ,background :foreground ,blue
+  ;;                                                   :bold t :height 1.2))))
+  ;;    `(dashboard-banner-logo-title-face ((,class (:background ,background :foreground ,blue
+  ;;                                                             :bold t :height 1.2))))
+  ;;    `(widget-button ((,class (:background ,background :foreground ,default :bold nil
+  ;;                                          :underline t :height 0.9))))
+
+  ;;    ;; erc stuff
+  ;;    `(erc-nick-default-face ((,class :foreground ,blue :background ,background :weight bold)))
+
+  ;;    ;; org stuff
+  ;;    `(outline-1 ((,class (:foreground ,blue :weight bold :height 1.8 :bold nil))))
+  ;;    `(outline-2 ((,class (:foreground ,purple :weight bold :height 1.7 :bold nil))))
+  ;;    `(outline-3 ((,class (:foreground ,peach :weight bold :height 1.6 :bold nil))))
+  ;;    `(outline-4 ((,class (:foreground ,green-light :weight bold :height 1.5 :bold nil))))
+  ;;    `(outline-5 ((,class (:foreground ,blue :weight bold :height 1.4 :bold nil))))
+  ;;    `(outline-6 ((,class (:foreground ,purple :weight bold :height 1.3 :bold nil))))
+  ;;    `(outline-7 ((,class (:foreground ,peach :weight bold :height 1.2 :bold nil))))
+  ;;    `(outline-8 ((,class (:foreground ,green-light :weight bold :height 1.1 :bold nil))))
+
+  ;;    `(org-block-begin-line ((,class (:background ,background-blue :foreground ,blue
+  ;;                                                 :bold t :height 1.0))))
+  ;;    `(org-block-end-line ((,class (:background ,background-blue :foreground ,blue
+  ;;                                               :bold t :height 1.0))))))
+#+END_SRC
 
 * Basic Interface Settings
 These are setting that do not depend on packages and are built-in enhancements to the UI.
@@ -394,7 +307,7 @@ Everything regarding the WM or DE-like functionality is bundled here, remove the
 ** exwm
 The only time I actually had to use comments, this is for ease of removal if you happen to not like exwm.
 *** Installation
-##+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package exwm
     :ensure t
     :config
@@ -505,18 +418,9 @@ The only time I actually had to use comments, this is for ease of removal if you
       (exwm-enable))
 #+END_SRC
 ** Multi monitor
-##+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (require 'exwm-randr)
-(setq exwm-randr-workspace-output-plist '(0 "HDMI-0" 
-1 "HDMI-0"
-2 "DP-4"
-3 "DP-4"
-4 "DP-4"
-5 "DP-4"
-6 "DP-4"
-7 "DP-4"
-8 "DP-4"
-9 "DP-4"))
+(setq exwm-randr-workspace-output-plist '(0 "HDMI-0" 1 "DP-4"))
 (add-hook 'exwm-randr-screen-change-hook
           (lambda ()
             (start-process-shell-command
@@ -524,7 +428,7 @@ The only time I actually had to use comments, this is for ease of removal if you
 (exwm-randr-enable)
 #+END_SRC
 ** System tray
-##+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (require 'exwm-systemtray)
 (exwm-systemtray-enable)
 #+END_SRC
@@ -537,7 +441,7 @@ keybindings.
 *** dmenu for emacs
 Who would've thought this was available, together with ido-vertical it's a nice large menu
 with its own cache for most launched applications.
-##+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package dmenu
     :ensure t
     :bind
@@ -547,35 +451,33 @@ with its own cache for most launched applications.
 *** Functions to start processes
 I guess this goes without saying but you absolutely have to change the arguments
 to suit the software that you are using. What good is a launcher for discord if you don't use it at all.
-##+BEGIN_SRC emacs-lisp
-  (defun exwm-async-run (name)
-    (interactive)
-    (start-process name nil name))
+#+BEGIN_SRC emacs-lisp
+  ;; (defun exwm-async-run (name)
+  ;;   (interactive)
+  ;;   (start-process name nil name))
 
-  (defun daedreth/launch-discord ()
-    (interactive)
-    (exwm-async-run "discord"))
+  ;; (defun daedreth/launch-discord ()
+  ;;   (interactive)
+  ;;   (exwm-async-run "discord"))
 
-  (defun daedreth/launch-browser ()
-    (interactive)
-    (exwm-async-run "qutebrowser"))
+  ;; (defun daedreth/launch-browser ()
+  ;;   (interactive)
+  ;;   (exwm-async-run "qutebrowser"))
 
-  (defun daedreth/lock-screen ()
-    (interactive)
-    (exwm-async-run "slock"))
+  ;; (defun daedreth/lock-screen ()
+  ;;   (interactive)
+  ;;   (exwm-async-run "slock"))
 
-  (defun daedreth/shutdown ()
-    (interactive)
-    (start-process "halt" nil "sudo" "halt"))
+  ;; (defun daedreth/shutdown ()
+  ;;   (interactive)
+  ;;   (start-process "halt" nil "sudo" "halt"))
 #+END_SRC
 
 *** Keybindings to start processes
 These can be modified as well, suit yourself.
-##+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "s-d") 'daedreth/launch-discord)
-  (global-set-key (kbd "<s-tab>") 'daedreth/launch-browser)
-  (global-set-key (kbd "<XF86ScreenSaver>") 'daedreth/lock-screen)
-  (global-set-key (kbd "<XF86PowerOff>") 'daedreth/shutdown)
+#+BEGIN_SRC emacs-lisp
+  ;; (global-set-key (kbd "<XF86ScreenSaver>") 'daedreth/lock-screen)
+  ;; (global-set-key (kbd "<XF86PowerOff>") 'daedreth/shutdown)
 #+END_SRC
 
 ** Audio controls
@@ -583,12 +485,12 @@ This is a set of bindings to my XF86 keys that invokes pulsemixer with the corre
 
 *** Volume modifier
 It goes without saying that you are free to modify the modifier as you see fit, 4 is good enough for me though.
-##+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defconst volumeModifier "4")
 #+END_SRC
 
 *** Functions to start processes
-##+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (defun audio/mute ()
     (interactive)
     (start-process "audio-mute" nil "pulsemixer" "--toggle-mute"))
@@ -604,7 +506,7 @@ It goes without saying that you are free to modify the modifier as you see fit, 
 
 *** Keybindings to start processes
 You can also change those if you'd like, but I highly recommend keeping 'em the same, chances are, they will just work.
-##+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "<XF86AudioMute>") 'audio/mute)
 (global-set-key (kbd "<XF86AudioRaiseVolume>") 'audio/raise-volume)
 (global-set-key (kbd "<XF86AudioLowerVolume>") 'audio/lower-volume)
@@ -647,9 +549,9 @@ These won't work in the terminal version or the virtual console, obvious reasons
 
 ** Default browser
 I use qutebrowser, so that's what I'll set up.
-##+BEGIN_SRC emacs-lisp
-  (setq browse-url-browser-function 'browse-url-generic
-        browse-url-generic-program "chromium")
+#+BEGIN_SRC emacs-lisp
+  ;; (setq browse-url-browser-function 'browse-url-generic
+  ;;       browse-url-generic-program "chromium")
 #+END_SRC
 
 * Projectile
@@ -698,51 +600,21 @@ on the screen and better integration.
 
 
 One modeline-related setting that is missing and is instead placed at the bottom is =diminish=.
-** Spaceline!
-I may not use spacemacs, since I do not like evil-mode and find spacemacs incredibly bloated and slow,
-however it would be stupid not to acknowledge the best parts about it, the theme and their modified powerline setup.
-
-This enables spaceline, it looks better and works very well with my theme of choice.
-;BEGIN_SRC emacs-lisp
-  (use-package spaceline
-    :ensure t
-    :config
-    (require 'spaceline-config)
-;;      (setq spaceline-buffer-encoding-abbrev-p nil)
-;;      (setq spaceline-line-column-p nil)
-;;      (setq spaceline-line-p nil)
-;;      (setq powerline-default-separator (quote arrow))
-;;      (spaceline-spacemacs-theme)
-)
-;END_SRC
-
-** No separator!
-;BEGIN_SRC emacs-lisp
-  ;;(setq powerline-default-separator nil)
-;END_SRC
-
-** Cursor position
-Show the current line and column for your cursor.
-We are not going to have =relative-linum-mode= in every major mode, so this is useful.
-;BEGIN_SRC emacs-lisp
-  (setq line-number-mode t)
-  (setq column-number-mode t)
-;END_SRC
 
 ** Clock
 If you prefer the 12hr-format, change the variable to =nil= instead of =t=.
 
 *** Time format
-;BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (setq display-time-24hr-format nil)
   (setq display-time-format "%H:%M - %d %B %Y")
-;END_SRC
+#+END_SRC
 
 *** Enabling the mode
 This turns on the clock globally.
-;BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (display-time-mode 1)
-;END_SRC
+#+END_SRC
 
 ** Battery indicator
 A package called =fancy-battery= will be used if we are in GUI emacs, otherwise the built in battery-mode will be used.
@@ -763,12 +635,12 @@ A teeny-tiny system monitor that can be enabled or disabled at runtime, useful f
 with power-hungry processes in ansi-term
 
 symon can be toggled on and off with =Super + h=.
-;BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package symon
     :ensure t
     :bind
     ("s-h" . symon-mode))
-;END_SRC
+#+END_SRC
 ** doom modeline is cool
 #+BEGIN_SRC emacs-lisp
   (use-package doom-modeline
@@ -841,27 +713,15 @@ symon can be toggled on and off with =Super + h=.
   ;;   )
 
 #+END_SRC
-* File manager
-Abandoning sunrise-commander.
-The repos are dead and I'm looking for something better anyway.
-
 * The terminal
 I have used urxvt for years, and I miss it sometimes, but ansi-term is enough for most of my tasks.
 
-** Default shell should be bash
-I don't know why this is a thing, but asking me what shell to launch every single
-time I open a terminal makes me want to slap babies, this gets rid of it.
-This goes without saying but you can replace bash with your shell of choice.
+** Default shell
 #+BEGIN_SRC emacs-lisp
   (defvar my-term-shell "/bin/zsh")
   (defadvice ansi-term (before force-bash)
     (interactive (list my-term-shell)))
   (ad-activate 'ansi-term)
-
-  ;; (defvar my-term-shell "/bin/zsh")
-  ;; (defadvice ansi-term (before force-bash)
-  ;;   (interactive (list my-term-shell)))
-  ;; (ad-activate 'ansi-term)
 #+END_SRC
 
 ** Easy to remember keybinding
@@ -2106,193 +1966,8 @@ you should really do this in the theme el, but this is a good default
   (kill-line (- 1 arg)))
 
 #+END_SRC
-** dwim duplicate
-#+BEGIN_SRC emacs-lisp
-  ;; (defun duplicate-dwim (arg)
-  ;;     (duplicate-line (arg))
-  ;;   )
 
-#+END_SRC
 * Keymap
-** avy in evil
-#+BEGIN_SRC emacs-lisp
-
-#+END_SRC
-** cua mode for more familiar copy-paste
-
-#+BEGIN_SRC emacs-lisp    
-  ;; (cua-mode t)
-  ;;     (setq cua-auto-tabify-rectangles nil) ;; Don't tabify after rectangle commands
-  ;;     (transient-mark-mode 1) ;; No region when it is not highlighted
-  ;;     ;; (setq cua-keep-region-after-copy nil) ;; Standard Windows behaviour
-#+END_SRC
-
-** subl-mode (add some common sublimetext/atom keybindings)
-#+BEGIN_SRC emacs-lisp
-
-
-  (defvar subl-mode-map
-    (let ((map(make-sparse-keymap)))
-
-       ;; (define-key map (kbd "C-d") 'mark-next-like-this)
-       (define-key map (kbd "C-e")  'ace-select-window)
-       (define-key map (kbd "C-S-d") 'duplicate-line)
-       (define-key map (kbd "C-/") 'comment-line)
-       (define-key map (kbd "C-S-/") 'comment-dwim)
-       ;; save C-s
-       ;; rebind enter to alt
-
-     map)
-  "subl-mode keymap.")
-
-  (define-minor-mode subl-mode
-    "Use ctrl+hjkl to move around files. Overrides other keymaps"
-    :init-value t
-    :lighter "subl"
-    :keymap subl-mode-map)
-
-  ;; https://github.com/jwiegley/use-package/blob/master/bind-key.el
-  ;; The keymaps in `emulation-mode-map-alists' take precedence over
-  ;; `minor-mode-map-alist'
-  (add-to-list 'emulation-mode-map-alists `((subl-mode . ,subl-mode-map)))
-
-  ;; Turn off the minor mode in the minibuffer
-  ;;(defun turn-off-hjkl-mode ()
-  ;;  "Turn off hjkl-mode."
-  ;;  (hjkl-mode -1))
-  ;;(add-hook 'minibuffer-setup-hook #'turn-off-my-mode)
-
-  ;;uncomment this line to enable
-  (provide 'subl-mode)
-#+END_SRC
-** text movement (hjkl)
-#+BEGIN_SRC emacs-lisp
-
-  ;; (require 'golden-ratio-scroll-screen)
-  ;; (defvar hjkl-mode-map
-  ;;   (let ((map(make-sparse-keymap)))
-     
-  ;;      (define-key map (kbd "C-h") 'backward-char)
-  ;;      (define-key map (kbd "C-j") 'next-line)
-  ;;      (define-key map (kbd "C-k") 'previous-line)
-  ;;      (define-key map (kbd "C-l") 'forward-char) 
-     
-  ;;      (define-key map (kbd "C-S-h") 'backward-word)
-  ;;      (define-key map (kbd "C-S-j") 'golden-ratio-scroll-screen-up)
-  ;;      (define-key map (kbd "C-S-k") 'golden-ratio-scroll-screen-down)
-  ;;      (define-key map (kbd "C-S-l") 'forward-word) 
-
-  ;;    map)
-  ;; "hjkl-mode keymap.")
-
-  ;; (define-minor-mode hjkl-mode
-  ;;   "Use ctrl+hjkl to move around files. Overrides other keymaps"
-  ;;   :init-value t
-  ;;   :lighter "hjkl"
-  ;;   :keymap hjkl-mode-map)
-
-  ;; ;; https://github.com/jwiegley/use-package/blob/master/bind-key.el
-  ;; ;; The keymaps in `emulation-mode-map-alists' take precedence over
-  ;; ;; `minor-mode-map-alist'
-  ;; (add-to-list 'emulation-mode-map-alists `((hjkl-mode . ,hjkl-mode-map)))
-
-  ;; Turn off the minor mode in the minibuffer
-  ;;(defun turn-off-hjkl-mode ()
-  ;;  "Turn off hjkl-mode."
-  ;;  (hjkl-mode -1))
-  ;;(add-hook 'minibuffer-setup-hook #'turn-off-my-mode)
-
-  ;;uncomment this line to enable
-  ;;(provide 'hjkl-mode)
-#+END_SRC
-** text movement (ergo like)
-#+BEGIN_SRC emacs-lisp
-
-  (require 'golden-ratio-scroll-screen)
-  (defvar emo-mode-map
-    (let ((map(make-sparse-keymap)))
-
-       (define-key map (kbd "M-h") 'newline-and-indent)
-       (define-key map (kbd "M-n") 'newline-below-go)
-       (define-key map (kbd "M-y") 'newline-above-go)
-
-       (define-key map (kbd "M-j") 'backward-char)
-       (define-key map (kbd "M-k") 'next-line)
-       (define-key map (kbd "M-i") 'previous-line)
-       (define-key map (kbd "M-l") 'forward-char)
-       (define-key map (kbd "M-o") 'end-of-line)
-       (define-key map (kbd "M-u") 'beginning-of-line-text) ;;todo dwim
-
-       (define-key map (kbd "M-p") 'duplicate-line) ;;todo dwim
-
-       ;; (define-key map (kbd "M-S-j") 'backward-word)
-       ;; (define-key map (kbd "M-S-i") 'golden-ratio-scroll-screen-up)
-       ;; (define-key map (kbd "M-S-k") 'golden-ratio-scroll-screen-down)
-       ;; (define-key map (kbd "M-S-l") 'forward-word)  
-       ;; (define-key map (kbd "M-S-o") 'forward-list) 
-       ;; (define-key map (kbd "M-S-u") 'backward-list)
-       (define-key map (kbd "M-J") 'backward-word)
-       (define-key map (kbd "M-I") 'golden-ratio-scroll-screen-down)
-       (define-key map (kbd "M-K") 'golden-ratio-scroll-screen-up)
-       (define-key map (kbd "M-L") 'forward-word)  
-       (define-key map (kbd "M-O") 'forward-list) 
-       (define-key map (kbd "M-U") 'backward-list) 
-
-       ;; killing
-       (define-key map (kbd "M-g") 'kill-whole-line)
-       (define-key map (kbd "M-t") 'kill-previous-line)
-       (define-key map (kbd "M-b") 'kill-next-line)
-
-       (define-key map (kbd "M-s") 'delete-backward-char)
-       (define-key map (kbd "M-d") 'backward-kill-word)
-       (define-key map (kbd "M-e") 'kill-word)
-       (define-key map (kbd "M-f") 'delete-char)
-       (define-key map (kbd "M-r") 'kill-line)
-       (define-key map (kbd "M-w") 'backward-kill-line) ;;todo dwim
-
-       (define-key map (kbd "M-S") 'backward-word)
-       (define-key map (kbd "M-E") 'golden-ratio-scroll-screen-up)
-       (define-key map (kbd "M-D") 'golden-ratio-scroll-screen-down)
-       (define-key map (kbd "M-F") 'forward-word)  
-       (define-key map (kbd "M-R") 'forward-list) 
-       (define-key map (kbd "M-W") 'backward-list)
-
-       ;; basic kill stuff
-       (define-key map (kbd "C-r") 'kill-region)
-       (define-key map (kbd "C-w") 'kill-ring-save)
-
-     map)
-  "emo-mode keymap.")
-
-  (define-minor-mode emo-mode
-    "Use ctrl+emo to move around files. Overrides other keymaps"
-    :init-value t
-    :lighter "emo"
-    :keymap emo-mode-map)
-
-  ;; https://github.com/jwiegley/use-package/blob/master/bind-key.el
-  ;; The keymaps in `emulation-mode-map-alists' take precedence over
-  ;; `minor-mode-map-alist'
-  (add-to-list 'emulation-mode-map-alists `((emo-mode . ,emo-mode-map)))
-
-  ;; Turn off the minor mode in the minibuffer
-  ;; (defun turn-off-emo-mode ()
-  ;;  "Turn off emo-mode."
-  ;;  (emo-mode -1))
-  ;; (add-hook 'minibuffer-setup-hook #'turn-off-my-mode)
-
-  (provide 'emo-mode)
-#+END_SRC
-** advanced
-enter is alt
-bindings for new line above and below and at point
-
-
-
-#+RESULTS:
-: snav-mode
-
-
 * linum gutter
 ** linum by default
 #+BEGIN_SRC emacs-lisp
