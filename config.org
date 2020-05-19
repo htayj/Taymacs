@@ -822,9 +822,7 @@ I like me some searching, the default search is very meh. In emacs, you mostly u
 #+BEGIN_SRC emacs-lisp
     (use-package swiper
       :ensure t
-      :bind ("C-f" . 'swiper)
-      :config 
-        (define-key evil-normal-state-map (kbd "C-f") 'swiper)
+      ;:bind ("C-f" . 'swiper)
   )
 #+END_SRC
 
@@ -950,12 +948,10 @@ I like =M-s= for it, same as =C-s= is for moving by searching string, now =M-s= 
   (use-package avy
     :ensure t
     :bind
-      ("C-s" . avy-goto-char)
+      ("M-s" . avy-goto-char)
       ;; ("C-a C-a" . avy-move-line)
       ;; ("C-a C-s" . avy-move-region)
       ;; ("C-a C-d" . avy-goto-char)
-    :config
-      (define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
       )
 #+END_SRC
 ** ace windows mode
@@ -966,8 +962,6 @@ I like =M-s= for it, same as =C-s= is for moving by searching string, now =M-s= 
     :bind
     ("C-e" . ace-select-window)
     ("C-M-e" . ace-window)
-:config
-      (define-key evil-normal-state-map (kbd "C-e") 'ace-select-window)
       )
     
 
@@ -1695,6 +1689,12 @@ Here is how we add more of them!
     :ensure t)
 #+END_SRC
 #+END_SRC
+* web browser
+** elpher for gopher and gem
+#+BEGIN_SRC emacs-lisp
+(use-package elpher
+  :ensure t)
+#+END_SRC
 * Instant messaging
 
 I like IRC, I also like other protocols but I enjoy IRC most, it's obvious that I long
@@ -1702,7 +1702,7 @@ for a way to do my messaging from within emacs.
 There is plenty of IRC clients in the repositories, and some more in the emacs repositories
 but I find that the default =erc= does the job best, it's easy to use and offers some conveniences
 that more sophisticated ones don't, so I use it.
-
+** circe
 ** erc, also known as "a way to ask for help on #emacs"
 You might want to edit the default nick, it's password protected anyway so don't bother.
 
@@ -1711,7 +1711,7 @@ This also hides some of the channel messages to avoid cluttering the buffer.
 The other line changes the prompt for each channel buffer to match the channel name,
 this way you always know who you are typing to.
 #+BEGIN_SRC emacs-lisp
-  (setq erc-nick "janTela")
+  (setq erc-nick "nobodynogroup")
   (setq erc-prompt (lambda () (concat "[" (buffer-name) "]")))
   (setq erc-hide-list '("JOIN" "PART" "QUIT"))
 #+END_SRC

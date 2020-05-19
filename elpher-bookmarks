@@ -1,0 +1,11 @@
+; Elpher bookmarks file
+
+; Bookmarks are stored as a list of (label URL) items.
+; Feel free to edit by hand, but take care to ensure
+; the list structure remains intact.
+
+(("[14-May-2020]        burrhole  Enter the Void" "gopher://gopher.club:70/1/users/burrhole/")
+ ("gemini://gemini.circumlunar.space" "gemini://gemini.circumlunar.space/")
+ ("gopher://gemini.circumlunar.space" "gopher://gemini.circumlunar.space/1")
+ ("THE 1436 FILES -- Community written conspiracy theories!" "gopher://1436.ninja:70/1/1436_Files")
+ ("gopher://bitreich.org/1/" "gopher://bitreich.org/1/"))
