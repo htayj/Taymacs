@@ -100,7 +100,6 @@ so chances are, as long as you know your way around emacs itself, you will insti
 #+END_SRC
 
 * Theme
-The most important part of every configuration.
 ** high contrast
 My new favourite one I guess, really decent default values.
 #+BEGIN_SRC emacs-lisp
@@ -109,19 +108,6 @@ My new favourite one I guess, really decent default values.
       :init
     (load-theme 'rmage t)
       )
-
-  ;; (use-package moe-theme
-  ;;         :ensure t
-  ;;         :init
-  ;;           (load-theme 'moe-dark t))
-        ;; (use-package color-theme-tty-dark
-        ;;   :ensure t
-        ;;   :init
-        ;;     (load-theme 'tty-dark t))
-      ;; (use-package grandshell-theme
-      ;;     :ensure t
-      ;;     :init
-      ;;       (load-theme 'grandshell t))
 #+END_SRC
 
 ** Font
@@ -129,112 +115,12 @@ My new favourite one I guess, really decent default values.
   ;; Set default font
   (set-face-attribute 'default nil
                       :family "Hack"
-                      ;; :height 150
+                      :height 130
                       ;; :weight 'normal
                       :width 'normal)
+;; set fallback font for emoji
+(set-fontset-font t nil (font-spec :size 20 :name "Unifont"))
 #+END_SRC
-
-** Some customization
-The theme is great, really, but some of the concepts just suck with powerline.
-#+BEGIN_SRC emacs-lisp
-  ;; (let ((class '((class color) (min-colors 89)))
-  ;;       (default (if (true-color-p) "#abb2bf" "#afafaf"))
-  ;;       (light (if (true-color-p) "#ccd4e3" "#d7d7d7"))
-  ;;       (background (if (true-color-p) "#282c34" "#333333"))
-  ;;       (background-dark (if (true-color-p) "#24282f" "#222222"))
-  ;;       (background-darker (if (true-color-p) "#22252c" "#222222"))
-  ;;       (mode-line-inactive (if "#1c2129" "#222222"))
-  ;;       (mode-line-active (if (true-color-p) "#6f337e" "#875f87"))
-  ;;       (background-lighter (if (true-color-p) "#3a3f4b" "#5f5f5f"))
-  ;;       (background-red (if (true-color-p) "#4c3840" "#5f5f5f"))
-  ;;       (bright-background-red (if (true-color-p) "#744a5b" "#744a5b"))
-  ;;       (background-purple (if (true-color-p) "#48384c" "#5f5f5f"))
-  ;;       (background-blue (if (true-color-p) "#38394c" "#444444"))
-  ;;       (bright-background-blue (if (true-color-p) "#4e5079" "#4e5079"))
-  ;;       (background-green (if (true-color-p) "#3d4a41" "#5f5f5f"))
-  ;;       (bright-background-green (if (true-color-p) "#3f6d54" "#3f6d54"))
-  ;;       (background-orange (if (true-color-p) "#4a473d" "#5f5f5f"))
-  ;;       (hl-line (if (true-color-p) "#2c323b" "#333333"))
-  ;;       (grey (if (true-color-p) "#cccccc" "#cccccc"))
-  ;;       (grey-dark (if (true-color-p) "#666666" "#666666"))
-  ;;       (highlight (if (true-color-p) "#3e4451" "#5f5f5f"))
-  ;;       (comment (if (true-color-p) "#687080" "#707070"))
-  ;;       (orange (if (true-color-p) "#da8548" "#d7875f"))
-  ;;       (orange-light (if (true-color-p) "#ddbd78" "#d7af87"))
-  ;;       (red (if (true-color-p) "#ff6c6b" "#ff5f5f"))
-  ;;       (purple (if (true-color-p) "#c678dd" "#d787d7"))
-  ;;       (purple-dark (if (true-color-p) "#64446d" "#5f5f5f"))
-  ;;       (blue (if (true-color-p) "#61afef" "#5fafff"))
-  ;;       (blue-dark (if (true-color-p) "#1f5582" "#005f87"))
-  ;;       (green (if (true-color-p) "#98be65" "#87af5f"))
-  ;;       (green-light (if (true-color-p) "#9eac8c" "#afaf87"))
-  ;;       (peach "PeachPuff3")
-  ;;       (diff-added-background (if (true-color-p) "#284437" "#284437"))
-  ;;       (diff-added-refined-background (if (true-color-p) "#1e8967" "#1e8967"))
-  ;;       (diff-removed-background (if (true-color-p) "#583333" "#580000"))
-  ;;       (diff-removed-refined-background (if (true-color-p) "#b33c49" "#b33c49"))
-  ;;       (diff-current-background (if (true-color-p) "#29457b" "#29457b"))
-  ;;       (diff-current-refined-background (if (true-color-p) "#4174ae" "#4174ae")))
-
-  ;;   (custom-theme-set-faces
-  ;;    'zerodark
-
-  ;;    `(fancy-battery-charging ((,class (:background ,background-blue :height 1.0 :bold t))))
-  ;;    `(fancy-battery-discharging ((,class (:background ,background-blue :height 1.0))))
-  ;;    `(fancy-battery-critical ((,class (:background ,background-blue :height 1.0))))
-
-  ;;    ;; mode line stuff
-  ;;    `(mode-line ((,class (:background ,background-blue :height 1.0 :foreground ,blue
-  ;;                                      :distant-foreground ,background-blue
-  ;;                                      :box ,(when zerodark-use-paddings-in-mode-line
-  ;;                                              (list :line-width 6 :color background-blue))))))
-
-  ;;    `(mode-line-inactive ((,class (:background ,background-blue :height 1.0 :foreground ,default
-  ;;                                               :distant-foreground ,background-blue
-  ;;                                               :box ,(when zerodark-use-paddings-in-mode-line
-  ;;                                                       (list :line-width 6 :color background-blue))))))
-
-  ;;    `(header-line ((,class (:inherit mode-line-inactive))))
-
-  ;;    `(powerline-active0 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
-  ;;                                          :distant-foreground ,background-blue))))
-  ;;    `(powerline-active1 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
-  ;;                                          :distant-foreground ,background-blue))))
-  ;;    `(powerline-active2 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
-  ;;                                          :distant-foreground ,background-blue))))
-  ;;    `(powerline-inactive0 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
-  ;;                                            :distant-foreground ,background-blue))))
-  ;;    `(powerline-inactive1 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
-  ;;                                            distant-foreground ,background-blue))))
-  ;;    `(powerline-inactive2 ((,class (:height 1.0 :foreground ,blue :background ,background-blue
-  ;;                                            :distant-foreground ,background-blue))))
-
-  ;;    `(dashboard-heading-face ((,class (:background ,background :foreground ,blue
-  ;;                                                   :bold t :height 1.2))))
-  ;;    `(dashboard-banner-logo-title-face ((,class (:background ,background :foreground ,blue
-  ;;                                                             :bold t :height 1.2))))
-  ;;    `(widget-button ((,class (:background ,background :foreground ,default :bold nil
-  ;;                                          :underline t :height 0.9))))
-
-  ;;    ;; erc stuff
-  ;;    `(erc-nick-default-face ((,class :foreground ,blue :background ,background :weight bold)))
-
-  ;;    ;; org stuff
-  ;;    `(outline-1 ((,class (:foreground ,blue :weight bold :height 1.8 :bold nil))))
-  ;;    `(outline-2 ((,class (:foreground ,purple :weight bold :height 1.7 :bold nil))))
-  ;;    `(outline-3 ((,class (:foreground ,peach :weight bold :height 1.6 :bold nil))))
-  ;;    `(outline-4 ((,class (:foreground ,green-light :weight bold :height 1.5 :bold nil))))
-  ;;    `(outline-5 ((,class (:foreground ,blue :weight bold :height 1.4 :bold nil))))
-  ;;    `(outline-6 ((,class (:foreground ,purple :weight bold :height 1.3 :bold nil))))
-  ;;    `(outline-7 ((,class (:foreground ,peach :weight bold :height 1.2 :bold nil))))
-  ;;    `(outline-8 ((,class (:foreground ,green-light :weight bold :height 1.1 :bold nil))))
-
-  ;;    `(org-block-begin-line ((,class (:background ,background-blue :foreground ,blue
-  ;;                                                 :bold t :height 1.0))))
-  ;;    `(org-block-end-line ((,class (:background ,background-blue :foreground ,blue
-  ;;                                               :bold t :height 1.0))))))
-#+END_SRC
-
 * Basic Interface Settings
 These are setting that do not depend on packages and are built-in enhancements to the UI.
 
@@ -301,7 +187,7 @@ Lets us use asynchronous processes wherever possible, pretty useful.
     :init (dired-async-mode 1))
 #+END_SRC
 
-* Window Manager (temporarily disabled)
+* Window Manager
 Everything regarding the WM or DE-like functionality is bundled here, remove the entire section if you do not wish to use =exwm=.
 
 ** exwm
@@ -420,11 +306,11 @@ The only time I actually had to use comments, this is for ease of removal if you
 ** Multi monitor
 #+BEGIN_SRC emacs-lisp
 (require 'exwm-randr)
-(setq exwm-randr-workspace-output-plist '(0 "HDMI-0" 1 "DP-4"))
+(setq exwm-randr-workspace-output-plist '(0 "DP-4"))
 (add-hook 'exwm-randr-screen-change-hook
           (lambda ()
             (start-process-shell-command
-             "xrandr" nil "xrandr --output HDMI-0 --left-of DP-4 --auto")))
+             "xrandr" nil "xrandr --output DP-4 --auto")))
 (exwm-randr-enable)
 #+END_SRC
 ** System tray
@@ -550,8 +436,9 @@ These won't work in the terminal version or the virtual console, obvious reasons
 ** Default browser
 I use qutebrowser, so that's what I'll set up.
 #+BEGIN_SRC emacs-lisp
-  ;; (setq browse-url-browser-function 'browse-url-generic
-  ;;       browse-url-generic-program "chromium")
+  (setq browse-url-browser-function 'eww-browse-url
+        browse-url-generic-program "firefox")
+(setq shr-inhibit-images t)
 #+END_SRC
 
 * Projectile
@@ -592,13 +479,6 @@ change the numbers to suit your liking, I find 5 to be enough.
 The modeline is the heart of emacs, it offers information at all times, it's persistent
 and verbose enough to gain a full understanding of modes and states you are in.
 
-
-Due to the fact that we attempt to use emacs as a desktop environment replacement,
-and external bar showing the time, the battery percentage and more system info would be great to have.
-I have however abandoned polybar in favor of a heavily modified modeline, this offers me more space
-on the screen and better integration.
-
-
 One modeline-related setting that is missing and is instead placed at the bottom is =diminish=.
 
 ** Clock
@@ -616,20 +496,6 @@ This turns on the clock globally.
   (display-time-mode 1)
 #+END_SRC
 
-** Battery indicator
-A package called =fancy-battery= will be used if we are in GUI emacs, otherwise the built in battery-mode will be used.
-Fancy battery has very odd colors if used in the tty, hence us disabling it.
-;BEGIN_SRC emacs-lisp
-  (use-package fancy-battery
-    :ensure t
-    :config
-      (setq fancy-battery-show-percentage t)
-      (setq battery-update-interval 15)
-      (if window-system
-        (fancy-battery-mode)
-        (display-battery-mode)))
-;END_SRC
-
 ** System monitor
 A teeny-tiny system monitor that can be enabled or disabled at runtime, useful for checking performance
 with power-hungry processes in ansi-term
@@ -641,19 +507,7 @@ symon can be toggled on and off with =Super + h=.
     :bind
     ("s-h" . symon-mode))
 #+END_SRC
-** doom modeline is cool
-#+BEGIN_SRC emacs-lisp
-  (use-package doom-modeline
-        :ensure t
-        :hook (after-init . doom-modeline-mode)
-        :config
-        (setq doom-modeline-icon t)
-        (setq doom-modeline-buffer-file-name-style 'file-name)
-      (setq doom-modeline-minor-modes t)
-        )
 
-#+END_SRC
-** use telephone-line as the powerline (old)
 #+BEGIN_SRC emacs-lisp
   ;; (use-package telephone-line
   ;;   :ensure t
@@ -948,7 +802,7 @@ I like =M-s= for it, same as =C-s= is for moving by searching string, now =M-s= 
   (use-package avy
     :ensure t
     :bind
-      ("M-s" . avy-goto-char)
+      ;; ("M-s" . avy-goto-char)
       ;; ("C-a C-a" . avy-move-line)
       ;; ("C-a C-s" . avy-move-region)
       ;; ("C-a C-d" . avy-goto-char)
@@ -959,9 +813,9 @@ I like =M-s= for it, same as =C-s= is for moving by searching string, now =M-s= 
   (use-package ace-window
     :ensure t
     :config (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-    :bind
-    ("C-e" . ace-select-window)
-    ("C-M-e" . ace-window)
+;    :bind
+;    ("C-e" . ace-select-window)
+;    ("C-M-e" . ace-window)
       )
     
 
@@ -1030,7 +884,7 @@ And this quickly deletes a line.
   (use-package multiple-cursors
     :ensure t
     :bind
-    ("C-d" . 'mc/mark-next-like-this)
+    ;("C-d" . 'mc/mark-next-like-this)
     ;; ("C-M-d C-M-d" . 'mc/mark-next-like-this)
     )
 #+END_SRC
@@ -1497,6 +1351,17 @@ Requires libclang to be installed.
 #+END_SRC
 
 ** web programming
+** LaTeX
+#+BEGIN_SRC emacs-lisp
+  (use-package tex
+    :defer t
+    :ensure auctex
+    :config
+    (setq TeX-auto-save t))
+  ;; (use-package auctex
+  ;; :ensure t)
+
+#+END_SRC
 *** vue
 **** vue-mode
 #+BEGIN_SRC emacs-lisp
@@ -1836,45 +1701,6 @@ M-x all-the-icons-install-fonts
 #+BEGIN_SRC emacs-lisp
 (use-package all-the-icons)
 #+END_SRC
-
-** file tree
-#+BEGIN_SRC emacs-lisp
-
-(use-package neotree
-      :ensure t
-      :config
-        (global-set-key [f8] 'neotree-toggle)
-        (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
-        (setq neo-smart-open t)
-)
-#+END_SRC
-** buffer tabs
-#+BEGIN_SRC emacs-lisp
-  ;; (use-package tabbar
-  ;;    :ensure t)
-
-#+END_SRC
-** basic tabs theme
-you should really do this in the theme el, but this is a good default
-#+BEGIN_SRC emacs-lisp
-  ;; (load "tabbar-tweak")
-#+END_SRC
-
-* focus follows mouse
-#+BEGIN_SRC emacs-lisp
-  (setq mouse-autoselect-window t
-      focus-follows-mouse t)
-#+END_SRC
-
-* Movement packages
-** golden ratio
-#+BEGIN_SRC emacs-lisp
-    (use-package golden-ratio-scroll-screen
-      :ensure t
-      )
-#+END_SRC
-
-#+RESULTS:
 * Atomic actions
 ** Duplicate Line atomically
 #+BEGIN_SRC emacs-lisp
@@ -1967,7 +1793,6 @@ you should really do this in the theme el, but this is a good default
 
 #+END_SRC
 
-* Keymap
 * linum gutter
 ** linum by default
 #+BEGIN_SRC emacs-lisp
@@ -2009,17 +1834,6 @@ you should really do this in the theme el, but this is a good default
     (editorconfig-mode 1))
 :lighter
 #+END_SRC
-* aggressive indent
-#+BEGIN_SRC emacs-lisp
-
-  (use-package aggressive-indent
-    :ensure t
-    :config
-  (global-aggressive-indent-mode nil)
-  (add-to-list 'aggressive-indent-excluded-modes 'org-mode))
-
-#+END_SRC
-
 * Diminishing modes
 Your modeline is sacred, and if you have a lot of modes enabled, as you will if you use this config,
 you might end up with a lot of clutter there, the package =diminish= disables modes on the mode line but keeps
@@ -2055,42 +1869,20 @@ Edit this list as you see fit!
     ;; (diminish 'company-mode "✓")
     (diminish 'rainbow-mode))
 #+END_SRC
-
-* gimp
+* gnus
+** hackernews in gnus
 #+BEGIN_SRC emacs-lisp
-
-;; (load "/home/taylor/gimpmode/gimp-init.el")
-
-;; Uncomment following line to globally use `gimp-selector':
-;; (global-set-key "\C-cg" 'gimp-selector)
+    (use-package nnhackernews
+      :ensure t
+    :config
+(add-to-list 'gnus-secondary-select-methods '(nnhackernews "")))
 
 #+END_SRC
-* todo:
-** org mode bindings
-** undo redo things
-** exwm destroy window
-** exwm move and resize window
-** ace window in exwm
-** kill ring management (avy kill ring?)
-popup killring thing
-avy buttons simple more recent
-support secondary selection
-*** actions:
-kill to position
-reorg ring
-remove from position
-yank from position
+** reddit in gnus
+#+BEGIN_SRC emacs-lisp
+  ;; (use-package nnreddit
+  ;; :ensure t
+  ;; :config 
 
-** mark ring management
-** secondary selection???
-*** ace select start -  ace select end?
-** keyboard layout generator
-** ryo 
-https://github.com/Kungsgeten/ryo-modal
-*** normal mode
-*** correlation mode?
-*** manipulation mode?
-*** vim mode?
-*** avy mode?
-*** org mode?
-*** a mode for rapidly replacing things with other things from other places
+  ;; (add-to-list 'gnus-secondary-select-methods '(nnreddit "")))
+#+END_SRC

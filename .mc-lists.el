@@ -20,6 +20,7 @@
 (setq mc/cmds-to-run-once
       '(
         ace-select-window
+        describe-key
         handle-select-window
         scheme-compile-definition-and-go
         ))
