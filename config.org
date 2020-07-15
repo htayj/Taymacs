@@ -4,6 +4,9 @@
 #+LANGUAGE: en
 #+OPTIONS: num:nil
 #+ATTR_HTML: :style margin-left: auto; margin-right: auto;
+
+* aknowledgements
+this config was based off of uncle daves emacs who i am forever grateful to for allowing me a user friendly entry point to emacs check out uncle daves repo at https://github.com/daedreth/UncleDavesEmacs 
 * Installation
 ** Quick Installation
 =git clone https://github.com/daedreth/UncleDavesEmacs ~/.emacs.d=
@@ -103,11 +106,24 @@ so chances are, as long as you know your way around emacs itself, you will insti
 ** high contrast
 My new favourite one I guess, really decent default values.
 #+BEGIN_SRC emacs-lisp
-    (use-package color-theme-modern
-      :ensure t
-      :init
-    (load-theme 'rmage t)
-      )
+
+(use-package modus-vivendi-theme
+  :ensure t 
+:init 
+  (setq modus-vivendi-theme-slanted-constructs t
+        modus-vivendi-theme-bold-constructs t
+        modus-vivendi-theme-visible-fringes t
+        modus-vivendi-theme-3d-modeline t
+        modus-vivendi-theme-subtle-diffs t
+        modus-vivendi-theme-intense-standard-completions t
+        modus-vivendi-theme-distinct-org-blocks t
+        modus-vivendi-theme-rainbow-org-src-blocks t
+        modus-vivendi-theme-proportional-fonts t
+        modus-vivendi-theme-rainbow-headings t
+        modus-vivendi-theme-section-headings t)
+:config
+ (load-theme 'modus-vivendi t)
+)
 #+END_SRC
 
 ** Font
@@ -115,7 +131,7 @@ My new favourite one I guess, really decent default values.
   ;; Set default font
   (set-face-attribute 'default nil
                       :family "Hack"
-                      :height 130
+                      :height 150
                       ;; :weight 'normal
                       :width 'normal)
 ;; set fallback font for emoji
@@ -208,7 +224,7 @@ The only time I actually had to use comments, this is for ease of removal if you
       (server-start)
 
       ;; this fixes issues with ido mode, if you use helm, get rid of it
-      (exwm-config-ido)
+;;      (exwm-config-ido)
 
       ;; a number between 1 and 9, exwm creates workspaces dynamically so I like starting out with 1
       (setq exwm-workspace-number 9)
@@ -434,13 +450,119 @@ These won't work in the terminal version or the virtual console, obvious reasons
 #+END_SRC
 
 ** Default browser
-I use qutebrowser, so that's what I'll set up.
+I use eww for most browsing, and I use icecat when I need to open something in an external browser.
 #+BEGIN_SRC emacs-lisp
-  (setq browse-url-browser-function 'eww-browse-url
-        browse-url-generic-program "firefox")
-(setq shr-inhibit-images t)
+    (setq browse-url-browser-function 'eww-browse-url
+	  browse-url-generic-program "icecat")
 #+END_SRC
 
+sometimes i load a page and it has a lot of animated images and it makes eww crawl, or it has big images that make the page hard to read, so I dont open images by default, but this neat script i found lets you turn on and off images.
+#+BEGIN_SRC emacs-lisp
+  (defun my/eww-toggle-images ()
+    "Toggle whether images are loaded and reload the current page from cache."
+    (interactive)
+    (setq-local shr-inhibit-images (not shr-inhibit-images))
+    (eww-reload t)
+    (message "Images are now %s"
+	     (if shr-inhibit-images "off" "on")))
+
+  ;; (define-key eww-mode-map (kbd "I") #'my/eww-toggle-images)
+  ;; (define-key eww-link-keymap (kbd "I") #'my/eww-toggle-images)
+
+  ;; minimal rendering by default
+  (setq-default shr-inhibit-images t)   ; toggle with `I`
+  (setq-default shr-use-fonts nil)      ; toggle with `F`
+#+END_SRC
+
+this highlights syntax in eww, good for elisp snippets on the wiki.
+#+BEGIN_SRC emacs-lisp
+;; syntax highlighting 
+(use-package language-detection
+:ensure t
+:config
+(require 'cl-lib)
+
+(defun eww-tag-pre (dom)
+  (let ((shr-folding-mode 'none)
+        (shr-current-font 'default))
+    (shr-ensure-newline)
+    (insert (eww-fontify-pre dom))
+    (shr-ensure-newline)))
+
+(defun eww-fontify-pre (dom)
+  (with-temp-buffer
+    (shr-generic dom)
+    (let ((mode (eww-buffer-auto-detect-mode)))
+      (when mode
+        (eww-fontify-buffer mode)))
+    (buffer-string)))
+
+(defun eww-fontify-buffer (mode)
+  (delay-mode-hooks (funcall mode))
+  (font-lock-default-function mode)
+  (font-lock-default-fontify-region (point-min)
+                                    (point-max)
+                                    nil))
+
+(defun eww-buffer-auto-detect-mode ()
+  (let* ((map '((ada ada-mode)
+                (awk awk-mode)
+                (c c-mode)
+                (cpp c++-mode)
+                (clojure clojure-mode lisp-mode)
+                (csharp csharp-mode java-mode)
+                (css css-mode)
+                (dart dart-mode)
+                (delphi delphi-mode)
+                (emacslisp emacs-lisp-mode)
+                (erlang erlang-mode)
+                (fortran fortran-mode)
+                (fsharp fsharp-mode)
+                (go go-mode)
+                (groovy groovy-mode)
+                (haskell haskell-mode)
+                (html html-mode)
+                (java java-mode)
+                (javascript javascript-mode)
+                (json json-mode javascript-mode)
+                (latex latex-mode)
+                (lisp lisp-mode)
+                (lua lua-mode)
+                (matlab matlab-mode octave-mode)
+                (objc objc-mode c-mode)
+                (perl perl-mode)
+                (php php-mode)
+                (prolog prolog-mode)
+                (python python-mode)
+                (r r-mode)
+                (ruby ruby-mode)
+                (rust rust-mode)
+                (scala scala-mode)
+                (shell shell-script-mode)
+                (smalltalk smalltalk-mode)
+                (sql sql-mode)
+                (swift swift-mode)
+                (visualbasic visual-basic-mode)
+                (xml sgml-mode)))
+         (language (language-detection-string
+                    (buffer-substring-no-properties (point-min) (point-max))))
+         (modes (cdr (assoc language map)))
+         (mode (cl-loop for mode in modes
+                        when (fboundp mode)
+                        return mode)))
+    (message (format "%s" language))
+    (when (fboundp mode)
+      mode)))
+
+(setq shr-external-rendering-functions
+      '((pre . eww-tag-pre))))
+
+#+END_SRC
+
+this opens a link under point
+#+BEGIN_SRC emacs-lisp
+
+#+END_SRC
 * Projectile
 Projectile is an awesome project manager, mostly because it recognizes directories
 with a =.git= directory as projects and helps you manage them accordingly.
@@ -599,8 +721,19 @@ Do me the favor, do me the biggest favor, matter of fact do yourself the biggest
 
 ** a prerequisite for others packages
 #+BEGIN_SRC emacs-lisp
-  (use-package ivy
-    :ensure t)
+    (use-package ivy
+      :ensure t
+  :config
+  (ivy-mode 1)
+:bind
+("C-x C-b" . 'ivy-switch-buffer)
+  ) 
+
+  (use-package counsel
+      :ensure t
+  :config
+  (counsel-mode 1)
+  ) 
 #+END_SRC
 
 ** scrolling and why does the screen move
@@ -674,10 +807,6 @@ This annoyed me so much I wrote these two, they take care of it.
 ** swiper and why is the default search so lame
 I like me some searching, the default search is very meh. In emacs, you mostly use search to get around your buffer, much like with avy, but sometimes it doesn't hurt to search for entire words or mode, swiper makes sure this is more efficient.
 #+BEGIN_SRC emacs-lisp
-    (use-package swiper
-      :ensure t
-      ;:bind ("C-f" . 'swiper)
-  )
 #+END_SRC
 
 ** buffers and why I hate list-buffers
@@ -746,41 +875,41 @@ I give in, helm is awesome. I'll end up customizing it more eventually,
 it's rather similar to ido-vertical though.
 *** helm
 #+BEGIN_SRC emacs-lisp
-  (use-package helm
-    :ensure t
-    :bind
-    ("C-x C-f" . 'helm-find-files)
-    ("C-x C-b" . 'helm-buffers-list)
-    ("M-x" . 'helm-M-x)
-    :config
-    (defun daedreth/helm-hide-minibuffer ()
-      (when (with-helm-buffer helm-echo-input-in-header-line)
-        (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
-          (overlay-put ov 'window (selected-window))
-          (overlay-put ov 'face
-                       (let ((bg-color (face-background 'default nil)))
-                         `(:background ,bg-color :foreground ,bg-color)))
-          (setq-local cursor-type nil))))
-    (add-hook 'helm-minibuffer-set-up-hook 'daedreth/helm-hide-minibuffer)
-    (setq helm-autoresize-max-height 0
-          helm-autoresize-min-height 40
-          helm-M-x-fuzzy-match t
-          helm-buffers-fuzzy-matching t
-          helm-recentf-fuzzy-match t
-          helm-semantic-fuzzy-match t
-          helm-imenu-fuzzy-match t
-          helm-split-window-in-side-p nil
-          helm-move-to-line-cycle-in-source nil
-          helm-ff-search-library-in-sexp t
-          helm-scroll-amount 8 
-          helm-echo-input-in-header-line t)
-    :init
-    (helm-mode 1))
+  ;; (use-package helm
+  ;;   :ensure t
+  ;;   :bind
+  ;;   ("C-x C-f" . 'helm-find-files)
+  ;;   ("C-x C-b" . 'helm-buffers-list)
+  ;;   ("M-x" . 'execute-extended-command)
+  ;;   :config
+  ;;   (defun daedreth/helm-hide-minibuffer ()
+  ;;     (when (with-helm-buffer helm-echo-input-in-header-line)
+  ;;       (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+  ;;         (overlay-put ov 'window (selected-window))
+  ;;         (overlay-put ov 'face
+  ;;                      (let ((bg-color (face-background 'default nil)))
+  ;;                        `(:background ,bg-color :foreground ,bg-color)))
+  ;;         (setq-local cursor-type nil))))
+  ;;   (add-hook 'helm-minibuffer-set-up-hook 'daedreth/helm-hide-minibuffer)
+  ;;   (setq helm-autoresize-max-height 0
+  ;;         helm-autoresize-min-height 40
+  ;;         helm-M-x-fuzzy-match t
+  ;;         helm-buffers-fuzzy-matching t
+  ;;         helm-recentf-fuzzy-match t
+  ;;         helm-semantic-fuzzy-match t
+  ;;         helm-imenu-fuzzy-match t
+  ;;         helm-split-window-in-side-p nil
+  ;;         helm-move-to-line-cycle-in-source nil
+  ;;         helm-ff-search-library-in-sexp t
+  ;;         helm-scroll-amount 8 
+  ;;         helm-echo-input-in-header-line t)
+  ;;   :init
+  ;;   (helm-mode 1))
 
-  (require 'helm-config)    
-  (helm-autoresize-mode 1)
-  (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
-  (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
+  ;; (require 'helm-config)    
+  ;; (helm-autoresize-mode 1)
+  ;; (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
+  ;; (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
 #+END_SRC
 ** silver searcher helm
 #+BEGIN_SRC emacs-lisp
@@ -824,7 +953,7 @@ I like =M-s= for it, same as =C-s= is for moving by searching string, now =M-s= 
 * Text manipulation
 Here I shall collect self-made functions that make editing text easier.
 
-** Mark-Multiple
+** Mark Multiple
 I can barely contain my joy. This extension allows you to quickly mark the next occurence of a region and edit them all at once. Wow!
 #+BEGIN_SRC emacs-lisp
   (use-package mark-multiple
@@ -946,10 +1075,10 @@ While changing buffers or workspaces, the first thing you do is look for your cu
 Unless you know its position, you can not move it efficiently. Every time you change
 buffers, the current position of your cursor will be briefly highlighted now.
 #+BEGIN_SRC emacs-lisp
-  (use-package beacon
-    :ensure t
-    :config
-      (beacon-mode 1))
+  ;; (use-package beacon
+  ;;   :ensure t
+  ;;   :config
+  ;;     (beacon-mode 1))
 #+END_SRC
 
 ** Rainbow
@@ -1637,10 +1766,12 @@ Obviously you might have to adjust /server-name/ and /server-port/ to fit your c
       (require 'emms-player-mpd)
       (emms-all) ; don't change this to values you see on stackoverflow questions if you expect emms to work
       (setq emms-seek-seconds 5)
-      (setq emms-player-list '(emms-player-mpd))
-      (setq emms-info-functions '(emms-info-mpd))
+      (emms-default-players)
+      ;; (setq emms-player-list '(emms-player-mpd))
+      ;; (setq emms-info-functions '(emms-info-mpd))
       (setq emms-player-mpd-server-name "localhost")
-      (setq emms-player-mpd-server-port "6601")
+      (setq emms-player-mpd-server-port "6600")     
+      (setq emms-source-file-default-directory "~/Media/")
     :bind
       ;; ("s-m p" . emms)
       ;; ("s-m b" . emms-smart-browse)
@@ -1648,6 +1779,7 @@ Obviously you might have to adjust /server-name/ and /server-port/ to fit your c
       ("<XF86AudioPrev>" . emms-previous)
       ("<XF86AudioNext>" . emms-next)
       ("<XF86AudioPlay>" . emms-pause)
+      ("<XF86AudioPause>" . emms-pause)
       ("<XF86AudioStop>" . emms-stop))
 #+END_SRC
 
@@ -1860,9 +1992,12 @@ Edit this list as you see fit!
     (diminish 'subl-mode)
     (diminish 'emo-mode)
     (diminish 'org-indent-mode)
-    (diminish 'projectile-mode "P'")
-    (diminish 'helm-mode "H'")
-    (diminish 'company-mode "C'")
+    (diminish 'projectile-mode)
+    (diminish 'helm-mode)
+    (diminish 'company-mode)
+    (diminish 'undo-tree-mode)
+    (diminish 'ivy-mode)
+    (diminish 'flycheck-mode)
 
     ;; (diminish 'projectile-mode "➶")
     ;; (diminish 'helm-mode "⛫")
@@ -1885,4 +2020,38 @@ Edit this list as you see fit!
   ;; :config 
 
   ;; (add-to-list 'gnus-secondary-select-methods '(nnreddit "")))
+#+END_SRC
+** convert atom feeds to rss
+#+BEGIN_SRC emacs-lisp
+
+  ;; (require 'mm-url)
+  ;; (defadvice mm-url-insert (after DE-convert-atom-to-rss () )
+  ;;   "Converts atom to RSS by calling xsltproc."
+  ;;   (when (re-search-forward "xmlns=\"http://www.w3.org/.*/Atom\"" 
+  ;; 			   nil t)
+  ;;     (goto-char (point-min))
+  ;;     (message "Converting Atom to RSS... ")
+  ;;     (call-process-region (point-min) (point-max) 
+  ;; 			 "xsltproc" 
+  ;; 			 t t nil 
+  ;; 			 (expand-file-name "~/atom2rss.xsl") "-")
+  ;;     (goto-char (point-min))
+  ;;     (message "Converting Atom to RSS... done")))
+
+  ;; (ad-activate 'mm-url-insert)
+
+#+END_SRC
+* nethack
+#+BEGIN_SRC emacs-lisp
+
+  ;; (autoload 'nethack "nethack" "Play Nethack." t)
+  ;; (load "/home/taylor/.emacs.d/lisp/nethack/nethack-comp.el")
+  ;; (load "/home/taylor/.emacs.d/lisp/nethack/nethack.el")
+  ;; (load "/home/taylor/.emacs.d/lisp/nethack/nethack.el")
+  ;; (load "/home/taylor/.emacs.d/lisp/nethack/nethack.el")
+  ;; (load "/home/taylor/.emacs.d/lisp/nethack/nethack.el")
+  ;; (load "/home/taylor/.emacs.d/lisp/nethack/nethack.el")
+  ;; (load "/home/taylor/.emacs.d/lisp/nethack/nethack.el")
+  ;; (setq nethack-program "/usr/games/nethack")
+
 #+END_SRC
