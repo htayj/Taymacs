@@ -532,21 +532,10 @@ This turns on the clock globally.
     (interactive (list my-term-shell)))
   (ad-activate 'ansi-term)
 #+END_SRC
-* Moving around emacs
-One of the most important things about a text editor is how efficient you manage
-to be when using it, how much time do basic tasks take you and so on and so forth.
-One of those tasks is moving around files and buffers, whatever you may use emacs for
-you /will/ be jumping around buffers like it's serious business, the following
-set of enhancements aims to make it easier.
-
-As a great emacs user once said:
-
-#+BEGIN_QUOTE
-Do me the favor, do me the biggest favor, matter of fact do yourself the biggest favor and integrate those into your workflow.
-#+END_QUOTE
-
+* discoverablility and completion
 ** Ivy
-I used to use helm, and ivy with counsel. but i find that dired is good enough to take the place of counsel, ivy is good enough for most things
+I used to use helm, and ivy with counsel. but i find that dired is good enough to take the place of counsel, ivy is good enough for most things. personally i feel like minibuffer completion stuff kinda breaks the "everything is a buffer" idea which is very useful in the long term
+
 #+BEGIN_SRC emacs-lisp
     (use-package ivy
       :ensure t
@@ -556,13 +545,9 @@ I used to use helm, and ivy with counsel. but i find that dired is good enough t
 ("C-x C-b" . 'ivy-switch-buffer)
   )
 #+END_SRC
-
-** TODO scrolling
-I don't know to be honest, but this little bit of code makes scrolling with emacs a lot nicer.
-#+BEGIN_SRC emacs-lisp
-  (setq scroll-conservatively 100)
-#+END_SRC
-
+** TODO set up whichkey with ivy
+** TODO  look into icicles
+** TODO look into anything.el
 ** which-key and why I love emacs
 In order to use emacs, you don't need to know how to use emacs.
 It's self documenting, and coupled with this insanely useful package, it's even easier.
@@ -577,7 +562,12 @@ It's beautiful
     :config
       (which-key-mode))
 #+END_SRC
-
+* Moving around emacs
+** TODO scrolling
+I don't know to be honest, but this little bit of code makes scrolling with emacs a lot nicer.
+#+BEGIN_SRC emacs-lisp
+  (setq scroll-conservatively 100)
+#+END_SRC
 ** windows,panes and why I hate other-window
 Some of us have large displays, others have tiny netbook screens, but regardless of your hardware
 you probably use more than 2 panes/windows at times, cycling through all of them with
@@ -624,7 +614,7 @@ This annoyed me so much I wrote these two, they take care of it.
     (other-window 1))
   (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
 #+END_SRC
-** buffers and why I hate list-buffers
+** TODO buffers and why I hate list-buffers
 Another big thing is, buffers. If you use emacs, you use buffers, everyone loves them.
 Having many buffers is useful, but can be tedious to work with, let us see how we can improve it.
 
@@ -670,12 +660,8 @@ This can be invoked using =C-M-s-k=. This keybinding makes sure you don't hit it
   (global-set-key (kbd "C-M-s-k") 'close-all-buffers)
 #+END_SRC
 
-** line numbers and programming
-Every now and then all of us feel the urge to be productive and write some code.
-In the event that this happens, the following bit of configuration makes sure that 
-we have access to relative line numbering in programming-related modes.
-I highly recommend not enabling =linum-relative-mode= globally, as it messed up 
-something like =ansi-term= for instance.
+** line numbers
+Relative line numbers
 #+BEGIN_SRC emacs-lisp
   (use-package linum-relative
     :ensure t
@@ -684,87 +670,9 @@ something like =ansi-term= for instance.
       (add-hook 'prog-mode-hook 'linum-relative-mode))
 #+END_SRC
 
-** ido and why I started using helm
-Sometimes, you don't realize how good something is until you try it extensively.
-I give in, helm is awesome. I'll end up customizing it more eventually,
-it's rather similar to ido-vertical though.
-*** helm
-#+BEGIN_SRC emacs-lisp
-  ;; (use-package helm
-  ;;   :ensure t
-  ;;   :bind
-  ;;   ("C-x C-f" . 'helm-find-files)
-  ;;   ("C-x C-b" . 'helm-buffers-list)
-  ;;   ("M-x" . 'execute-extended-command)
-  ;;   :config
-  ;;   (defun daedreth/helm-hide-minibuffer ()
-  ;;     (when (with-helm-buffer helm-echo-input-in-header-line)
-  ;;       (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
-  ;;         (overlay-put ov 'window (selected-window))
-  ;;         (overlay-put ov 'face
-  ;;                      (let ((bg-color (face-background 'default nil)))
-  ;;                        `(:background ,bg-color :foreground ,bg-color)))
-  ;;         (setq-local cursor-type nil))))
-  ;;   (add-hook 'helm-minibuffer-set-up-hook 'daedreth/helm-hide-minibuffer)
-  ;;   (setq helm-autoresize-max-height 0
-  ;;         helm-autoresize-min-height 40
-  ;;         helm-M-x-fuzzy-match t
-  ;;         helm-buffers-fuzzy-matching t
-  ;;         helm-recentf-fuzzy-match t
-  ;;         helm-semantic-fuzzy-match t
-  ;;         helm-imenu-fuzzy-match t
-  ;;         helm-split-window-in-side-p nil
-  ;;         helm-move-to-line-cycle-in-source nil
-  ;;         helm-ff-search-library-in-sexp t
-  ;;         helm-scroll-amount 8 
-  ;;         helm-echo-input-in-header-line t)
-  ;;   :init
-  ;;   (helm-mode 1))
-
-  ;; (require 'helm-config)    
-  ;; (helm-autoresize-mode 1)
-  ;; (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
-  ;; (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
-#+END_SRC
-** silver searcher helm
-#+BEGIN_SRC emacs-lisp
-  (use-package helm-ag
-    :ensure t)
-#+END_SRC
-** avy and why it's the best thing in existence
-Many times have I pondered how I can move around buffers even quicker.
-I'm glad to say, that avy is precisely what I needed, and it's precisely what you need as well.
-In short, as you invoke one of avy's functions, you will be prompted for a character
-that you'd like to jump to in the /visible portion of the current buffer/.
-Afterwards you will notice how all instances of said character have additional letter on top of them.
-Pressing those letters, that are next to your desired character will move your cursor over there.
-Admittedly, this sounds overly complicated and complex, but in reality takes a split second
-and improves your life tremendously.
-
-I like =M-s= for it, same as =C-s= is for moving by searching string, now =M-s= is moving by searching characters.
-#+BEGIN_SRC emacs-lisp
-  (use-package avy
-    :ensure t
-    :bind
-      ;; ("M-s" . avy-goto-char)
-      ;; ("C-a C-a" . avy-move-line)
-      ;; ("C-a C-s" . avy-move-region)
-      ;; ("C-a C-d" . avy-goto-char)
-      )
-#+END_SRC
-** ace windows mode
-#+BEGIN_SRC emacs-lisp
-  (use-package ace-window
-    :ensure t
-    :config (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-;    :bind
-;    ("C-e" . ace-select-window)
-;    ("C-M-e" . ace-window)
-      )
-    
-
-#+END_SRC
-
+** isearch/avy/ace jump
+personally i have tried using avy but plain isearch seems to do the job the best for me so far, i may revisit avy at some point in the far future if i feel the need
+*** TODO revisit avy mode
 * Text manipulation
 Here I shall collect self-made functions that make editing text easier.
 
@@ -823,13 +731,11 @@ And this quickly deletes a line.
   (global-set-key (kbd "C-c l k") 'kill-whole-line)
 #+END_SRC
 
-* multiple cursors
+* TODO multiple cursors
+need to decide if i want to keep this
 #+BEGIN_SRC emacs-lisp
   (use-package multiple-cursors
     :ensure t
-    :bind
-    ;("C-d" . 'mc/mark-next-like-this)
-    ;; ("C-M-d C-M-d" . 'mc/mark-next-like-this)
     )
 #+END_SRC
 
@@ -1515,6 +1421,7 @@ that more sophisticated ones don't, so I use it.
 ** erc, also known as "a way to ask for help on #emacs"
 You might want to edit the default nick, it's password protected anyway so don't bother.
 
+*** TODO find a way to ignore some channels and only show notifications in modeline
 *** Some common settings
 This also hides some of the channel messages to avoid cluttering the buffer.
 The other line changes the prompt for each channel buffer to match the channel name,
@@ -1525,7 +1432,7 @@ this way you always know who you are typing to.
   (setq erc-hide-list '("JOIN" "PART" "QUIT"))
 #+END_SRC
 
-*** Poor mans selectable server list
+*** selectable server list
 What it says on the tin, this changes the =erc= history to include the server I connect to often.
 #+BEGIN_SRC emacs-lisp
   (setq erc-server-history-list '("irc.freenode.net"
@@ -1540,7 +1447,7 @@ You can even highlight nicks to make the buffers a bit more visually pleasing an
   :config
     (erc-update-modules))
 #+END_SRC
-
+** 
 ** rich presence for discord
 Memes, but it's fun and tiny.
 #+BEGIN_SRC emacs-lisp
@@ -1559,13 +1466,8 @@ Memes, but it's fun and tiny.
 #+RESULTS:
 | irc.freenode.net | :port | 6697 | :encryption | tls | :channels | (#rcirc #emacs #emacswiki) |
 
-* Media
-Why bother with an external media manager when emacs is a thing.
-EMMS is huge, incredibly powerful and luckily well documented.
-All I need it for is to play music and video, that's it.
-I also need it to display metadata on the modeline correctly, which it does with mpd automatically.
 
-** EMMS with mpd
+* EMMS 
 There is many backends, many players and codecs for EMMS, we use mpd now.
 
 *** Basic setup for mpd
@@ -1739,32 +1641,6 @@ M-x all-the-icons-install-fonts
   (kill-line (- 1 arg)))
 
 #+END_SRC
-
-* linum gutter
-** linum by default
-#+BEGIN_SRC emacs-lisp
-    ;; (when (version<= "26.0.50" emacs-version )
-    ;;   (global-display-line-numbers-mode))
-  ;; (global-linum-mode)
-
-#+END_SRC
-** git gutter
-#+BEGIN_SRC emacs-lisp
-
-  ;;   (use-package git-gutter-fringe
-  ;;     :ensure t
-  ;;     :config
-  ;;     (custom-set-variables
-  ;;  '(git-gutter-fr:modified-sign " ") ;; two space
-  ;;  '(git-gutter-fr:added-sign "+")    ;; multiple character is OK
-  ;;  '(git-gutter-fr:deleted-sign "-"))
-
-  ;; (set-face-background 'git-gutter-fr:modified "purple") ;; background color
-  ;; (set-face-foreground 'git-gutter-fr:added "green")
-  ;; (set-face-foreground 'git-gutter-fr:deleted "red")
-  ;; (global-git-gutter-mode +1)
-  ;;     )
-#+END_SRC
 * WM startup
 * Tabs
 #+BEGIN_SRC emacs-lisp
@@ -1821,6 +1697,7 @@ Edit this list as you see fit!
 #+END_SRC
 * gnus
 ** hackernews in gnus
+i may turn this back on once i have a better grasp of gnus
 #+BEGIN_SRC emacs-lisp
     (use-package nnhackernews
       :ensure t
@@ -1829,6 +1706,7 @@ Edit this list as you see fit!
 
 #+END_SRC
 ** reddit in gnus
+i may turn this back on once i have a better grasp of gnus
 #+BEGIN_SRC emacs-lisp
   ;; (use-package nnreddit
   ;; :ensure t
@@ -1857,6 +1735,7 @@ Edit this list as you see fit!
 
 #+END_SRC
 * nethack
+i cant get this to work but i want it to work
 #+BEGIN_SRC emacs-lisp
 
   ;; (autoload 'nethack "nethack" "Play Nethack." t)
