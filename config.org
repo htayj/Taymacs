@@ -880,29 +880,7 @@ C-n and C-p totally work for this.
 Minor, non-completion related settings and plugins for writing code.
 
 ** lsp-mode
-npm i -g typescript-language-server; npm i -g typescript
-#+BEGIN_SRC emacs-lisp
-            ;; (use-package lsp-mode
-  ;;             :commands lsp
-  ;;             :ensure t
-  ;;             :init
-  ;;         )
-
-
-  ;;     (use-package lsp-ui 
-  ;;       :commands lsp-ui-mode
-  ;;       :ensure t)
-
-  ;;     (use-package company-lsp :commands company-lsp :ensure t)
-
-
-  ;; (require 'lsp)
-  ;; (require 'lsp-clients)
-
-  ;; (add-hook 'js2-mode-hook 'lsp)
-  ;;(add-hook 'vue-mode-hook 'lsp)
-
-#+END_SRC
+lsp is bloat
 
 ** yasnippet
 #+BEGIN_SRC emacs-lisp
@@ -1201,17 +1179,6 @@ Requires libclang to be installed.
 #+END_SRC
 
 ** web programming
-** LaTeX
-#+BEGIN_SRC emacs-lisp
-  (use-package tex
-    :defer t
-    :ensure auctex
-    :config
-    (setq TeX-auto-save t))
-  ;; (use-package auctex
-  ;; :ensure t)
-
-#+END_SRC
 *** vue
 **** vue-mode
 #+BEGIN_SRC emacs-lisp
@@ -1273,6 +1240,18 @@ Requires libclang to be installed.
   (setq web-mode-enable-auto-indentation nil)
 (setq web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
     )
+
+#+END_SRC
+
+** LaTeX
+#+BEGIN_SRC emacs-lisp
+  (use-package tex
+    :defer t
+    :ensure auctex
+    :config
+    (setq TeX-auto-save t))
+  ;; (use-package auctex
+  ;; :ensure t)
 
 #+END_SRC
 
