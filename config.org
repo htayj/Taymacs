@@ -6,28 +6,7 @@
 #+ATTR_HTML: :style margin-left: auto; margin-right: auto;
 
 * aknowledgements
-this config was based off of uncle daves emacs who i am forever grateful to for allowing me a user friendly entry point to emacs check out uncle daves repo at https://github.com/daedreth/UncleDavesEmacs 
-* Installation
-** Quick Installation
-=git clone https://github.com/daedreth/UncleDavesEmacs ~/.emacs.d=
-
-Keep in mind that you should remove your own ~/.emacs and your ~/.emacs.d
-prior to cloning this configuration. The next time you launch Emacs (and I recommend
-launching emacs in the tty for the first time) it's going to download a good amount
-of packages and configure them for you, you might see warnings and errors being
-displayed as well, those are safe to ignore as long as you relaunch emacs and
-see none.
-
-The configuration, much like emacs is self documented, I highly recommend reading
-through my ramblings in their entirety.
-
-** Less Quick Installation
-You are free to pick out bits and pieces of this and apply them.
-So long as you have a working =use-package= configuration (take a peek at my init.el),
-there should be absolutely no issues.
-I highly encourage you to read up on the prose around the packages you are interested in,
-I do my absolute best to describe the configuration as well as I only can, this might help you on your emacs journey!
-Have some fun with it, add your own keybindings, change parameters, it's your editor in the end.
+this config was based off of uncle daves emacs who i am forever grateful to for allowing me a user friendly entry point to emacs check out uncle daves repo at https://github.com/daedreth/UncleDavesEmacs
 
 * Dependencies for:
 ** EXWM
@@ -60,30 +39,6 @@ Since we are going to use emacs as our window manager, it would be nice to have 
 - =virtualenv=, for python completion.
 - =lua=, for obvious reasons.
 
-*** pip
-- =pip install jedi flake8 autopep8=, here, a one line install.
-
-* Some notes
-** On use-package some more
-We utilize use-package to handle downloading and configuring other packages painlessly.
-With =init.el= written the way it is, emacs checks for the presence of =use-package=
-on launch and downloads it and installs if necessary.
-=el-Get= is too old and not configurable enough.
-
-** On the format of the configuration
-As you may have noticed, as you scroll down my bit of prose, this is the configuration file itself.
-This configuration is written in =org-mode=, which is a great emacs package and a great markup language.
-On launch, this file is being sourced into =~/.emacs.d/init.el=, the prose is being automatically
-stripped (as to not affect performance) and the remaining =config.el= file is parsed.
-
-This is also the reason why your org-mode configuration file is never called =init.org=.
-
-** On the use case of this configuration
-This entire config is meant to be used as a full on desktop environment, it is tailored to sit on top of xorg and be awesome.
-It is perfectly possible to use it without exwm and emms, as a regular emacs config, just make sure to delete the unwanted sections,
-ex.g EXWM, Audio Control, EMMS and all the launchers.
-There is barely any learning curve to using =exwm=, since it makes x-windows act as regular buffers as much as possible,
-so chances are, as long as you know your way around emacs itself, you will instinctively know how to make use of its features.
 
 * import manually installed packages
 #+BEGIN_SRC emacs-lisp
@@ -104,7 +59,7 @@ so chances are, as long as you know your way around emacs itself, you will insti
 
 * Theme
 ** high contrast
-My new favourite one I guess, really decent default values.
+
 #+BEGIN_SRC emacs-lisp
 
 (use-package modus-vivendi-theme
@@ -141,8 +96,7 @@ My new favourite one I guess, really decent default values.
 These are setting that do not depend on packages and are built-in enhancements to the UI.
 
 ** Looks
-*** Remove lame startup screen
-We use an actual replacement for it, keep reading or head directly to =dashboard=.
+*** remove original dashboard
 #+BEGIN_SRC emacs-lisp
 (setq inhibit-startup-message t)
 #+END_SRC
@@ -153,11 +107,7 @@ If you like using any of those, change =-1= to =1=.
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 #+END_SRC
-*** Disable bell
-This is annoying, remove this line if you like being visually reminded of events.
-#+BEGIN_SRC emacs-lisp
-(setq ring-bell-function 'ignore)
-#+END_SRC
+
 *** Set UTF-8 encoding
 #+BEGIN_SRC emacs-lisp 
   (setq locale-coding-system 'utf-8)
@@ -183,7 +133,7 @@ Changes =lambda= to an actual symbol and a few others as well, only in the GUI v
 #+END_SRC
 
 ** Functionality
-*** Disable backups and auto-saves
+*** backups and auto-saves
 I don't use either, you might want to turn those from =nil= to =t= if you do.
 #+BEGIN_SRC emacs-lisp
 (setq make-backup-files nil)
@@ -196,7 +146,7 @@ I don't use either, you might want to turn those from =nil= to =t= if you do.
 #+END_SRC
 
 *** Async
-Lets us use asynchronous processes wherever possible, pretty useful.
+use asynchronous processes wherever possible
 #+BEGIN_SRC emacs-lisp
   (use-package async
     :ensure t
@@ -349,39 +299,6 @@ with its own cache for most launched applications.
     :bind
       ("s-SPC" . 'dmenu))
 #+END_SRC
-
-*** Functions to start processes
-I guess this goes without saying but you absolutely have to change the arguments
-to suit the software that you are using. What good is a launcher for discord if you don't use it at all.
-#+BEGIN_SRC emacs-lisp
-  ;; (defun exwm-async-run (name)
-  ;;   (interactive)
-  ;;   (start-process name nil name))
-
-  ;; (defun daedreth/launch-discord ()
-  ;;   (interactive)
-  ;;   (exwm-async-run "discord"))
-
-  ;; (defun daedreth/launch-browser ()
-  ;;   (interactive)
-  ;;   (exwm-async-run "qutebrowser"))
-
-  ;; (defun daedreth/lock-screen ()
-  ;;   (interactive)
-  ;;   (exwm-async-run "slock"))
-
-  ;; (defun daedreth/shutdown ()
-  ;;   (interactive)
-  ;;   (start-process "halt" nil "sudo" "halt"))
-#+END_SRC
-
-*** Keybindings to start processes
-These can be modified as well, suit yourself.
-#+BEGIN_SRC emacs-lisp
-  ;; (global-set-key (kbd "<XF86ScreenSaver>") 'daedreth/lock-screen)
-  ;; (global-set-key (kbd "<XF86PowerOff>") 'daedreth/shutdown)
-#+END_SRC
-
 ** Audio controls
 This is a set of bindings to my XF86 keys that invokes pulsemixer with the correct parameters
 
@@ -413,7 +330,6 @@ You can also change those if you'd like, but I highly recommend keeping 'em the 
 (global-set-key (kbd "<XF86AudioRaiseVolume>") 'audio/raise-volume)
 (global-set-key (kbd "<XF86AudioLowerVolume>") 'audio/lower-volume)
 #+END_SRC
-fdfg
 ** Screenshots
 I don't need scrot to take screenshots, or shutter or whatever tools you might have. This is enough.
 These won't work in the terminal version or the virtual console, obvious reasons.
@@ -559,13 +475,7 @@ this highlights syntax in eww, good for elisp snippets on the wiki.
 
 #+END_SRC
 
-this opens a link under point
-#+BEGIN_SRC emacs-lisp
-
-#+END_SRC
-* Projectile
-Projectile is an awesome project manager, mostly because it recognizes directories
-with a =.git= directory as projects and helps you manage them accordingly.
+* TODO Projectile
 
 ** Enable projectile globally
 This makes sure that everything can be a project.
@@ -582,10 +492,7 @@ This makes sure that everything can be a project.
 #+END_SRC
 
 * Dashboard
-This is your new startup screen, together with projectile it works in unison and
-provides you with a quick look into your latest projects and files.
-Change the welcome message to whatever string you want and
-change the numbers to suit your liking, I find 5 to be enough.
+Dashboard with recent files and projects
 #+BEGIN_SRC emacs-lisp
   (use-package dashboard
     :ensure t
@@ -617,95 +524,14 @@ This turns on the clock globally.
 #+BEGIN_SRC emacs-lisp
   (display-time-mode 1)
 #+END_SRC
-
-** System monitor
-A teeny-tiny system monitor that can be enabled or disabled at runtime, useful for checking performance
-with power-hungry processes in ansi-term
-
-symon can be toggled on and off with =Super + h=.
-#+BEGIN_SRC emacs-lisp
-  (use-package symon
-    :ensure t
-    :bind
-    ("s-h" . symon-mode))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-  ;; (use-package telephone-line
-  ;;   :ensure t
-  ;;   :config
-  ;;   (setq telephone-line-primary-left-separator 'telephone-line-halfsin-left
-  ;;         telephone-line-secondary-left-separator 'telephone-line-halfsin-hollow-left
-  ;;         telephone-line-primary-right-separator 'telephone-line-halfsin-right
-  ;;         telephone-line-secondary-right-separator 'telephone-line-halfsin-hollow-right)
-
-  ;;   (defface tl-red '((t (:foreground "white" :background "red"))) "")
-  ;;   (defface tl-orangered '((t (:foreground "white" :background "orange red"))) "")
-  ;;   (defface tl-orange '((t (:foreground "dim grey" :background "orange"))) "")
-  ;;   (defface tl-gold '((t (:foreground "dim grey" :background "gold"))) "")
-  ;;   (defface tl-yellow '((t (:foreground "dim grey" :background "yellow"))) "")
-  ;;   (defface tl-chartreuse '((t (:foreground "dim grey" :background "chartreuse"))) "")
-  ;;   (defface tl-green '((t (:foreground "dim grey" :background "green"))) "")
-  ;;   (defface tl-sgreen '((t (:foreground "dim grey" :background "spring green"))) "")
-  ;;   (defface tl-cyan '((t (:foreground "dim grey" :background "cyan"))) "")
-  ;;   (defface tl-blue '((t (:foreground "white" :background "blue"))) "")
-  ;;   (defface tl-dmagenta '((t (:foreground "white" :background "dark magenta"))) "")
-
-  ;;   (setq telephone-line-faces
-  ;;         '((red . (tl-red . tl-red))
-  ;;           (ored . (tl-orangered . tl-orangered))
-  ;;           (orange . (tl-orange . tl-orange))
-  ;;           (gold . (tl-gold . tl-gold))
-  ;;           (yellow . (tl-yellow . tl-yellow))
-  ;;           (chartreuse . (tl-chartreuse . tl-chartreuse))
-  ;;           (green . (tl-green . tl-green))
-  ;;           (sgreen . (tl-sgreen . tl-sgreen))
-  ;;           (cyan . (tl-cyan . tl-cyan))
-  ;;           (blue . (tl-blue . tl-blue))
-  ;;           (dmagenta . (tl-dmagenta . tl-dmagenta))
-  ;;           (evil . telephone-line-evil-face)
-  ;;           (accent . (telephone-line-accent-active . telephone-line-accent-inactive))
-  ;;           (nil . (mode-line . mode-line-inactive))))
-  ;;   (setq telephone-line-lhs
-  ;;         '((evil   . (telephone-line-evil-tag-segment))
-  ;;           (accent . (telephone-line-vc-segment))
-  ;;           ))
-  ;;   (setq telephone-line-rhs
-
-
-
-  ;;         '(
-  ;;           (accent . (telephone-line-erc-modified-channels-segment))
-  ;;           (red . (telephone-line-flycheck-segment))
-  ;;           (orange . (telephone-line-process-segment))
-
-  ;;           (yellow    . (telephone-line-minor-mode-segment))
-  ;;           (green    . (telephone-line-buffer-segment))
-
-  ;;           (blue    . (telephone-line-misc-info-segment))
-  ;;           (dmagenta . (telephone-line-major-mode-segment))
-  ;;           (evil   . (telephone-line-airline-position-segment))))
-  ;;   (telephone-line-mode 1)
-  ;;   )
-
-#+END_SRC
 * The terminal
-I have used urxvt for years, and I miss it sometimes, but ansi-term is enough for most of my tasks.
-
 ** Default shell
 #+BEGIN_SRC emacs-lisp
-  (defvar my-term-shell "/bin/zsh")
+  (defvar my-term-shell "/bin/bash")
   (defadvice ansi-term (before force-bash)
     (interactive (list my-term-shell)))
   (ad-activate 'ansi-term)
 #+END_SRC
-
-** Easy to remember keybinding
-In loving memory of bspwm, Super + Enter opens a new terminal, old habits die hard.
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "<s-return>") 'ansi-term)
-#+END_SRC
-
 * Moving around emacs
 One of the most important things about a text editor is how efficient you manage
 to be when using it, how much time do basic tasks take you and so on and so forth.
@@ -719,7 +545,8 @@ As a great emacs user once said:
 Do me the favor, do me the biggest favor, matter of fact do yourself the biggest favor and integrate those into your workflow.
 #+END_QUOTE
 
-** a prerequisite for others packages
+** Ivy
+I used to use helm, and ivy with counsel. but i find that dired is good enough to take the place of counsel, ivy is good enough for most things
 #+BEGIN_SRC emacs-lisp
     (use-package ivy
       :ensure t
@@ -727,16 +554,10 @@ Do me the favor, do me the biggest favor, matter of fact do yourself the biggest
   (ivy-mode 1)
 :bind
 ("C-x C-b" . 'ivy-switch-buffer)
-  ) 
-
-  (use-package counsel
-      :ensure t
-  :config
-  (counsel-mode 1)
-  ) 
+  )
 #+END_SRC
 
-** scrolling and why does the screen move
+** TODO scrolling
 I don't know to be honest, but this little bit of code makes scrolling with emacs a lot nicer.
 #+BEGIN_SRC emacs-lisp
   (setq scroll-conservatively 100)
@@ -803,12 +624,6 @@ This annoyed me so much I wrote these two, they take care of it.
     (other-window 1))
   (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
 #+END_SRC
-
-** swiper and why is the default search so lame
-I like me some searching, the default search is very meh. In emacs, you mostly use search to get around your buffer, much like with avy, but sometimes it doesn't hurt to search for entire words or mode, swiper makes sure this is more efficient.
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
-
 ** buffers and why I hate list-buffers
 Another big thing is, buffers. If you use emacs, you use buffers, everyone loves them.
 Having many buffers is useful, but can be tedious to work with, let us see how we can improve it.
