@@ -23,10 +23,7 @@ Since we are going to use emacs as our window manager, it would be nice to have 
 - =noto-cjk=, for all the fonts imaginable.
 - =slock=, if you would like to lock the screen.
 
-** TRAMP
-*** From the package manager:
-- =sudo=, properly configured for your user.
-
+  
 ** EMMS
 *** From the package manager:
 - =mpd=, since we are going to be using EMMS for music playback, I recommend setting up a working mpd server.
@@ -42,10 +39,10 @@ Since we are going to use emacs as our window manager, it would be nice to have 
 
 * import manually installed packages
 #+BEGIN_SRC emacs-lisp
-(let ((default-directory  (concat user-emacs-directory
-        (convert-standard-filename "lisp/"))))
-  (normal-top-level-add-to-load-path '("."))
-  (normal-top-level-add-subdirs-to-load-path))
+  (let ((default-directory  (concat user-emacs-directory
+                                    (convert-standard-filename "lisp/"))))
+    (normal-top-level-add-to-load-path '("."))
+    (normal-top-level-add-subdirs-to-load-path))
 #+END_SRC
 
 * undo tree
@@ -54,7 +51,7 @@ Since we are going to use emacs as our window manager, it would be nice to have 
     :ensure t
     :config
     (global-undo-tree-mode)
-  )
+    )
 #+END_SRC
 
 * Theme
@@ -62,23 +59,23 @@ Since we are going to use emacs as our window manager, it would be nice to have 
 
 #+BEGIN_SRC emacs-lisp
 
-(use-package modus-vivendi-theme
-  :ensure t 
-:init 
-  (setq modus-vivendi-theme-slanted-constructs t
-        modus-vivendi-theme-bold-constructs t
-        modus-vivendi-theme-visible-fringes t
-        modus-vivendi-theme-3d-modeline t
-        modus-vivendi-theme-subtle-diffs t
-        modus-vivendi-theme-intense-standard-completions t
-        modus-vivendi-theme-distinct-org-blocks t
-        modus-vivendi-theme-rainbow-org-src-blocks t
-        modus-vivendi-theme-proportional-fonts t
-        modus-vivendi-theme-rainbow-headings t
-        modus-vivendi-theme-section-headings t)
-:config
- (load-theme 'modus-vivendi t)
-)
+  (use-package modus-vivendi-theme
+    :ensure t 
+    :init 
+    (setq modus-vivendi-theme-slanted-constructs t
+          modus-vivendi-theme-bold-constructs t
+          modus-vivendi-theme-visible-fringes t
+          modus-vivendi-theme-3d-modeline t
+          modus-vivendi-theme-subtle-diffs t
+          modus-vivendi-theme-intense-standard-completions t
+          modus-vivendi-theme-distinct-org-blocks t
+          modus-vivendi-theme-rainbow-org-src-blocks t
+          modus-vivendi-theme-proportional-fonts t
+          modus-vivendi-theme-rainbow-headings t
+          modus-vivendi-theme-section-headings t)
+    :config
+    (load-theme 'modus-vivendi t)
+    )
 #+END_SRC
 
 ** Font
@@ -89,8 +86,8 @@ Since we are going to use emacs as our window manager, it would be nice to have 
                       :height 150
                       ;; :weight 'normal
                       :width 'normal)
-;; set fallback font for emoji
-(set-fontset-font t nil (font-spec :size 20 :name "Unifont"))
+  ;; set fallback font for emoji
+  (set-fontset-font t nil (font-spec :size 20 :name "Unifont"))
 #+END_SRC
 * Basic Interface Settings
 These are setting that do not depend on packages and are built-in enhancements to the UI.
@@ -98,14 +95,14 @@ These are setting that do not depend on packages and are built-in enhancements t
 ** Looks
 *** remove original dashboard
 #+BEGIN_SRC emacs-lisp
-(setq inhibit-startup-message t)
+  (setq inhibit-startup-message t)
 #+END_SRC
 *** Disable menus and scrollbars
 If you like using any of those, change =-1= to =1=.
 #+BEGIN_SRC emacs-lisp
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
 #+END_SRC
 
 *** Set UTF-8 encoding
@@ -122,27 +119,19 @@ Besides, it's only used for programming.
 #+BEGIN_SRC emacs-lisp
   (when window-system (add-hook 'prog-mode-hook 'hl-line-mode))
 #+END_SRC
-*** Pretty symbols
-Changes =lambda= to an actual symbol and a few others as well, only in the GUI version though.
-#+BEGIN_SRC emacs-lisp
-  (when window-system
-        (use-package pretty-mode
-        :ensure t
-        :config
-        (global-pretty-mode t)))
-#+END_SRC
+
 
 ** Functionality
 *** backups and auto-saves
 I don't use either, you might want to turn those from =nil= to =t= if you do.
 #+BEGIN_SRC emacs-lisp
-(setq make-backup-files nil)
-(setq auto-save-default nil)
+  (setq make-backup-files nil)
+  (setq auto-save-default nil)
 #+END_SRC
 
 *** Change yes-or-no questions into y-or-n questions
 #+BEGIN_SRC emacs-lisp
-(defalias 'yes-or-no-p 'y-or-n-p)
+  (defalias 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
 
 *** Async
@@ -164,83 +153,83 @@ The only time I actually had to use comments, this is for ease of removal if you
     :ensure t
     :config
 
-      ;; necessary to configure exwm manually
-      (require 'exwm-config)
+    ;; necessary to configure exwm manually
+    (require 'exwm-config)
 
-      ;; fringe size, most people prefer 1 
-      (fringe-mode 3)
+    ;; fringe size, most people prefer 1 
+    (fringe-mode 3)
 
-      ;; emacs as a daemon, use "emacsclient <filename>" to seamlessly edit files from the terminal directly in the exwm instance
-      (server-start)
+    ;; emacs as a daemon, use "emacsclient <filename>" to seamlessly edit files from the terminal directly in the exwm instance
+    (server-start)
 
-      ;; this fixes issues with ido mode, if you use helm, get rid of it
-;;      (exwm-config-ido)
+    ;; this fixes issues with ido mode, if you use helm, get rid of it
+    ;;      (exwm-config-ido)
 
-      ;; a number between 1 and 9, exwm creates workspaces dynamically so I like starting out with 1
-      (setq exwm-workspace-number 9)
+    ;; a number between 1 and 9, exwm creates workspaces dynamically so I like starting out with 1
+    (setq exwm-workspace-number 9)
 
-      ;; this is a way to declare truly global/always working keybindings
-      ;; this is a nifty way to go back from char mode to line mode without using the mouse
-      (exwm-input-set-key (kbd "s-r") #'exwm-reset)
-      (exwm-input-set-key (kbd "s-k") #'exwm-workspace-delete)
-      (exwm-input-set-key (kbd "s-w") #'exwm-workspace-swap)
-     (exwm-input-set-key (kbd "s-n") 'ibuffer)
-     (exwm-input-set-key (kbd "s-m") 'next-buffer)
-     (exwm-input-set-key (kbd "s-,") 'previous-buffer)
-     (exwm-input-set-key (kbd "s-/") 'kill-current-buffer) 
+    ;; this is a way to declare truly global/always working keybindings
+    ;; this is a nifty way to go back from char mode to line mode without using the mouse
+    (exwm-input-set-key (kbd "s-r") #'exwm-reset)
+    (exwm-input-set-key (kbd "s-k") #'exwm-workspace-delete)
+    (exwm-input-set-key (kbd "s-w") #'exwm-workspace-swap)
+    (exwm-input-set-key (kbd "s-n") 'ibuffer)
+    (exwm-input-set-key (kbd "s-m") 'next-buffer)
+    (exwm-input-set-key (kbd "s-,") 'previous-buffer)
+    (exwm-input-set-key (kbd "s-/") 'kill-current-buffer) 
 
-     (exwm-input-set-key (kbd "s-j") 'windmove-left)
-     (exwm-input-set-key (kbd "s-k") 'windmove-down)
-     (exwm-input-set-key (kbd "s-i") 'windmove-up)
-     (exwm-input-set-key (kbd "s-l") 'windmove-right) 
-     (exwm-input-set-key (kbd "s-;") 'delete-window) 
+    (exwm-input-set-key (kbd "s-j") 'windmove-left)
+    (exwm-input-set-key (kbd "s-k") 'windmove-down)
+    (exwm-input-set-key (kbd "s-i") 'windmove-up)
+    (exwm-input-set-key (kbd "s-l") 'windmove-right) 
+    (exwm-input-set-key (kbd "s-;") 'delete-window) 
 
 
-     (exwm-input-set-key (kbd "s-s h") 'split-window-right)
-     (exwm-input-set-key (kbd "s-s j") 'split-window-below)
-     (exwm-input-set-key (kbd "s-s k") 'split-and-follow-horizontally)
-     (exwm-input-set-key (kbd "s-s l") 'split-and-follow-vertically)
+    (exwm-input-set-key (kbd "s-s h") 'split-window-right)
+    (exwm-input-set-key (kbd "s-s j") 'split-window-below)
+    (exwm-input-set-key (kbd "s-s k") 'split-and-follow-horizontally)
+    (exwm-input-set-key (kbd "s-s l") 'split-and-follow-vertically)
 
-      ;; the next loop will bind s-<number> to switch to the corresponding workspace
-      (dotimes (i 10)
-        (exwm-input-set-key (kbd (format "s-%d" i))
-                            `(lambda ()
-                               (interactive)
-                               (exwm-workspace-switch-create ,i))))
+    ;; the next loop will bind s-<number> to switch to the corresponding workspace
+    (dotimes (i 10)
+      (exwm-input-set-key (kbd (format "s-%d" i))
+                          `(lambda ()
+                             (interactive)
+                             (exwm-workspace-switch-create ,i))))
 
-      ;; the simplest launcher, I keep it in only if dmenu eventually stopped working or something
-      (exwm-input-set-key (kbd "s-&")
-                          (lambda (command)
-                            (interactive (list (read-shell-command "$ ")))
-                            (start-process-shell-command command nil command)))
+    ;; the simplest launcher, I keep it in only if dmenu eventually stopped working or something
+    (exwm-input-set-key (kbd "s-&")
+                        (lambda (command)
+                          (interactive (list (read-shell-command "$ ")))
+                          (start-process-shell-command command nil command)))
 
-      ;; an easy way to make keybindings work *only* in line mode
-      (push ?\C-q exwm-input-prefix-keys)
-      (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
+    ;; an easy way to make keybindings work *only* in line mode
+    (push ?\C-q exwm-input-prefix-keys)
+    (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
 
-      ;; simulation keys are keys that exwm will send to the exwm buffer upon inputting a key combination
-      (exwm-input-set-simulation-keys
-       '(
-         ;; movement
-         ([?\C-b] . left)
-         ([?\M-b] . C-left)
-         ([?\C-f] . right)
-         ([?\M-f] . C-right)
-         ([?\C-p] . up)
-         ([?\C-n] . down)
-         ([?\C-a] . home)
-         ([?\C-e] . end)
-         ([?\M-v] . prior)
-         ([?\C-v] . next)
-         ([?\C-d] . delete)
-         ([?\C-k] . (S-end delete))
-         ;; cut/paste
-         ([?\C-w] . ?\C-x)
-         ([?\M-w] . ?\C-c)
-         ([?\C-y] . ?\C-v)
-         ;; search
-         ([?\C-f] . ?\C-f)
-         ;; movement
+    ;; simulation keys are keys that exwm will send to the exwm buffer upon inputting a key combination
+    (exwm-input-set-simulation-keys
+     '(
+       ;; movement
+       ([?\C-b] . left)
+       ([?\M-b] . C-left)
+       ([?\C-f] . right)
+       ([?\M-f] . C-right)
+       ([?\C-p] . up)
+       ([?\C-n] . down)
+       ([?\C-a] . home)
+       ([?\C-e] . end)
+       ([?\M-v] . prior)
+       ([?\C-v] . next)
+       ([?\C-d] . delete)
+       ([?\C-k] . (S-end delete))
+       ;; cut/paste
+       ([?\C-w] . ?\C-x)
+       ([?\M-w] . ?\C-c)
+       ([?\C-y] . ?\C-v)
+       ;; search
+       ([?\C-f] . ?\C-f)
+       ;; movement
        ([?\M-h] . return)
        ([?\M-m] . return)
        ([?\M-l] . right)
@@ -248,10 +237,10 @@ The only time I actually had to use comments, this is for ease of removal if you
        ([?\M-j] . left)
        ([?\M-\\] . prior)
        ([?\M-'] . next)
-         ))
+       ))
 
-      ;; this little bit will make sure that XF86 keys work in exwm buffers as well
-      (dolist (k '(XF86AudioLowerVolume
+    ;; this little bit will make sure that XF86 keys work in exwm buffers as well
+    (dolist (k '(XF86AudioLowerVolume
                  XF86AudioRaiseVolume
                  XF86PowerOff
                  XF86AudioMute
@@ -266,23 +255,23 @@ The only time I actually had to use comments, this is for ease of removal if you
                  print))
       (cl-pushnew k exwm-input-prefix-keys))
 
-      ;; this just enables exwm, it started automatically once everything is ready
-      (exwm-enable))
+    ;; this just enables exwm, it started automatically once everything is ready
+    (exwm-enable))
 #+END_SRC
 ** Multi monitor
 #+BEGIN_SRC emacs-lisp
-(require 'exwm-randr)
-(setq exwm-randr-workspace-output-plist '(0 "DP-4"))
-(add-hook 'exwm-randr-screen-change-hook
-          (lambda ()
-            (start-process-shell-command
-             "xrandr" nil "xrandr --output DP-4 --auto")))
-(exwm-randr-enable)
+  (require 'exwm-randr)
+  (setq exwm-randr-workspace-output-plist '(0 "DP-4"))
+  (add-hook 'exwm-randr-screen-change-hook
+            (lambda ()
+              (start-process-shell-command
+               "xrandr" nil "xrandr --output DP-4 --auto")))
+  (exwm-randr-enable)
 #+END_SRC
 ** System tray
 #+BEGIN_SRC emacs-lisp
   (require 'exwm-systemtray)
-(exwm-systemtray-enable)
+  (exwm-systemtray-enable)
 #+END_SRC
 
 ** Launchers
@@ -297,7 +286,7 @@ with its own cache for most launched applications.
   (use-package dmenu
     :ensure t
     :bind
-      ("s-SPC" . 'dmenu))
+    ("s-SPC" . 'dmenu))
 #+END_SRC
 ** Audio controls
 This is a set of bindings to my XF86 keys that invokes pulsemixer with the correct parameters
@@ -305,7 +294,7 @@ This is a set of bindings to my XF86 keys that invokes pulsemixer with the corre
 *** Volume modifier
 It goes without saying that you are free to modify the modifier as you see fit, 4 is good enough for me though.
 #+BEGIN_SRC emacs-lisp
-(defconst volumeModifier "4")
+  (defconst volumeModifier "4")
 #+END_SRC
 
 *** Functions to start processes
@@ -326,9 +315,9 @@ It goes without saying that you are free to modify the modifier as you see fit, 
 *** Keybindings to start processes
 You can also change those if you'd like, but I highly recommend keeping 'em the same, chances are, they will just work.
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "<XF86AudioMute>") 'audio/mute)
-(global-set-key (kbd "<XF86AudioRaiseVolume>") 'audio/raise-volume)
-(global-set-key (kbd "<XF86AudioLowerVolume>") 'audio/lower-volume)
+  (global-set-key (kbd "<XF86AudioMute>") 'audio/mute)
+  (global-set-key (kbd "<XF86AudioRaiseVolume>") 'audio/raise-volume)
+  (global-set-key (kbd "<XF86AudioLowerVolume>") 'audio/lower-volume)
 #+END_SRC
 ** Screenshots
 I don't need scrot to take screenshots, or shutter or whatever tools you might have. This is enough.
@@ -340,15 +329,15 @@ These won't work in the terminal version or the virtual console, obvious reasons
     "Takes a fullscreen screenshot of the current workspace"
     (interactive)
     (when window-system
-    (loop for i downfrom 3 to 1 do
-          (progn
-            (message (concat (number-to-string i) "..."))
-            (sit-for 1)))
-    (message "Cheese!")
-    (sit-for 1)
-    (start-process "screenshot" nil "import" "-window" "root" 
-               (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".png"))
-    (message "Screenshot taken!")))
+      (loop for i downfrom 3 to 1 do
+            (progn
+              (message (concat (number-to-string i) "..."))
+              (sit-for 1)))
+      (message "Cheese!")
+      (sit-for 1)
+      (start-process "screenshot" nil "import" "-window" "root" 
+                     (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".png"))
+      (message "Screenshot taken!")))
   (global-set-key (kbd "<print>") 'daedreth/take-screenshot)
 #+END_SRC
 
@@ -358,18 +347,18 @@ These won't work in the terminal version or the virtual console, obvious reasons
     "Takes a screenshot of a region selected by the user."
     (interactive)
     (when window-system
-    (call-process "import" nil nil nil ".newScreen.png")
-    (call-process "convert" nil nil nil ".newScreen.png" "-shave" "1x1"
-                  (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".png"))
-    (call-process "rm" nil nil nil ".newScreen.png")))
+      (call-process "import" nil nil nil ".newScreen.png")
+      (call-process "convert" nil nil nil ".newScreen.png" "-shave" "1x1"
+                    (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".png"))
+      (call-process "rm" nil nil nil ".newScreen.png")))
   (global-set-key (kbd "<Scroll_Lock>") 'daedreth/take-screenshot-region)
 #+END_SRC
 
 ** Default browser
 I use eww for most browsing, and I use icecat when I need to open something in an external browser.
 #+BEGIN_SRC emacs-lisp
-    (setq browse-url-browser-function 'eww-browse-url
-	  browse-url-generic-program "icecat")
+  (setq browse-url-browser-function 'eww-browse-url
+        browse-url-generic-program "icecat")
 #+END_SRC
 
 sometimes i load a page and it has a lot of animated images and it makes eww crawl, or it has big images that make the page hard to read, so I dont open images by default, but this neat script i found lets you turn on and off images.
@@ -380,7 +369,7 @@ sometimes i load a page and it has a lot of animated images and it makes eww cra
     (setq-local shr-inhibit-images (not shr-inhibit-images))
     (eww-reload t)
     (message "Images are now %s"
-	     (if shr-inhibit-images "off" "on")))
+             (if shr-inhibit-images "off" "on")))
 
   ;; (define-key eww-mode-map (kbd "I") #'my/eww-toggle-images)
   ;; (define-key eww-link-keymap (kbd "I") #'my/eww-toggle-images)
@@ -392,86 +381,86 @@ sometimes i load a page and it has a lot of animated images and it makes eww cra
 
 this highlights syntax in eww, good for elisp snippets on the wiki.
 #+BEGIN_SRC emacs-lisp
-;; syntax highlighting 
-(use-package language-detection
-:ensure t
-:config
-(require 'cl-lib)
+  ;; syntax highlighting 
+  (use-package language-detection
+    :ensure t
+    :config
+    (require 'cl-lib)
 
-(defun eww-tag-pre (dom)
-  (let ((shr-folding-mode 'none)
-        (shr-current-font 'default))
-    (shr-ensure-newline)
-    (insert (eww-fontify-pre dom))
-    (shr-ensure-newline)))
+    (defun eww-tag-pre (dom)
+      (let ((shr-folding-mode 'none)
+            (shr-current-font 'default))
+        (shr-ensure-newline)
+        (insert (eww-fontify-pre dom))
+        (shr-ensure-newline)))
 
-(defun eww-fontify-pre (dom)
-  (with-temp-buffer
-    (shr-generic dom)
-    (let ((mode (eww-buffer-auto-detect-mode)))
-      (when mode
-        (eww-fontify-buffer mode)))
-    (buffer-string)))
+    (defun eww-fontify-pre (dom)
+      (with-temp-buffer
+        (shr-generic dom)
+        (let ((mode (eww-buffer-auto-detect-mode)))
+          (when mode
+            (eww-fontify-buffer mode)))
+        (buffer-string)))
 
-(defun eww-fontify-buffer (mode)
-  (delay-mode-hooks (funcall mode))
-  (font-lock-default-function mode)
-  (font-lock-default-fontify-region (point-min)
-                                    (point-max)
-                                    nil))
+    (defun eww-fontify-buffer (mode)
+      (delay-mode-hooks (funcall mode))
+      (font-lock-default-function mode)
+      (font-lock-default-fontify-region (point-min)
+                                        (point-max)
+                                        nil))
 
-(defun eww-buffer-auto-detect-mode ()
-  (let* ((map '((ada ada-mode)
-                (awk awk-mode)
-                (c c-mode)
-                (cpp c++-mode)
-                (clojure clojure-mode lisp-mode)
-                (csharp csharp-mode java-mode)
-                (css css-mode)
-                (dart dart-mode)
-                (delphi delphi-mode)
-                (emacslisp emacs-lisp-mode)
-                (erlang erlang-mode)
-                (fortran fortran-mode)
-                (fsharp fsharp-mode)
-                (go go-mode)
-                (groovy groovy-mode)
-                (haskell haskell-mode)
-                (html html-mode)
-                (java java-mode)
-                (javascript javascript-mode)
-                (json json-mode javascript-mode)
-                (latex latex-mode)
-                (lisp lisp-mode)
-                (lua lua-mode)
-                (matlab matlab-mode octave-mode)
-                (objc objc-mode c-mode)
-                (perl perl-mode)
-                (php php-mode)
-                (prolog prolog-mode)
-                (python python-mode)
-                (r r-mode)
-                (ruby ruby-mode)
-                (rust rust-mode)
-                (scala scala-mode)
-                (shell shell-script-mode)
-                (smalltalk smalltalk-mode)
-                (sql sql-mode)
-                (swift swift-mode)
-                (visualbasic visual-basic-mode)
-                (xml sgml-mode)))
-         (language (language-detection-string
-                    (buffer-substring-no-properties (point-min) (point-max))))
-         (modes (cdr (assoc language map)))
-         (mode (cl-loop for mode in modes
-                        when (fboundp mode)
-                        return mode)))
-    (message (format "%s" language))
-    (when (fboundp mode)
-      mode)))
+    (defun eww-buffer-auto-detect-mode ()
+      (let* ((map '((ada ada-mode)
+                    (awk awk-mode)
+                    (c c-mode)
+                    (cpp c++-mode)
+                    (clojure clojure-mode lisp-mode)
+                    (csharp csharp-mode java-mode)
+                    (css css-mode)
+                    (dart dart-mode)
+                    (delphi delphi-mode)
+                    (emacslisp emacs-lisp-mode)
+                    (erlang erlang-mode)
+                    (fortran fortran-mode)
+                    (fsharp fsharp-mode)
+                    (go go-mode)
+                    (groovy groovy-mode)
+                    (haskell haskell-mode)
+                    (html html-mode)
+                    (java java-mode)
+                    (javascript javascript-mode)
+                    (json json-mode javascript-mode)
+                    (latex latex-mode)
+                    (lisp lisp-mode)
+                    (lua lua-mode)
+                    (matlab matlab-mode octave-mode)
+                    (objc objc-mode c-mode)
+                    (perl perl-mode)
+                    (php php-mode)
+                    (prolog prolog-mode)
+                    (python python-mode)
+                    (r r-mode)
+                    (ruby ruby-mode)
+                    (rust rust-mode)
+                    (scala scala-mode)
+                    (shell shell-script-mode)
+                    (smalltalk smalltalk-mode)
+                    (sql sql-mode)
+                    (swift swift-mode)
+                    (visualbasic visual-basic-mode)
+                    (xml sgml-mode)))
+             (language (language-detection-string
+                        (buffer-substring-no-properties (point-min) (point-max))))
+             (modes (cdr (assoc language map)))
+             (mode (cl-loop for mode in modes
+                            when (fboundp mode)
+                            return mode)))
+        (message (format "%s" language))
+        (when (fboundp mode)
+          mode)))
 
-(setq shr-external-rendering-functions
-      '((pre . eww-tag-pre))))
+    (setq shr-external-rendering-functions
+          '((pre . eww-tag-pre))))
 
 #+END_SRC
 
@@ -479,11 +468,12 @@ this highlights syntax in eww, good for elisp snippets on the wiki.
 
 ** Enable projectile globally
 This makes sure that everything can be a project.
+
 #+BEGIN_SRC emacs-lisp
   (use-package projectile
     :ensure t
     :init
-      (projectile-mode 1))
+    (projectile-mode 1))
 #+END_SRC
 
 ** Let projectile call make
@@ -497,22 +487,16 @@ Dashboard with recent files and projects
   (use-package dashboard
     :ensure t
     :config
-      (dashboard-setup-startup-hook)
-      (setq dashboard-startup-banner "~/.emacs.d/img/dashLogo.png")
-      (setq dashboard-items '((recents  . 5)
-                              (projects . 5)))
-      (setq dashboard-banner-logo-title "TAYMACS"))
+    (dashboard-setup-startup-hook)
+    (setq dashboard-startup-banner "~/.emacs.d/img/dashLogo.png")
+    (setq dashboard-items '((recents  . 5)
+                            (projects . 5)))
+    (setq dashboard-banner-logo-title "TAYMACS"))
 #+END_SRC
 
 * Modeline
-The modeline is the heart of emacs, it offers information at all times, it's persistent
-and verbose enough to gain a full understanding of modes and states you are in.
-
-One modeline-related setting that is missing and is instead placed at the bottom is =diminish=.
 
 ** Clock
-If you prefer the 12hr-format, change the variable to =nil= instead of =t=.
-
 *** Time format
 #+BEGIN_SRC emacs-lisp
   (setq display-time-24hr-format nil)
@@ -537,62 +521,44 @@ This turns on the clock globally.
 I used to use helm, and ivy with counsel. but i find that dired is good enough to take the place of counsel, ivy is good enough for most things. personally i feel like minibuffer completion stuff kinda breaks the "everything is a buffer" idea which is very useful in the long term
 
 #+BEGIN_SRC emacs-lisp
-    (use-package ivy
-      :ensure t
-  :config
-  (ivy-mode 1)
-:bind
-("C-x C-b" . 'ivy-switch-buffer)
-  )
+  (use-package ivy
+    :ensure t
+    :config
+    (ivy-mode 1)
+    :bind
+    ("C-x C-b" . 'ivy-switch-buffer)
+    )
 #+END_SRC
 ** TODO set up whichkey with ivy
 ** TODO  look into icicles
 ** TODO look into anything.el
-** which-key and why I love emacs
-In order to use emacs, you don't need to know how to use emacs.
-It's self documenting, and coupled with this insanely useful package, it's even easier.
-In short, after you start the input of a command and stop, pondering what key must follow,
-it will automatically open a non-intrusive buffer at the bottom of the screen offering
-you suggestions for completing the command, that's it, nothing else.
-
-It's beautiful
+** which-key
+automatic cheat sheet once you press part of a key series
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
     :ensure t
     :config
-      (which-key-mode))
+    (which-key-mode))
 #+END_SRC
 * Moving around emacs
-** TODO scrolling
-I don't know to be honest, but this little bit of code makes scrolling with emacs a lot nicer.
-#+BEGIN_SRC emacs-lisp
-  (setq scroll-conservatively 100)
-#+END_SRC
 ** windows,panes and why I hate other-window
 Some of us have large displays, others have tiny netbook screens, but regardless of your hardware
 you probably use more than 2 panes/windows at times, cycling through all of them with
 =C-c o= is annoying to say the least, it's a lot of keystrokes and takes time, time you could spend doing something more productive.
 
 *** switch-window
-This magnificent package takes care of this issue.
-It's unnoticeable if you have <3 panes open, but with 3 or more, upon pressing =C-x o=
-you will notice how your buffers turn a solid color and each buffer is asigned a letter
-(the list below shows the letters, you can modify them to suit your liking), upon pressing
-a letter asigned to a window, your will be taken to said window, easy to remember, quick to use
-and most importantly, it annihilates a big issue I had with emacs. An alternative is =ace-window=,
-however by default it also changes the behaviour of =C-x o= even if only 2 windows are open,
-this is bad, it also works less well with =exwm= for some reason.
+switch window uses an ace type jump if more than 2 windows are open
 #+BEGIN_SRC emacs-lisp
-(use-package switch-window
-  :ensure t
-  :config
+  (use-package switch-window
+    :ensure t
+    :config
     (setq switch-window-input-style 'minibuffer)
     (setq switch-window-increase 4)
     (setq switch-window-threshold 2)
     (setq switch-window-shortcut-style 'qwerty)
     (setq switch-window-qwerty-shortcuts
-        '("a" "s" "d" "f" "j" "k" "l" "i" "o"))
-  :bind
+          '("a" "s" "d" "f" "j" "k" "l" "i" "o"))
+    :bind
     ([remap other-window] . switch-window))
 #+END_SRC
 
@@ -614,7 +580,7 @@ This annoyed me so much I wrote these two, they take care of it.
     (other-window 1))
   (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
 #+END_SRC
-** TODO buffers and why I hate list-buffers
+** TODO buffers
 Another big thing is, buffers. If you use emacs, you use buffers, everyone loves them.
 Having many buffers is useful, but can be tedious to work with, let us see how we can improve it.
 
@@ -631,33 +597,20 @@ Doing =C-x k= should kill the current buffer at all times, we have =ibuffer= for
 *** Kill buffers without asking for confirmation
 Unless you have the muscle memory, I recommend omitting this bit, as you may lose progress for no reason when working.
 #+BEGIN_SRC emacs-lisp
-(setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
+  (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
 #+END_SRC
 
 *** Turn switch-to-buffer into ibuffer
 I don't understand how ibuffer isn't the default option by now.
 It's vastly superior in terms of ergonomics and functionality, you can delete buffers, rename buffer, move buffers, organize buffers etc.
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-x b") 'ibuffer)
+  (global-set-key (kbd "C-x b") 'ibuffer)
 #+END_SRC
 
 **** expert-mode
 If you feel like you know how ibuffer works and need not to be asked for confirmation after every serious command, enable this as follows.
 #+BEGIN_SRC emacs-lisp
-;;(setq ibuffer-expert t)
-#+END_SRC
-*** close-all-buffers
-It's one of those things where I genuinely have to wonder why there is no built in functionality for it.
-Once in a blue moon I need to kill all buffers, and having ~150 of them open would mean I'd need to spend a few too many
-seconds doing this than I'd like, here's a solution.
-
-This can be invoked using =C-M-s-k=. This keybinding makes sure you don't hit it unless you really want to.
-#+BEGIN_SRC emacs-lisp
-  (defun close-all-buffers ()
-    "Kill all buffers without regard for their origin."
-    (interactive)
-    (mapc 'kill-buffer (buffer-list)))
-  (global-set-key (kbd "C-M-s-k") 'close-all-buffers)
+  ;;(setq ibuffer-expert t)
 #+END_SRC
 
 ** line numbers
@@ -666,8 +619,8 @@ Relative line numbers
   (use-package linum-relative
     :ensure t
     :config
-      (setq linum-relative-current-symbol "")
-      (add-hook 'prog-mode-hook 'linum-relative-mode))
+    (setq linum-relative-current-symbol "")
+    (add-hook 'prog-mode-hook 'linum-relative-mode))
 #+END_SRC
 
 ** isearch/avy/ace jump
@@ -731,13 +684,12 @@ And this quickly deletes a line.
   (global-set-key (kbd "C-c l k") 'kill-whole-line)
 #+END_SRC
 
-* TODO multiple cursors
-need to decide if i want to keep this
+** capture
 #+BEGIN_SRC emacs-lisp
-  (use-package multiple-cursors
-    :ensure t
-    )
+  (global-set-key (kbd "C-c j") 'org-capture)
 #+END_SRC
+
+
 
 * Minor conveniences
 Emacs is at it's best when it just does things for you, shows you the way, guides you so to speak.
@@ -772,64 +724,45 @@ Emacs treats camelCase strings as a single word by default, this changes said be
 #+END_SRC
 
 ** Electric
-If you write any code, you may enjoy this.
-Typing the first character in a set of 2, completes the second one after your cursor.
-Opening a bracket? It's closed for you already. Quoting something? It's closed for you already.
-
-You can easily add and remove pairs yourself, have a look.
+autocomplete pairs
 #+BEGIN_SRC emacs-lisp
-(setq electric-pair-pairs '(
-                           (?\{ . ?\})
-                           (?\( . ?\))
-                           (?\[ . ?\])
-                           (?\" . ?\")
-                           ))
+  (setq electric-pair-pairs '(
+                              (?\{ . ?\})
+                              (?\( . ?\))
+                              (?\[ . ?\])
+                              (?\" . ?\")
+                              ))
 #+END_SRC
 
 And now to enable it
 #+BEGIN_SRC emacs-lisp
-(electric-pair-mode t)
+  (electric-pair-mode t)
 #+END_SRC
-
-** Beacon
-While changing buffers or workspaces, the first thing you do is look for your cursor.
-Unless you know its position, you can not move it efficiently. Every time you change
-buffers, the current position of your cursor will be briefly highlighted now.
-#+BEGIN_SRC emacs-lisp
-  ;; (use-package beacon
-  ;;   :ensure t
-  ;;   :config
-  ;;     (beacon-mode 1))
-#+END_SRC
-
 ** Rainbow
-Mostly useful if you are into web development or game development.
-Every time emacs encounters a hexadecimal code that resembles a color, it will automatically highlight
-it in the appropriate color. This is a lot cooler than you may think.
+shows color of hex color
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-mode
     :ensure t
     :init
-      (add-hook 'prog-mode-hook 'rainbow-mode))
+    (add-hook 'prog-mode-hook 'rainbow-mode))
 #+END_SRC
 
 ** Show parens
-I forgot about that initially, it highlights matching parens when the cursor is just behind one of them.
+highlight matching paren
 #+BEGIN_SRC emacs-lisp
   (show-paren-mode 1)
 #+END_SRC
 ** Rainbow delimiters
-Colors parentheses and other delimiters depending on their depth, useful for any language using them,
-especially lisp.
+Colors parentheses and other delimiters depending on their depth
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-delimiters
     :ensure t
     :init
-      (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 #+END_SRC
 
 ** Expand region
-A pretty simple package, takes your cursor and semantically expands the region, so words, sentences, maybe the contents of some parentheses, it's awesome, try it out.
+grow region over levels of semantic objects.
 #+BEGIN_SRC emacs-lisp
   (use-package expand-region
     :ensure t
@@ -837,43 +770,12 @@ A pretty simple package, takes your cursor and semantically expands the region, 
 #+END_SRC
 
 ** Hungry deletion
-On the list of things I like doing, deleting big whitespaces is pretty close to the bottom.
 Backspace or Delete will get rid of all whitespace until the next non-whitespace character is encountered.
-You may not like it, thus disable it if you must, but it's pretty decent.
 #+BEGIN_SRC emacs-lisp
   (use-package hungry-delete
     :ensure t
     :config
-      (global-hungry-delete-mode))
-#+END_SRC
-
-** Zapping to char
-A nifty little package that kills all text between your cursor and a selected character.
-A lot more useful than you might think. If you wish to include the selected character in the killed region,
-change =zzz-up-to-char= into =zzz-to-char=.
-#+BEGIN_SRC emacs-lisp
-  (use-package zzz-to-char
-    :ensure t
-    :bind ("M-z" . zzz-up-to-char))
-#+END_SRC
-
-* Kill ring
-There is a lot of customization to the kill ring, and while I have not used it much before,
-I decided that it was time to change that.
-** Maximum entries on the ring
-The default is 60, I personally need more sometimes.
-#+BEGIN_SRC emacs-lisp
-  (setq kill-ring-max 100)
-#+END_SRC
-
-** popup-kill-ring
-Out of all the packages I tried out, this one, being the simplest, appealed to me most.
-With a simple M-y you can now browse your kill-ring like browsing autocompletion items.
-C-n and C-p totally work for this.
-#+BEGIN_SRC emacs-lisp
-  (use-package popup-kill-ring
-    :ensure t
-    :bind ("M-y" . popup-kill-ring))
+    (global-hungry-delete-mode))
 #+END_SRC
 
 * Programming
@@ -884,23 +786,23 @@ lsp is bloat
 
 ** yasnippet
 #+BEGIN_SRC emacs-lisp
-    (use-package yasnippet
-      :ensure t
-      :config
-        (use-package yasnippet-snippets
-          :ensure t)
-        (yas-reload-all))
+  (use-package yasnippet
+    :ensure t
+    :config
+    (use-package yasnippet-snippets
+      :ensure t)
+    (yas-reload-all))
 #+END_SRC
 
 ** flycheck
 #+BEGIN_SRC emacs-lisp
-    (use-package flycheck
-      :ensure t
-      :config
-    
-(add-hook 'after-init-hook #'global-flycheck-mode)
-        (flycheck-add-mode 'javascript-eslint 'web-mode)
-  )
+  (use-package flycheck
+    :ensure t
+    :config
+  
+    (add-hook 'after-init-hook #'global-flycheck-mode)
+    (flycheck-add-mode 'javascript-eslint 'web-mode)
+    )
 #+END_SRC
 
 ** company mode
@@ -939,12 +841,12 @@ Each category also has additional settings.
 
 **** flycheck
 #+BEGIN_SRC emacs-lisp
-    (use-package flycheck-clang-analyzer
-      :ensure t
-      :config
-      (with-eval-after-load 'flycheck
-        (require 'flycheck-clang-analyzer)
-         (flycheck-clang-analyzer-setup)))
+  (use-package flycheck-clang-analyzer
+    :ensure t
+    :config
+    (with-eval-after-load 'flycheck
+      (require 'flycheck-clang-analyzer)
+      (flycheck-clang-analyzer-setup)))
 
 
 #+END_SRC
@@ -988,13 +890,13 @@ Requires libclang to be installed.
 **** company
 #+BEGIN_SRC emacs-lisp
   (with-eval-after-load 'company
-      (add-hook 'python-mode-hook 'company-mode))
+    (add-hook 'python-mode-hook 'company-mode))
 
   (use-package company-jedi
     :ensure t
     :config
-      (require 'company)
-      (add-to-list 'company-backends 'company-jedi))
+    (require 'company)
+    (add-to-list 'company-backends 'company-jedi))
 
   (defun python-mode-company-init ()
     (setq-local company-backends '((company-jedi
@@ -1004,8 +906,8 @@ Requires libclang to be installed.
   (use-package company-jedi
     :ensure t
     :config
-      (require 'company)
-      (add-hook 'python-mode-hook 'python-mode-company-init))
+    (require 'company)
+    (add-hook 'python-mode-hook 'python-mode-company-init))
 #+END_SRC
 
 *** emacs-lisp
@@ -1032,14 +934,10 @@ Requires libclang to be installed.
   (use-package slime-company
     :ensure t
     :init
-      (require 'company)
-      (slime-setup '(slime-fancy slime-company)))
+    (require 'company)
+    (slime-setup '(slime-fancy slime-company)))
 #+END_SRC
-*** clojure
-#+BEGIN_SRC emacs-lisp
-  (use-package cider
-    :ensure t)
-      #+END_SRC
+
 *** lua
 **** yasnippet
 #+BEGIN_SRC emacs-lisp
@@ -1067,11 +965,11 @@ Requires libclang to be installed.
   (use-package company-lua
     :ensure t
     :config
-      (require 'company)
-      (setq lua-indent-level 4)
-      (setq lua-indent-string-contents t)
-      (add-hook 'lua-mode-hook 'custom-lua-repl-bindings)
-      (add-hook 'lua-mode-hook 'lua-mode-company-init))
+    (require 'company)
+    (setq lua-indent-level 4)
+    (setq lua-indent-string-contents t)
+    (add-hook 'lua-mode-hook 'custom-lua-repl-bindings)
+    (add-hook 'lua-mode-hook 'lua-mode-company-init))
 #+END_SRC
 
 *** bash
@@ -1099,8 +997,8 @@ Requires libclang to be installed.
   (use-package company-shell
     :ensure t
     :config
-      (require 'company)
-      (add-hook 'shell-mode-hook 'shell-mode-company-init))
+    (require 'company)
+    (add-hook 'shell-mode-hook 'shell-mode-company-init))
 #+END_SRC
 *** haskell
 #+BEGIN_SRC emacs-lisp
@@ -1109,93 +1007,93 @@ Requires libclang to be installed.
 #+END_SRC
 *** JS
 #+BEGIN_SRC emacs-lisp
-    (add-hook 'emacs-lisp-mode-hook 'company-mode)
-    (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
-    (use-package js2-mode
-       :ensure t
-      :init
-      (setq js-basic-indent 2)
-      (setq js2-strict-missing-semi-warning nil)
-      (setq js2-missing-semi-one-line-override t)
-      (setq-default js2-basic-indent 2
-                    js2-basic-offset 2
-                    js2-auto-indent-p t
-                    js2-cleanup-whitespace t
-                    js2-enter-indents-newline t
-                    js2-indent-on-enter-key t
-                    js2-global-externs (list "window" "module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON" "jQuery" "$"))
+  (add-hook 'emacs-lisp-mode-hook 'company-mode)
+  (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
+  (use-package js2-mode
+    :ensure t
+    :init
+    (setq js-basic-indent 2)
+    (setq js2-strict-missing-semi-warning nil)
+    (setq js2-missing-semi-one-line-override t)
+    (setq-default js2-basic-indent 2
+                  js2-basic-offset 2
+                  js2-auto-indent-p t
+                  js2-cleanup-whitespace t
+                  js2-enter-indents-newline t
+                  js2-indent-on-enter-key t
+                  js2-global-externs (list "window" "module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON" "jQuery" "$"))
 
-      (add-hook 'js2-mode-hook
-                (lambda ()
-                  (push '("function" . ?ƒ) prettify-symbols-alist)))
+    (add-hook 'js2-mode-hook
+              (lambda ()
+                (push '("function" . ?ƒ) prettify-symbols-alist)))
     (add-hook 'js2-mode-hook 'company-mode)
     (add-hook 'js2-mode-hook 'yas-minor-mode)
-      (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+    (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
     )
 
-    ;; jump to definition
-    ;;(use-package tern
-    ;;   :ensure t
-    ;;   :init (add-hook 'js2-mode-hook (lambda () (tern-mode t)))
-    ;;   :config
-    ;;     (use-package company-tern
-    ;;        :ensure t
-    ;;        :init (add-to-list 'company-backends 'company-tern)))
-    ;; refactoring (C-c)
-    (use-package js2-refactor
-      :ensure t
-      :init   (add-hook 'js2-mode-hook 'js2-refactor-mode)
-      :config (js2r-add-keybindings-with-prefix "C-c ."))
+  ;; jump to definition
+  ;;(use-package tern
+  ;;   :ensure t
+  ;;   :init (add-hook 'js2-mode-hook (lambda () (tern-mode t)))
+  ;;   :config
+  ;;     (use-package company-tern
+  ;;        :ensure t
+  ;;        :init (add-to-list 'company-backends 'company-tern)))
+  ;; refactoring (C-c)
+  (use-package js2-refactor
+    :ensure t
+    :init   (add-hook 'js2-mode-hook 'js2-refactor-mode)
+    :config (js2r-add-keybindings-with-prefix "C-c ."))
 
   (use-package prettier-js
     :ensure t
-  :config
-(add-hook 'js2-mode-hook 'prettier-js-mode)
-(add-hook 'web-mode-hook 'prettier-js-mode)
+    :config
+    (add-hook 'js2-mode-hook 'prettier-js-mode)
+    (add-hook 'web-mode-hook 'prettier-js-mode)
     )
 #+END_SRC
 
 *** drools
 #+BEGIN_SRC emacs-lisp
-(autoload 'drools-mode "drools-mode")
+  (autoload 'drools-mode "drools-mode")
 
-(defun set-extension-mode (extension mode)
-  (setq auto-mode-alist
-	(cons (cons (concat "\\" extension "\\'") mode)
-	      auto-mode-alist) ) )
+  (defun set-extension-mode (extension mode)
+    (setq auto-mode-alist
+          (cons (cons (concat "\\" extension "\\'") mode)
+                auto-mode-alist) ) )
 
-(set-extension-mode ".drl" 'drools-mode)
-(set-extension-mode ".dslr" 'drools-mode)
+  (set-extension-mode ".drl" 'drools-mode)
+  (set-extension-mode ".dslr" 'drools-mode)
 
-(add-hook 'drools-mode-hook 'my-drools-hook)
+  (add-hook 'drools-mode-hook 'my-drools-hook)
 
-(defun drools-return-and-indent()
-  (interactive)
-  (newline) (indent-for-tab-command) )
+  (defun drools-return-and-indent()
+    (interactive)
+    (newline) (indent-for-tab-command) )
 
-(defun my-drools-hook ()
-  (setq indent-tabs-mode nil)
-  (local-set-key [?\C-m] 'drools-return-and-indent) )
+  (defun my-drools-hook ()
+    (setq indent-tabs-mode nil)
+    (local-set-key [?\C-m] 'drools-return-and-indent) )
 #+END_SRC
 
 ** web programming
 *** vue
 **** vue-mode
 #+BEGIN_SRC emacs-lisp
-(use-package vue-mode
-:ensure t
-:init (add-hook 'vue-mode-hook 'company-mode)
-(add-hook 'vue-mode-hook 'yas-minor-mode)
-:config
-(setq mmm-submode-decoration-level 0)
-)
+  (use-package vue-mode
+    :ensure t
+    :init (add-hook 'vue-mode-hook 'company-mode)
+    (add-hook 'vue-mode-hook 'yas-minor-mode)
+    :config
+    (setq mmm-submode-decoration-level 0)
+    )
 #+END_SRC
 **** vue-html-mode
 
 #+BEGIN_SRC emacs-lisp
-(use-package vue-html-mode
-:ensure t
-)
+  (use-package vue-html-mode
+    :ensure t
+    )
 #+END_SRC
 **** vue lsp?
 #+BEGIN_SRC emacs-lisp
@@ -1204,17 +1102,17 @@ Requires libclang to be installed.
 #+end_src
 
 #+BEGIN_SRC emacs-lisp
-(use-package vue-mode
-:ensure t
-)
+  (use-package vue-mode
+    :ensure t
+    )
 #+END_SRC
 
 *** emmet
 
 #+BEGIN_SRC emacs-lisp
-(use-package emmet-mode
-:ensure t
-)
+  (use-package emmet-mode
+    :ensure t
+    )
 #+END_SRC
 
 *** coffee?
@@ -1236,9 +1134,9 @@ Requires libclang to be installed.
               (lambda (hash) (setq web-mode-block-padding 0)))
     (add-hook 'web-mode-hook 'company-mode)
     (add-hook 'web-mode-hook 'yas-minor-mode)
-  :config
-  (setq web-mode-enable-auto-indentation nil)
-(setq web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
+    :config
+    (setq web-mode-enable-auto-indentation nil)
+    (setq web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
     )
 
 #+END_SRC
@@ -1265,11 +1163,8 @@ great. It's easy and intuitive to use, shows its options at a keypress and much 
     :ensure t
     :config
     (setq magit-push-always-verify nil)
-    (setq git-commit-summary-max-length 50)
-    :bind
-    ("M-g" . magit-status))
+    (setq git-commit-summary-max-length 50))
 #+END_SRC
-
 ** git gutter
 #+BEGIN_SRC emacs-lisp
   (use-package diff-hl
@@ -1279,16 +1174,6 @@ great. It's easy and intuitive to use, shows its options at a keypress and much 
     )
 
 
-#+END_SRC
-
-** support for merge requests
-#+BEGIN_SRC emacs-lisp
-(use-package forge
-:after magit
-:ensure t
-:config
-(add-to-list 'forge-alist '("git.codemettle.com" "git.codemettle.com/api/v4" "git.codemettle.com" forge-gitlab-repository))
-)
 #+END_SRC
 * Remote editing
 I have no need to directly edit files over SSH, but what I do need is a way to edit files as root.
@@ -1300,7 +1185,7 @@ Pretty self-explanatory, useful as hell if you use exwm.
   (use-package sudo-edit
     :ensure t
     :bind
-      ("s-e" . sudo-edit))
+    ("s-e" . sudo-edit))
 #+END_SRC
 
 * Org
@@ -1325,13 +1210,13 @@ Those are all rather self-explanatory.
 #+END_SRC
 ** org journal
 #+BEGIN_SRC emacs-lisp
-(use-package org-journal 
-      :ensure t
-      :defer t
-      :custom
-      (org-journal-dir "~/notes/journal/")
-      (org-journal-date-format "%A, %d %B %Y")
-)
+  (use-package org-journal 
+    :ensure t
+    :defer t
+    :custom
+    (org-journal-dir "~/notes/journal/")
+    (org-journal-date-format "%A, %d %B %Y")
+    )
 #+END_SRC
 ** Syntax highlighting for documents exported to HTML
 #+BEGIN_SRC emacs-lisp
@@ -1342,8 +1227,8 @@ Those are all rather self-explanatory.
 ** Line wrapping
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook
-	    '(lambda ()
-	       (visual-line-mode 1)))
+            '(lambda ()
+               (visual-line-mode 1)))
 #+END_SRC
 
 ** Keybindings
@@ -1357,14 +1242,14 @@ Makes it all look a bit nicer, I hate looking at asterisks.
   (use-package org-bullets
     :ensure t
     :config
-      (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
 #+END_SRC
 
 ** Easy-to-add emacs-lisp template
 Hitting tab after an "<el" in an org-mode file will create a template for elisp insertion.
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'org-structure-template-alist
-	       '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
+               '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
 #+END_SRC
 
 ** Exporting options
@@ -1377,17 +1262,12 @@ Here is how we add more of them!
     (add-to-list 'load-path "/usr/share/emacs/site-lisp/tex-utils")
     (require 'xdvi-search))
 #+END_SRC
-*** Twitter Bootstrap
-#+BEGIN_SRC emacs-lisp
-  (use-package ox-twbs
-    :ensure t)
-#+END_SRC
-#+END_SRC
+
 * web browser
 ** elpher for gopher and gem
 #+BEGIN_SRC emacs-lisp
-(use-package elpher
-  :ensure t)
+  (use-package elpher
+    :ensure t)
 #+END_SRC
 * Instant messaging
 
@@ -1421,31 +1301,11 @@ What it says on the tin, this changes the =erc= history to include the server I 
 *** Nick highlighting
 You can even highlight nicks to make the buffers a bit more visually pleasing and easier to look at.
 #+BEGIN_SRC emacs-lisp
-(use-package erc-hl-nicks
-  :ensure t
-  :config
+  (use-package erc-hl-nicks
+    :ensure t
+    :config
     (erc-update-modules))
 #+END_SRC
-** 
-** rich presence for discord
-Memes, but it's fun and tiny.
-#+BEGIN_SRC emacs-lisp
-  (use-package elcord
-    :ensure t)
-#+END_SRC
-** rcirc
-#+BEGIN_SRC emacs-lisp
-(setq rcirc-default-nick "nobodynogroup")
-(setq rcirc-server-alist
-      '(("irc.freenode.net" :port 6697 :encryption tls
-	 :channels ("#rcirc" "#emacs" "#emacswiki"))))
-
-#+END_SRC
-
-#+RESULTS:
-| irc.freenode.net | :port | 6697 | :encryption | tls | :channels | (#rcirc #emacs #emacswiki) |
-
-
 * EMMS 
 There is many backends, many players and codecs for EMMS, we use mpd now.
 
@@ -1458,25 +1318,25 @@ Obviously you might have to adjust /server-name/ and /server-port/ to fit your c
   (use-package emms
     :ensure t
     :config
-      (require 'emms-setup)
-      (require 'emms-player-mpd)
-      (emms-all) ; don't change this to values you see on stackoverflow questions if you expect emms to work
-      (setq emms-seek-seconds 5)
-      (emms-default-players)
-      ;; (setq emms-player-list '(emms-player-mpd))
-      ;; (setq emms-info-functions '(emms-info-mpd))
-      (setq emms-player-mpd-server-name "localhost")
-      (setq emms-player-mpd-server-port "6600")     
-      (setq emms-source-file-default-directory "~/Media/")
+    (require 'emms-setup)
+    (require 'emms-player-mpd)
+    (emms-all) ; don't change this to values you see on stackoverflow questions if you expect emms to work
+    (setq emms-seek-seconds 5)
+    (emms-default-players)
+    ;; (setq emms-player-list '(emms-player-mpd))
+    ;; (setq emms-info-functions '(emms-info-mpd))
+    (setq emms-player-mpd-server-name "localhost")
+    (setq emms-player-mpd-server-port "6600")     
+    (setq emms-source-file-default-directory "~/Media/")
     :bind
-      ;; ("s-m p" . emms)
-      ;; ("s-m b" . emms-smart-browse)
-      ;; ("s-m r" . emms-player-mpd-update-all-reset-cache)
-      ("<XF86AudioPrev>" . emms-previous)
-      ("<XF86AudioNext>" . emms-next)
-      ("<XF86AudioPlay>" . emms-pause)
-      ("<XF86AudioPause>" . emms-pause)
-      ("<XF86AudioStop>" . emms-stop))
+    ;; ("s-m p" . emms)
+    ;; ("s-m b" . emms-smart-browse)
+    ;; ("s-m r" . emms-player-mpd-update-all-reset-cache)
+    ("<XF86AudioPrev>" . emms-previous)
+    ("<XF86AudioNext>" . emms-next)
+    ("<XF86AudioPlay>" . emms-pause)
+    ("<XF86AudioPause>" . emms-pause)
+    ("<XF86AudioStop>" . emms-stop))
 #+END_SRC
 
 *** MPC Setup
@@ -1527,105 +1387,105 @@ and only invoke it manually when needed.
 ** Icons to make things pretty
 M-x all-the-icons-install-fonts
 #+BEGIN_SRC emacs-lisp
-(use-package all-the-icons)
+  (use-package all-the-icons)
 #+END_SRC
 * Atomic actions
 ** Duplicate Line atomically
 #+BEGIN_SRC emacs-lisp
-;; https://stackoverflow.com/questions/88399/how-do-i-duplicate-a-whole-line-in-emacs
-(defun duplicate-line (arg)
-  "Duplicate current line, leaving point in lower line."
-  (interactive "*p")
+  ;; https://stackoverflow.com/questions/88399/how-do-i-duplicate-a-whole-line-in-emacs
+  (defun duplicate-line (arg)
+    "Duplicate current line, leaving point in lower line."
+    (interactive "*p")
 
-  ;; save the point for undo
-  (setq buffer-undo-list (cons (point) buffer-undo-list))
+    ;; save the point for undo
+    (setq buffer-undo-list (cons (point) buffer-undo-list))
 
-  ;; local variables for start and end of line
-  (let ((bol (save-excursion (beginning-of-line) (point)))
-        eol)
-    (save-excursion
+    ;; local variables for start and end of line
+    (let ((bol (save-excursion (beginning-of-line) (point)))
+          eol)
+      (save-excursion
 
-      ;; don't use forward-line for this, because you would have
-      ;; to check whether you are at the end of the buffer
-      (end-of-line)
-      (setq eol (point))
+        ;; don't use forward-line for this, because you would have
+        ;; to check whether you are at the end of the buffer
+        (end-of-line)
+        (setq eol (point))
 
-      ;; store the line and disable the recording of undo information
-      (let ((line (buffer-substring bol eol))
-            (buffer-undo-list t)
-            (count arg))
-        ;; insert the line arg times
-        (while (> count 0)
-          (newline)         ;; because there is no newline in 'line'
-          (insert line)
-          (setq count (1- count)))
-        )
+        ;; store the line and disable the recording of undo information
+        (let ((line (buffer-substring bol eol))
+              (buffer-undo-list t)
+              (count arg))
+          ;; insert the line arg times
+          (while (> count 0)
+            (newline)         ;; because there is no newline in 'line'
+            (insert line)
+            (setq count (1- count)))
+          )
 
-      ;; create the undo information
-      (setq buffer-undo-list (cons (cons eol (point)) buffer-undo-list)))
-    ) ; end-of-let
+        ;; create the undo information
+        (setq buffer-undo-list (cons (cons eol (point)) buffer-undo-list)))
+      ) ; end-of-let
 
-  ;; put the point in the lowest line and return
-  (next-line arg))
+    ;; put the point in the lowest line and return
+    (next-line arg))
 #+END_SRC
 ** making new lines
 #+BEGIN_SRC emacs-lisp
-(defun newline-below-go ()
-  "1. move to end of the line.
-  2. insert newline with index"
+  (defun newline-below-go ()
+    "1. move to end of the line.
+    2. insert newline with index"
 
-  (interactive)
-  (let ((oldpos (point)))
-    (end-of-line)
-    (newline-and-indent)))
+    (interactive)
+    (let ((oldpos (point)))
+      (end-of-line)
+      (newline-and-indent)))
 
-(defun newline-above-go ()
-  "1. move to end of the line.
-  2. insert newline with index"
+  (defun newline-above-go ()
+    "1. move to end of the line.
+    2. insert newline with index"
 
-  (interactive)
-  (let ((oldpos (point)))
-    (beginning-of-line)
-    (newline-and-indent) ;;fixme indent the new line
-    (previous-line)
-    (end-of-line)))
+    (interactive)
+    (let ((oldpos (point)))
+      (beginning-of-line)
+      (newline-and-indent) ;;fixme indent the new line
+      (previous-line)
+      (end-of-line)))
 
 #+END_SRC
 ** deleting lines
 
 #+BEGIN_SRC emacs-lisp
 
-(defun kill-previous-line ()
-  "1. move to end of the line.
-  2. insert newline with index"
+  (defun kill-previous-line ()
+    "1. move to end of the line.
+    2. insert newline with index"
 
-  (interactive)
-  (let ((oldpos (point)))
-    (previous-line)
-    (kill-whole-line)))
+    (interactive)
+    (let ((oldpos (point)))
+      (previous-line)
+      (kill-whole-line)))
 
 
-(defun kill-next-line ()
-  "1. move to end of the line.
-  2. insert newline with index"
+  (defun kill-next-line ()
+    "1. move to end of the line.
+    2. insert newline with index"
 
-  (interactive)
-  (let ((oldpos (point)))
-    (next-line)
-    (kill-whole-line)))
+    (interactive)
+    (let ((oldpos (point)))
+      (next-line)
+      (kill-whole-line)))
 
-(defun backward-kill-line (arg)
-  "Kill ARG lines backward."
-  (interactive "p")
-  (kill-line (- 1 arg)))
+  (defun backward-kill-line (arg)
+    "Kill ARG lines backward."
+    (interactive "p")
+    (kill-line (- 1 arg)))
 
 #+END_SRC
 * WM startup
 * Tabs
 #+BEGIN_SRC emacs-lisp
-;; abolish tabs
-(setq-default indent-tabs-mode nil)
-    (setq tab-stop-list (number-sequence 2 120 2))
+  ;; abolish tabs
+  (setq-default indent-tabs-mode nil)
+  (setq tab-stop-list (number-sequence 2 120 2))
 #+END_SRC
 
 * editorconfig
@@ -1634,7 +1494,7 @@ M-x all-the-icons-install-fonts
     :ensure t
     :config
     (editorconfig-mode 1))
-:lighter
+  :lighter
 #+END_SRC
 * Diminishing modes
 Your modeline is sacred, and if you have a lot of modes enabled, as you will if you use this config,
@@ -1727,4 +1587,14 @@ i cant get this to work but i want it to work
   ;; (load "/home/taylor/.emacs.d/lisp/nethack/nethack.el")
   ;; (setq nethack-program "/usr/games/nethack")
 
+#+END_SRC
+* config management
+** TODO something that sets the indentation of org mode src blocks
+* screenreader
+** eloud
+#+BEGIN_SRC emacs-lisp
+  (use-package eloud
+    :ensure t
+    :config
+    (setq eloud-espeak-path "/usr/bin/espeak"))
 #+END_SRC
