@@ -50,8 +50,7 @@ Since we are going to use emacs as our window manager, it would be nice to have 
   (use-package undo-tree
     :ensure t
     :config
-    (global-undo-tree-mode)
-    )
+    (global-undo-tree-mode))
 #+END_SRC
 
 * Theme
@@ -74,8 +73,7 @@ Since we are going to use emacs as our window manager, it would be nice to have 
           modus-vivendi-theme-rainbow-headings t
           modus-vivendi-theme-section-headings t)
     :config
-    (load-theme 'modus-vivendi t)
-    )
+    (load-theme 'modus-vivendi t))
 #+END_SRC
 
 ** Font
@@ -236,8 +234,7 @@ The only time I actually had to use comments, this is for ease of removal if you
        ([?\M-k] . down)
        ([?\M-j] . left)
        ([?\M-\\] . prior)
-       ([?\M-'] . next)
-       ))
+       ([?\M-'] . next)))
 
     ;; this little bit will make sure that XF86 keys work in exwm buffers as well
     (dolist (k '(XF86AudioLowerVolume
@@ -526,8 +523,7 @@ I used to use helm, and ivy with counsel. but i find that dired is good enough t
     :config
     (ivy-mode 1)
     :bind
-    ("C-x C-b" . 'ivy-switch-buffer)
-    )
+    ("C-x C-b" . 'ivy-switch-buffer))
 #+END_SRC
 ** TODO set up whichkey with ivy
 ** TODO  look into icicles
@@ -730,8 +726,7 @@ autocomplete pairs
                               (?\{ . ?\})
                               (?\( . ?\))
                               (?\[ . ?\])
-                              (?\" . ?\")
-                              ))
+                              (?\" . ?\")))
 #+END_SRC
 
 And now to enable it
@@ -801,8 +796,7 @@ lsp is bloat
     :config
   
     (add-hook 'after-init-hook #'global-flycheck-mode)
-    (flycheck-add-mode 'javascript-eslint 'web-mode)
-    )
+    (flycheck-add-mode 'javascript-eslint 'web-mode))
 #+END_SRC
 
 ** company mode
@@ -1028,8 +1022,7 @@ Requires libclang to be installed.
                 (push '("function" . ?ƒ) prettify-symbols-alist)))
     (add-hook 'js2-mode-hook 'company-mode)
     (add-hook 'js2-mode-hook 'yas-minor-mode)
-    (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-    )
+    (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode)))
 
   ;; jump to definition
   ;;(use-package tern
@@ -1049,8 +1042,7 @@ Requires libclang to be installed.
     :ensure t
     :config
     (add-hook 'js2-mode-hook 'prettier-js-mode)
-    (add-hook 'web-mode-hook 'prettier-js-mode)
-    )
+    (add-hook 'web-mode-hook 'prettier-js-mode))
 #+END_SRC
 
 *** drools
@@ -1085,15 +1077,13 @@ Requires libclang to be installed.
     :init (add-hook 'vue-mode-hook 'company-mode)
     (add-hook 'vue-mode-hook 'yas-minor-mode)
     :config
-    (setq mmm-submode-decoration-level 0)
-    )
+    (setq mmm-submode-decoration-level 0))
 #+END_SRC
 **** vue-html-mode
 
 #+BEGIN_SRC emacs-lisp
   (use-package vue-html-mode
-    :ensure t
-    )
+    :ensure t)
 #+END_SRC
 **** vue lsp?
 #+BEGIN_SRC emacs-lisp
@@ -1103,16 +1093,14 @@ Requires libclang to be installed.
 
 #+BEGIN_SRC emacs-lisp
   (use-package vue-mode
-    :ensure t
-    )
+    :ensure t)
 #+END_SRC
 
 *** emmet
 
 #+BEGIN_SRC emacs-lisp
   (use-package emmet-mode
-    :ensure t
-    )
+    :ensure t)
 #+END_SRC
 
 *** coffee?
@@ -1136,8 +1124,7 @@ Requires libclang to be installed.
     (add-hook 'web-mode-hook 'yas-minor-mode)
     :config
     (setq web-mode-enable-auto-indentation nil)
-    (setq web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
-    )
+    (setq web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'"))))
 
 #+END_SRC
 
@@ -1163,17 +1150,16 @@ great. It's easy and intuitive to use, shows its options at a keypress and much 
     :ensure t
     :config
     (setq magit-push-always-verify nil)
-    (setq git-commit-summary-max-length 50))
+    (setq git-commit-summary-max-length 80)
+    :bind
+    ("C-c g" . sudo-edit))
 #+END_SRC
 ** git gutter
 #+BEGIN_SRC emacs-lisp
   (use-package diff-hl
     :ensure t
     :config
-    (global-diff-hl-mode)
-    )
-
-
+    (global-diff-hl-mode))
 #+END_SRC
 * Remote editing
 I have no need to directly edit files over SSH, but what I do need is a way to edit files as root.
@@ -1215,8 +1201,7 @@ Those are all rather self-explanatory.
     :defer t
     :custom
     (org-journal-dir "~/notes/journal/")
-    (org-journal-date-format "%A, %d %B %Y")
-    )
+    (org-journal-date-format "%A, %d %B %Y"))
 #+END_SRC
 ** Syntax highlighting for documents exported to HTML
 #+BEGIN_SRC emacs-lisp
@@ -1418,12 +1403,10 @@ M-x all-the-icons-install-fonts
           (while (> count 0)
             (newline)         ;; because there is no newline in 'line'
             (insert line)
-            (setq count (1- count)))
-          )
+            (setq count (1- count))))
 
         ;; create the undo information
-        (setq buffer-undo-list (cons (cons eol (point)) buffer-undo-list)))
-      ) ; end-of-let
+        (setq buffer-undo-list (cons (cons eol (point)) buffer-undo-list)))) ; end-of-let
 
     ;; put the point in the lowest line and return
     (next-line arg))
