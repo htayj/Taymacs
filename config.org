@@ -111,11 +111,16 @@ If you like using any of those, change =-1= to =1=.
   (set-selection-coding-system 'utf-8)
   (prefer-coding-system 'utf-8)
 #+END_SRC
-*** Highligh current line
+*** Highlight current line
 =hl-line= is awesome! It's not very awesome in the terminal version of emacs though, so we don't use that.
 Besides, it's only used for programming.
 #+BEGIN_SRC emacs-lisp
   (when window-system (add-hook 'prog-mode-hook 'hl-line-mode))
+#+END_SRC
+
+*** visual bell
+#+BEGIN_SRC emacs-lisp
+  (setq visible-bell t)
 #+END_SRC
 
 
@@ -265,6 +270,14 @@ The only time I actually had to use comments, this is for ease of removal if you
                "xrandr" nil "xrandr --output DP-4 --auto")))
   (exwm-randr-enable)
 #+END_SRC
+** autoname the buffers
+#+BEGIN_SRC emacs-lisp
+  ;; autoname buffers
+  (add-hook 'exwm-update-class-hook
+            (lambda ()
+              (exwm-workspace-rename-buffer exwm-class-name)))
+#+END_SRC
+
 ** System tray
 #+BEGIN_SRC emacs-lisp
   (require 'exwm-systemtray)
@@ -515,9 +528,11 @@ This turns on the clock globally.
 #+END_SRC
 * discoverablility and completion
 ** Ivy
-I used to use helm, and ivy with counsel. but i find that dired is good enough to take the place of counsel, ivy is good enough for most things. personally i feel like minibuffer completion stuff kinda breaks the "everything is a buffer" idea which is very useful in the long term
-
 #+BEGIN_SRC emacs-lisp
+  (use-package counsel
+    :ensure t
+    :after ivy
+    :config (counsel-mode))
   (use-package ivy
     :ensure t
     :config
@@ -525,6 +540,8 @@ I used to use helm, and ivy with counsel. but i find that dired is good enough t
     :bind
     ("C-x C-b" . 'ivy-switch-buffer))
 #+END_SRC
+*** potential:
+https://github.com/masasam/emacs-counsel-tramp
 ** TODO set up whichkey with ivy
 ** TODO  look into icicles
 ** TODO look into anything.el
@@ -622,21 +639,24 @@ Relative line numbers
 ** isearch/avy/ace jump
 personally i have tried using avy but plain isearch seems to do the job the best for me so far, i may revisit avy at some point in the far future if i feel the need
 *** TODO revisit avy mode
-* Text manipulation
-Here I shall collect self-made functions that make editing text easier.
-
+* non-sinful custom bindings (C-c lowercase)
 ** Mark Multiple
-I can barely contain my joy. This extension allows you to quickly mark the next occurence of a region and edit them all at once. Wow!
 #+BEGIN_SRC emacs-lisp
   (use-package mark-multiple
     :ensure t
     :bind ("C-c q" . 'mark-next-like-this))
 #+END_SRC
-
-** Improved kill-word
-Why on earth does a function called =kill-word= not .. kill a word.
-It instead deletes characters from your cursors position to the end of the word,
-let's make a quick fix and bind it properly.
+** vim-like (v)
+everything is inner-object because the rest is easy enough in emacs way
+*** list of actions 
+kill - k
+copy - w
+mark - m
+yank into
+occur
+multicursor
+*** word
+**** kill (k)
 #+BEGIN_SRC emacs-lisp
   (defun daedreth/kill-inner-word ()
     "Kills the entire word your cursor is in. Equivalent to 'ciw' in vim."
@@ -644,10 +664,10 @@ let's make a quick fix and bind it properly.
     (forward-char 1)
     (backward-word)
     (kill-word 1))
-  (global-set-key (kbd "C-c w k") 'daedreth/kill-inner-word)
+  (global-set-key (kbd "C-c v w k") 'daedreth/kill-inner-word)
 #+END_SRC
 
-** Improved copy-word
+**** copy (w)
 And again, the same as above but we make sure to not delete the source word.
 #+BEGIN_SRC emacs-lisp
   (defun daedreth/copy-whole-word ()
@@ -657,10 +677,10 @@ And again, the same as above but we make sure to not delete the source word.
       (backward-word)
       (kill-word 1)
       (yank)))
-  (global-set-key (kbd "C-c w c") 'daedreth/copy-whole-word)
+  (global-set-key (kbd "C-c v w w") 'daedreth/copy-whole-word)
 #+END_SRC
-
-** Copy a line
+*** line (l)
+**** copy (w)
 Regardless of where your cursor is, this quickly copies a line.
 #+BEGIN_SRC emacs-lisp
   (defun daedreth/copy-whole-line ()
@@ -671,16 +691,62 @@ Regardless of where your cursor is, this quickly copies a line.
        (buffer-substring
         (point-at-bol)
         (point-at-eol)))))
-  (global-set-key (kbd "C-c l c") 'daedreth/copy-whole-line)
+  (global-set-key (kbd "C-c v l w") 'daedreth/copy-whole-line)
 #+END_SRC
 
-** Kill a line
+**** kill (k)
 And this quickly deletes a line.
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c l k") 'kill-whole-line)
+  (global-set-key (kbd "C-c v l k") 'kill-whole-line)
+#+END_SRC
+** media (d)
+*** management (m)
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c d m") 'emms)
+#+END_SRC
+*** add (a)
+**** from dired (d)
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c a d") 'emms-add-dired)
+#+END_SRC
+**** TODO from search (s)
+**** from find-file (f)
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c a f") 'emms-add-find)
+#+END_SRC
+*** streams (s)
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c d s") 'emms-streams)
+#+END_SRC
+*** next (n)
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c d n") 'emms-next)
+#+END_SRC
+*** previous (p)
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c d p") 'emms-previous)
+#+END_SRC
+*** pause (SPC)
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c d SPC") 'emms-pause)
 #+END_SRC
 
-** capture
+** framing (f)
+*** TODO maybe something like persp mode?
+** web (w)
+*** wowser (w)
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c w w") 'eww)
+#+END_SRC
+** mark (m)
+*** TODO line (l)
+*** TODO word (w)
+** insert (i)
+*** TODO insert unicode (u)
+** TODO snippet (s)
+** TODO compile (c)
+
+** capture/journal (j)
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-c j") 'org-capture)
 #+END_SRC
@@ -761,7 +827,7 @@ grow region over levels of semantic objects.
 #+BEGIN_SRC emacs-lisp
   (use-package expand-region
     :ensure t
-    :bind ("C-q" . er/expand-region))
+    :bind ("C-M-q" . er/expand-region))
 #+END_SRC
 
 ** Hungry deletion
@@ -1339,7 +1405,13 @@ Adjust according to your setup.
 #+BEGIN_SRC emacs-lisp
   (setq mpc-host "localhost:6601")
 #+END_SRC
-
+*** mpv
+#+BEGIN_SRC emacs-lisp
+  (use-package emms-player-mpv
+:ensure t
+:config
+(add-to-list 'emms-player-list 'emms-player-mpv))
+#+END_SRC
 *** Some more fun stuff
 **** Starting the daemon from within emacs
 If you have an absolutely massive music library, it might be a good idea to get rid of =mpc-update=
@@ -1374,6 +1446,15 @@ and only invoke it manually when needed.
     (call-process "mpc" nil nil nil "update")
     (message "MPD Database Updated!"))
   ;;(global-set-key (kbd "s-m u") 'mpd/update-database)
+#+END_SRC
+* youtube-dl
+#+BEGIN_SRC emacs-lisp
+  (defun play-youtube (url)
+    "plays youtube."
+    (interactive "sUrl of video: ")
+  (shell-command (concat "youtube-dl " url " --add-metadata --write-info-json &" ))
+  (emms-add-file (substring (shell-command-to-string (concat "youtube-dl " url " --get-filename ")) 0 -1)))
+
 #+END_SRC
 * UI modernization
 
@@ -1525,9 +1606,26 @@ Edit this list as you see fit!
     ;; (diminish 'company-mode "✓")
     (diminish 'rainbow-mode))
 #+END_SRC
+* elfeed
+replacing gnus with elfeed
+** elfeed itself
+#+BEGIN_SRC emacs-lisp
+    (use-package elfeed
+      :ensure t)
+#+END_SRC
+** elfeed goodies
+** org mode feed list
+#+BEGIN_SRC emacs-lisp
+    (use-package elfeed-org
+      :ensure t
+    :config
+(elfeed-org)
+(setq rmh-elfeed-org-files (list "~/Dropbox/newsfeeds.org" )))
+#+END_SRC
 * gnus
 ** hackernews in gnus
 i may turn this back on once i have a better grasp of gnus
+
 #+BEGIN_SRC emacs-lisp
     (use-package nnhackernews
       :ensure t

@@ -1,12 +1,67 @@
-;;;; Emacs Bookmark Format Version 1 ;;;; -*- coding: utf-8-emacs -*- 
+;;;; Emacs Bookmark Format Version 1 ;;;; -*- coding: utf-8-emacs -*-
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("org-capture-last-stored"
- (filename . "~/.notes")
- (front-context-string . "** TODO set up t")
- (rear-context-string . "2020-07-05 Sun]\n")
- (position . 84))
+(("create from sidebar"
+ (filename . "~/atom-planner/src/store/actions.js")
+ (front-context-string . "\n      context.d")
+ (rear-context-string . "...`,\n      });\n")
+ (position . 63889))
+("fetchuto"
+ (filename . "~/atom-planner/src/store/actions.js")
+ (front-context-string . "\n    return cont")
+ (rear-context-string . "rs');\n    }\n    ")
+ (position . 90058))
+("modify key tag resp"
+ (filename . "~/atom-planner/src/store/actions.js")
+ (front-context-string . "ytag) =>\n       ")
+ (rear-context-string . "d(\n          (ke")
+ (position . 111461))
+("modify key tag response"
+ (filename . "~/atom-planner/src/store/actions.js")
+ (front-context-string . "\n          conte")
+ (rear-context-string . "nse);\n          ")
+ (position . 112224))
+("create key tag resp"
+ (filename . "~/atom-planner/src/store/actions.js")
+ (front-context-string . "\n      WorkflowA")
+ (rear-context-string . " return;\n      }")
+ (position . 114587))
+("delete unit response"
+ (filename . "~/atom-planner/src/store/actions.js")
+ (front-context-string . "}\n    }\n  },\n  f")
+ (rear-context-string . " {unitTaskOrgId:")
+ (position . 79175))
+("fetch member networks"
+ (filename . "~/atom-planner/src/store/actions.js")
+ (front-context-string . "unitTaskOrgId,\n ")
+ (rear-context-string . "kOrgId: payload.")
+ (position . 83376))
+("scroll into view"
+ (filename . "~/atom-vue-library/component/UnitPlanner/src/components/tree/TreeItem.vue")
+ (front-context-string . "removeCollapsing")
+ (rear-context-string . "\n          this.")
+ (position . 13170))
+("rekey update"
+ (filename . "~/atom-planner/src/components/modals/COMSECModal.vue")
+ (front-context-string . "          this.l")
+ (rear-context-string . "}).then(() => {\n")
+ (position . 18614))
+("editkeysetupdate"
+ (filename . "~/atom-planner/src/components/reports/NetworkReport.vue")
+ (front-context-string . "set_id).then((re")
+ (rear-context-string . "yId(network.key_")
+ (position . 23150))
+("editkeytag"
+ (filename . "~/atom-planner/src/components/customFields/KeyTagTable.vue")
+ (front-context-string . "this.notAssigned")
+ (rear-context-string . "it &&\n        (!")
+ (position . 7718))
+("org-capture-last-stored"
+ (filename . "~/notes/cap/todo.org")
+ (front-context-string . "** TODO send to ")
+ (rear-context-string . "-22 Tue 06:01> \n")
+ (position . 1124))
 ("org-refile-last-stored"
  (filename . "~/notes/master.org")
  (front-context-string . "** TODO [#A] set")
