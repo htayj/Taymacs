@@ -45,6 +45,22 @@ Since we are going to use emacs as our window manager, it would be nice to have 
     (normal-top-level-add-subdirs-to-load-path))
 #+END_SRC
 
+* evil
+#+BEGIN_SRC emacs-lisp
+  (use-package evil
+    :ensure t
+    :init
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    :config
+    (evil-mode 1)
+    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state))
+  (use-package evil-collection
+    :ensure t)
+  (use-package evil-surround
+    :ensure t)
+#+END_SRC
+
 * undo tree
 #+BEGIN_SRC emacs-lisp
   (use-package undo-tree
@@ -169,7 +185,7 @@ The only time I actually had to use comments, this is for ease of removal if you
     ;;      (exwm-config-ido)
 
     ;; a number between 1 and 9, exwm creates workspaces dynamically so I like starting out with 1
-    (setq exwm-workspace-number 9)
+    (setq exwm-workspace-number 1)
 
     ;; this is a way to declare truly global/always working keybindings
     ;; this is a nifty way to go back from char mode to line mode without using the mouse
@@ -364,12 +380,47 @@ These won't work in the terminal version or the virtual console, obvious reasons
   (global-set-key (kbd "<Scroll_Lock>") 'daedreth/take-screenshot-region)
 #+END_SRC
 
+** eaf
+gui applications from inside emacs using python repl connected to the lisp
+#+BEGIN_SRC emacs-lisp
+  (use-package eaf
+    :load-path "~/.emacs.d/site-lisp/emacs-application-framework" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
+    :custom
+    (eaf-find-alternate-file-in-dired t)
+    :config
+    (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+    (define-key dired-mode-map (kbd "e") 'eaf-open-this-from-dired))
+#+END_SRC
+
+
 ** Default browser
 I use eww for most browsing, and I use icecat when I need to open something in an external browser.
 #+BEGIN_SRC emacs-lisp
   (setq browse-url-browser-function 'eww-browse-url
         browse-url-generic-program "icecat")
 #+END_SRC
+
+
+shrface for eww that is more like org mode
+#+BEGIN_SRC emacs-lisp
+  ;; (use-package shrface
+  ;;   :defer t
+  ;;   :ensure t
+  ;;   :config
+  ;;   (shrface-basic)
+  ;;   (shrface-trial)
+  ;;   (setq shrface-href-versatile t))
+
+  ;; (use-package eww
+  ;;   :init
+  ;;   (add-hook 'eww-after-render-hook #'shrface-mode)
+  ;;   :config
+  ;;   (require 'shrface))
+
+#+END_SRC
+
 
 sometimes i load a page and it has a lot of animated images and it makes eww crawl, or it has big images that make the page hard to read, so I dont open images by default, but this neat script i found lets you turn on and off images.
 #+BEGIN_SRC emacs-lisp
@@ -474,6 +525,15 @@ this highlights syntax in eww, good for elisp snippets on the wiki.
 
 #+END_SRC
 
+* File Manager
+** Dired
+#+BEGIN_SRC emacs-lisp
+  (setq-default dired-listing-switches "-alh")
+  (use-package all-the-icons-dired
+    :ensure t
+    :hook (dired-mode . all-the-icons-dired-mode)
+    )
+#+END_SRC
 * TODO Projectile
 
 ** Enable projectile globally
@@ -482,8 +542,14 @@ This makes sure that everything can be a project.
 #+BEGIN_SRC emacs-lisp
   (use-package projectile
     :ensure t
-    :init
-    (projectile-mode 1))
+    :init (projectile-mode 1)
+    :custom
+    (projectile-completion-system)
+    :bind ("C-c p" . 'projectile-command-map))
+
+  (use-package counsel-projectile
+    :ensure t
+    :config (counsel-projectile-mode))
 #+END_SRC
 
 ** Let projectile call make
@@ -533,16 +599,22 @@ This turns on the clock globally.
     :ensure t
     :after ivy
     :config (counsel-mode))
+
   (use-package ivy
     :ensure t
     :config
     (ivy-mode 1)
     :bind
     ("C-x C-b" . 'ivy-switch-buffer))
+
+  (use-package ivy-rich
+    :ensure t
+    :after counsel
+    :init
+    (ivy-rich-mode 1))
 #+END_SRC
 *** potential:
 https://github.com/masasam/emacs-counsel-tramp
-** TODO set up whichkey with ivy
 ** TODO  look into icicles
 ** TODO look into anything.el
 ** which-key
@@ -552,6 +624,14 @@ automatic cheat sheet once you press part of a key series
     :ensure t
     :config
     (which-key-mode))
+#+END_SRC
+** prescient
+better auto completion - sorts by length and prioritizes more commonly used selections
+#+BEGIN_SRC emacs-lisp
+  (use-package ivy-prescient
+    :ensure t
+    :after counsel
+    :config (ivy-prescient-mode 1))
 #+END_SRC
 * Moving around emacs
 ** windows,panes and why I hate other-window
@@ -639,6 +719,16 @@ Relative line numbers
 ** isearch/avy/ace jump
 personally i have tried using avy but plain isearch seems to do the job the best for me so far, i may revisit avy at some point in the far future if i feel the need
 *** TODO revisit avy mode
+*** ace-link for eww 
+#+BEGIN_SRC emacs-lisp
+  (use-package ace-link
+    :ensure t
+    :config
+    (ace-link-setup-default)
+  )
+
+
+#+END_SRC
 * non-sinful custom bindings (C-c lowercase)
 ** Mark Multiple
 #+BEGIN_SRC emacs-lisp
@@ -873,7 +963,7 @@ Minor, non-completion related settings and plugins for writing code.
     :config
   
     (add-hook 'after-init-hook #'global-flycheck-mode)
-    (flycheck-add-mode 'javascript-eslint 'web-mode))
+    (flycheck-add-mode 'javascript-eslint 'web-mode 'scala-mode))
 #+END_SRC
 
 ** company mode
@@ -884,16 +974,14 @@ I prefer =C-n= and =C-p= to move around the items, so I remap those accordingly.
 #+BEGIN_SRC emacs-lisp
   (use-package company
     :ensure t
+
+    :bind (:map company-active-map
+                ("<tab>" . company-complete-selection))
     :config
     (setq company-idle-delay 0)
-    (setq company-minimum-prefix-length 3))
+    (setq company-minimum-prefix-length 1))
 
-  (with-eval-after-load 'company
-    (define-key company-active-map (kbd "M-n") nil)
-    (define-key company-active-map (kbd "M-p") nil)
-    (define-key company-active-map (kbd "C-n") #'company-select-next)
-    (define-key company-active-map (kbd "C-p") #'company-select-previous)
-    (define-key company-active-map (kbd "SPC") #'company-abort))
+
 #+END_SRC
 emacs
 ** specific languages
@@ -1145,6 +1233,90 @@ Requires libclang to be installed.
     (local-set-key [?\C-m] 'drools-return-and-indent) )
 #+END_SRC
 
+*** scala
+#+BEGIN_SRC emacs-lisp
+  (use-package scala-mode
+    :ensure t
+    :interpreter
+    ("scala" . scala-mode))
+
+  (use-package sbt-mode
+    :commands sbt-start sbt-command
+    :ensure t
+    :config
+    ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
+    ;; allows using SPACE when in the minibuffer
+    (substitute-key-definition
+     'minibuffer-complete-word
+     'self-insert-command
+     minibuffer-local-completion-map)
+     ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
+     (setq sbt:program-options '("-Dsbt.supershell=false"))
+  )
+
+  (use-package lsp-mode
+    ;; Optional - enable lsp-mode automatically in scala files
+    :ensure t
+    :hook  (scala-mode . lsp)
+           (lsp-mode . lsp-lens-mode)
+    :config (setq lsp-prefer-flymake nil))
+
+  ;; Add metals backend for lsp-mode
+  (use-package lsp-metals
+    :ensure t
+    :config (setq lsp-metals-treeview-show-when-views-received nil))
+
+  ;; Enable nice rendering of documentation on hover
+  (use-package lsp-ui
+    :ensure t)
+
+  ;; Add company-lsp backend for metals
+  (use-package company-lsp
+    :ensure t)
+
+  ;; Use the Debug Adapter Protocol for running tests and debugging
+  (use-package posframe
+    :ensure t
+    ;; Posframe is a pop-up tool that must be manually installed for dap-mode
+    )
+  (use-package dap-mode
+    :ensure t
+    :hook
+    (lsp-mode . dap-mode)
+    (lsp-mode . dap-ui-mode)
+    )
+#+END_SRC
+
+*** TS
+#+BEGIN_SRC emacs-lisp
+    (use-package tide
+      :ensure t
+      :config
+      (defun setup-tide-mode ()
+        (interactive)
+        (tide-setup)
+        (flycheck-mode +1)
+        (setq flycheck-check-syntax-automatically '(save mode-enabled))
+        (eldoc-mode +1)
+        (tide-hl-identifier-mode +1)
+        ;; company is an optional dependency. You have to
+        ;; install it separately via package-install
+        ;; `M-x package-install [ret] company`
+        (company-mode +1))
+
+      ;; aligns annotation to the right hand side
+      (setq company-tooltip-align-annotations t)
+
+      ;; formats the buffer before saving
+      (add-hook 'before-save-hook 'tide-format-before-save)
+
+      (add-hook 'typescript-mode-hook #'setup-tide-mode))
+      (add-hook 'web-mode-hook
+                (lambda ()
+                  (when (string-equal "tsx" (file-name-extension buffer-file-name))
+                    (setup-tide-mode))))
+#+END_SRC
+
 ** web programming
 *** vue
 **** vue-mode
@@ -1195,6 +1367,7 @@ Requires libclang to be installed.
     (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
     (add-hook 'editorconfig-custom-hooks
               (lambda (hash) (setq web-mode-block-padding 0)))
     (add-hook 'web-mode-hook 'company-mode)
@@ -1461,7 +1634,8 @@ and only invoke it manually when needed.
 ** Icons to make things pretty
 M-x all-the-icons-install-fonts
 #+BEGIN_SRC emacs-lisp
-  (use-package all-the-icons)
+  (use-package all-the-icons
+    :ensure t)
 #+END_SRC
 * Atomic actions
 ** Duplicate Line atomically
