@@ -30,6 +30,7 @@
  '(eww-search-prefix "https://www.duckduckgo.com/lite?q=")
  '(gnus-asynchronous t)
  '(gnus-use-full-window nil)
+ '(helm-autoresize-mode nil)
  '(helm-completion-style 'helm)
  '(ivy-mode t)
  '(lsp-metals-treeview-show-when-views-received nil)
@@ -80,9 +81,11 @@ During:%K")))
      ("\\.x?html?\\'" . "firefox %s")
      ("\\.pdf\\'" . default)))
  '(package-selected-packages
-   '(tide lsp-ui company-lsp lsp-metals lsp-mode sbt-mode scala-mode evil-surround evil-collection shrface ace-link ivy-rich ivy-prescient counsel-projectile all-the-icons-dired all-the-icons emms-player-mpv elfeed-org elfeed paredit eloud language-detection ivy modus-vivendi-theme counsel nnhackernews auctex acutex elpher moe-theme color-theme-modern cider haskell-mode forge prettier-js org-journal web-mode key-chord evil doom-modeline diff-hl aggressive-indent ace-window helm-ag vue-mode salaire-mode doom-themes editorconfig telephone-line eyeliner spaceline-all-the-icons tabbar neotree js2-refactor company-tern tern ergoemacs-mode dracula-theme golden-ratio-scroll-screen slime-company slime company-jedi zzz-to-char rainbow-delimiters avy projectile sunrise-x-modeline sunrise-x-buttons sunrise-commander twittering-mode zerodark-theme pretty-mode flycheck-clang-analyzer flycheck-irony flycheck yasnippet-snippets yasnippet company-c-headers company-shell company-irony irony irony-mode company-lua mark-multiple expand-region swiper popup-kill-ring dmenu ido-vertical-mode ido-vertical ox-html5slide centered-window-mode htmlize ox-twbs diminish erc-hl-nicks symon rainbow-mode switch-window dashboard smex company sudo-edit emms magit org-bullets hungry-delete beacon linum-relative spaceline fancy-battery exwm which-key use-package))
+   '(prettier tide lsp-ui company-lsp lsp-metals lsp-mode sbt-mode scala-mode evil-surround evil-collection shrface ace-link ivy-rich ivy-prescient counsel-projectile all-the-icons-dired all-the-icons emms-player-mpv elfeed-org elfeed paredit eloud language-detection ivy modus-vivendi-theme counsel nnhackernews auctex acutex elpher moe-theme color-theme-modern cider haskell-mode forge prettier-js org-journal web-mode key-chord evil doom-modeline diff-hl aggressive-indent ace-window helm-ag vue-mode salaire-mode doom-themes editorconfig telephone-line eyeliner spaceline-all-the-icons tabbar neotree js2-refactor company-tern tern ergoemacs-mode dracula-theme golden-ratio-scroll-screen slime-company slime company-jedi zzz-to-char rainbow-delimiters avy projectile sunrise-x-modeline sunrise-x-buttons sunrise-commander twittering-mode zerodark-theme pretty-mode flycheck-clang-analyzer flycheck-irony flycheck yasnippet-snippets yasnippet company-c-headers company-shell company-irony irony irony-mode company-lua mark-multiple expand-region swiper popup-kill-ring dmenu ido-vertical-mode ido-vertical ox-html5slide centered-window-mode htmlize ox-twbs diminish erc-hl-nicks symon rainbow-mode switch-window dashboard smex company sudo-edit emms magit org-bullets hungry-delete beacon linum-relative spaceline fancy-battery exwm which-key use-package))
  '(pos-tip-background-color "#36473A")
  '(pos-tip-foreground-color "#FFFFC8")
+ '(prettier-js-args
+   '("--print-width" "120" "--arrow-parens" "avoid" "--trailing-comma" "all" "--find-config-path"))
  '(projectile-ignored-projects nil)
  '(projectile-indexing-method 'hybrid)
  '(projectile-project-root-files '(".projectile"))
@@ -98,7 +101,8 @@ During:%K")))
  '(shr-use-fonts nil)
  '(tabbar-separator '(0.5))
  '(tramp-chunksize 500)
- '(tramp-default-method "scp"))
+ '(tramp-default-method "scp")
+ '(tramp-default-proxies-alist '(("192.168.1.137" "pi" "pi"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
