@@ -58,10 +58,10 @@
  (rear-context-string . "it &&\n        (!")
  (position . 7718))
 ("org-capture-last-stored"
- (filename . "~/notes/cap/todo.org")
- (front-context-string . "** TODO send to ")
- (rear-context-string . "-22 Tue 06:01> \n")
- (position . 1124))
+ (filename . "~/notes/notes.org")
+ (front-context-string . "** charles goors")
+ (rear-context-string . "]\nFrom:\nDuring:\n")
+ (position . 47401))
 ("org-refile-last-stored"
  (filename . "~/notes/master.org")
  (front-context-string . "** TODO [#A] set")

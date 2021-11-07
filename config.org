@@ -1459,6 +1459,12 @@ great. It's easy and intuitive to use, shows its options at a keypress and much 
     :config
     (global-diff-hl-mode))
 #+END_SRC
+** magit forge
+#+BEGIN_SRC emacs-lisp
+  (use-package forge
+    :ensure t
+    :after magit)
+#+END_SRC
 * Remote editing
 ** Editing with sudo
 Pretty self-explanatory, useful as hell if you use exwm.
@@ -1535,7 +1541,7 @@ change astrisks to bullets
 Hitting tab after an "<el" in an org-mode file will create a template for elisp insertion.
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'org-structure-template-alist
-               '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
+               '("el" "emacs-lisp"))
 #+END_SRC
 
 ** Exporting options
@@ -1574,7 +1580,7 @@ this way you always know who you are typing to.
 *** selectable server list
 What it says on the tin, this changes the =erc= history to include the server I connect to often.
 #+BEGIN_SRC emacs-lisp
-  (setq erc-server-history-list '("irc.freenode.net"
+  (setq erc-server-history-list '("irc.libera.chat"
                                   "localhost"))
 #+END_SRC
 
@@ -1585,6 +1591,11 @@ You can even highlight nicks to make the buffers a bit more visually pleasing an
     :ensure t
     :config
     (erc-update-modules))
+#+END_SRC
+** ELIM
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "~/elim/elisp")
+  (load-library "garak")
 #+END_SRC
 * EMMS 
 There is many backends, many players and codecs for EMMS, we use mpd now.
@@ -1894,4 +1905,11 @@ i may turn this back on once i have a better grasp of gnus
     :ensure t
     :config
     (setq eloud-espeak-path "/usr/bin/espeak"))
+#+END_SRC
+
+* org
+** todo states
+#+BEGIN_SRC emacs-lisp
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "PLAN(p)" "WAIT(w@)" "|" "DONE(d!)" "CANCELED(c@)" "MISSED(m@)")))
 #+END_SRC
