@@ -79,7 +79,7 @@ Since we are going to use emacs as our window manager, it would be nice to have 
 
 #+BEGIN_SRC emacs-lisp
 
-  (use-package modus-vivendi-theme
+  (use-package modus-themes
     :ensure t 
     :init 
     (setq modus-vivendi-theme-slanted-constructs t
@@ -97,7 +97,7 @@ Since we are going to use emacs as our window manager, it would be nice to have 
     (load-theme 'modus-vivendi t))
 #+END_SRC
 
-** COMMENT Font
+** Font
 #+BEGIN_SRC emacs-lisp
   ;; Set default font
   (set-face-attribute 'default nil
@@ -173,113 +173,117 @@ Everything regarding the WM or DE-like functionality is bundled here, remove the
 The only time I actually had to use comments, this is for ease of removal if you happen to not like exwm.
 *** Installation
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package exwm
-  ;;   :ensure t
-  ;;   :config
+  (use-package exwm
+    :ensure t
+    :config
 
-  ;;   ;; necessary to configure exwm manually
-  ;;   (require 'exwm-config)
+    ;; necessary to configure exwm manually
+    (require 'exwm-config)
 
-  ;;   ;; fringe size, most people prefer 1 
-  ;;   (fringe-mode 3)
+    ;; fringe size, most people prefer 1 
+    (fringe-mode 3)
 
-  ;;   ;; emacs as a daemon, use "emacsclient <filename>" to seamlessly edit files from the terminal directly in the exwm instance
-  ;;   (server-start)
+    ;; emacs as a daemon, use "emacsclient <filename>" to seamlessly edit files from the terminal directly in the exwm instance
+    (server-start)
 
-  ;;   ;; this fixes issues with ido mode, if you use helm, get rid of it
-  ;;   ;;      (exwm-config-ido)
+    ;; this fixes issues with ido mode, if you use helm, get rid of it
+    ;;      (exwm-config-ido)
 
-  ;;   ;; a number between 1 and 9, exwm creates workspaces dynamically so I like starting out with 1
-  ;;   (setq exwm-workspace-number 1)
+    ;; a number between 1 and 9, exwm creates workspaces dynamically so I like starting out with 1
+    (setq exwm-workspace-number 1)
 
-  ;;   ;; this is a way to declare truly global/always working keybindings
-  ;;   ;; this is a nifty way to go back from char mode to line mode without using the mouse
-  ;;   (exwm-input-set-key (kbd "s-r") #'exwm-reset)
-  ;;   (exwm-input-set-key (kbd "s-k") #'exwm-workspace-delete)
-  ;;   (exwm-input-set-key (kbd "s-w") #'exwm-workspace-swap)
-  ;;   (exwm-input-set-key (kbd "s-n") 'ibuffer)
-  ;;   (exwm-input-set-key (kbd "s-m") 'next-buffer)
-  ;;   (exwm-input-set-key (kbd "s-,") 'previous-buffer)
-  ;;   (exwm-input-set-key (kbd "s-/") 'kill-current-buffer) 
+    ;; make x buffers available on all workspaces
+    (setq exwm-workspace-show-all-buffers t)
+    (setq exwm-layout-show-all-buffers t)
 
-  ;;   (exwm-input-set-key (kbd "s-j") 'windmove-left)
-  ;;   (exwm-input-set-key (kbd "s-k") 'windmove-down)
-  ;;   (exwm-input-set-key (kbd "s-i") 'windmove-up)
-  ;;   (exwm-input-set-key (kbd "s-l") 'windmove-right) 
-  ;;   (exwm-input-set-key (kbd "s-;") 'delete-window) 
+    ;; this is a way to declare truly global/always working keybindings
+    ;; this is a nifty way to go back from char mode to line mode without using the mouse
+    (exwm-input-set-key (kbd "s-r") #'exwm-reset)
+    (exwm-input-set-key (kbd "s-k") #'exwm-workspace-delete)
+    (exwm-input-set-key (kbd "s-w") #'exwm-workspace-swap)
+    (exwm-input-set-key (kbd "s-n") 'ibuffer)
+    (exwm-input-set-key (kbd "s-m") 'next-buffer)
+    (exwm-input-set-key (kbd "s-,") 'previous-buffer)
+    (exwm-input-set-key (kbd "s-/") 'kill-current-buffer) 
+
+    (exwm-input-set-key (kbd "s-h") 'windmove-left)
+    (exwm-input-set-key (kbd "s-j") 'windmove-down)
+    (exwm-input-set-key (kbd "s-k") 'windmove-up)
+    (exwm-input-set-key (kbd "s-l") 'windmove-right) 
+    (exwm-input-set-key (kbd "s-;") 'delete-window) 
 
 
-  ;;   (exwm-input-set-key (kbd "s-s h") 'split-window-right)
-  ;;   (exwm-input-set-key (kbd "s-s j") 'split-window-below)
-  ;;   (exwm-input-set-key (kbd "s-s k") 'split-and-follow-horizontally)
-  ;;   (exwm-input-set-key (kbd "s-s l") 'split-and-follow-vertically)
+    (exwm-input-set-key (kbd "s-s h") 'split-window-right)
+    (exwm-input-set-key (kbd "s-s j") 'split-window-below)
+    (exwm-input-set-key (kbd "s-s k") 'split-and-follow-horizontally)
+    (exwm-input-set-key (kbd "s-s l") 'split-and-follow-vertically)
 
-  ;;   ;; the next loop will bind s-<number> to switch to the corresponding workspace
-  ;;   (dotimes (i 10)
-  ;;     (exwm-input-set-key (kbd (format "s-%d" i))
-  ;;                         `(lambda ()
-  ;;                            (interactive)
-  ;;                            (exwm-workspace-switch-create ,i))))
+    ;; the next loop will bind s-<number> to switch to the corresponding workspace
+    (dotimes (i 10)
+      (exwm-input-set-key (kbd (format "s-%d" i))
+                          `(lambda ()
+                             (interactive)
+                             (exwm-workspace-switch-create ,i))))
 
-  ;;   ;; the simplest launcher, I keep it in only if dmenu eventually stopped working or something
-  ;;   (exwm-input-set-key (kbd "s-&")
-  ;;                       (lambda (command)
-  ;;                         (interactive (list (read-shell-command "$ ")))
-  ;;                         (start-process-shell-command command nil command)))
+    ;; the simplest launcher, I keep it in only if dmenu eventually stopped working or something
+    (exwm-input-set-key (kbd "s-&")
+                        (lambda (command)
+                          (interactive (list (read-shell-command "$ ")))
+                          (start-process-shell-command command nil command)))
 
-  ;;   ;; an easy way to make keybindings work *only* in line mode
-  ;;   (push ?\C-q exwm-input-prefix-keys)
-  ;;   (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
+    ;; an easy way to make keybindings work *only* in line mode
+    (push ?\C-q exwm-input-prefix-keys)
+    (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
 
-  ;;   ;; simulation keys are keys that exwm will send to the exwm buffer upon inputting a key combination
-  ;;   (exwm-input-set-simulation-keys
-  ;;    '(
-  ;;      ;; movement
-  ;;      ([?\C-b] . left)
-  ;;      ([?\M-b] . C-left)
-  ;;      ([?\C-f] . right)
-  ;;      ([?\M-f] . C-right)
-  ;;      ([?\C-p] . up)
-  ;;      ([?\C-n] . down)
-  ;;      ([?\C-a] . home)
-  ;;      ([?\C-e] . end)
-  ;;      ([?\M-v] . prior)
-  ;;      ([?\C-v] . next)
-  ;;      ([?\C-d] . delete)
-  ;;      ([?\C-k] . (S-end delete))
-  ;;      ;; cut/paste
-  ;;      ([?\C-w] . ?\C-x)
-  ;;      ([?\M-w] . ?\C-c)
-  ;;      ([?\C-y] . ?\C-v)
-  ;;      ;; search
-  ;;      ([?\C-f] . ?\C-f)
-  ;;      ;; movement
-  ;;      ([?\M-h] . return)
-  ;;      ([?\M-m] . return)
-  ;;      ([?\M-l] . right)
-  ;;      ([?\M-k] . down)
-  ;;      ([?\M-j] . left)
-  ;;      ([?\M-\\] . prior)
-  ;;      ([?\M-'] . next)))
+    ;; simulation keys are keys that exwm will send to the exwm buffer upon inputting a key combination
+    (exwm-input-set-simulation-keys
+     '(
+       ;; movement
+       ([?\C-b] . left)
+       ([?\M-b] . C-left)
+       ([?\C-f] . right)
+       ([?\M-f] . C-right)
+       ([?\C-p] . up)
+       ([?\C-n] . down)
+       ([?\C-a] . home)
+       ([?\C-e] . end)
+       ([?\M-v] . prior)
+       ([?\C-v] . next)
+       ([?\C-d] . delete)
+       ([?\C-k] . (S-end delete))
+       ;; cut/paste
+       ([?\C-w] . ?\C-x)
+       ([?\M-w] . ?\C-c)
+       ([?\C-y] . ?\C-v)
+       ;; search
+       ([?\C-f] . ?\C-f)
+       ;; movement
+       ([?\M-h] . return)
+       ([?\M-m] . return)
+       ([?\M-l] . right)
+       ([?\M-k] . down)
+       ([?\M-j] . left)
+       ([?\M-\\] . prior)
+       ([?\M-'] . next)))
 
-  ;;   ;; this little bit will make sure that XF86 keys work in exwm buffers as well
-  ;;   (dolist (k '(XF86AudioLowerVolume
-  ;;                XF86AudioRaiseVolume
-  ;;                XF86PowerOff
-  ;;                XF86AudioMute
-  ;;                XF86AudioPlay
-  ;;                XF86AudioStop
-  ;;                XF86AudioPrev
-  ;;                XF86AudioNext
-  ;;                XF86ScreenSaver
-  ;;                XF68Back
-  ;;                XF86Forward
-  ;;                Scroll_Lock
-  ;;                print))
-  ;;     (cl-pushnew k exwm-input-prefix-keys))
+    ;; this little bit will make sure that XF86 keys work in exwm buffers as well
+    (dolist (k '(XF86AudioLowerVolume
+                 XF86AudioRaiseVolume
+                 XF86PowerOff
+                 XF86AudioMute
+                 XF86AudioPlay
+                 XF86AudioStop
+                 XF86AudioPrev
+                 XF86AudioNext
+                 XF86ScreenSaver
+                 XF68Back
+                 XF86Forward
+                 Scroll_Lock
+                 print))
+      (cl-pushnew k exwm-input-prefix-keys))
 
-  ;;   ;; this just enables exwm, it started automatically once everything is ready
-  ;;   (exwm-enable))'
+    ;; this just enables exwm, it started automatically once everything is ready
+    (exwm-enable))'
 #+END_SRC
 ** Multi monitor
 #+BEGIN_SRC emacs-lisp
@@ -291,6 +295,11 @@ The only time I actually had to use comments, this is for ease of removal if you
   ;;              "xrandr" nil "xrandr --output DP-4 --auto")))
   ;; (exwm-randr-enable)
 #+END_SRC
+** exwm edit
+#+BEGIN_SRC emacs-lisp
+  (use-package exwm-edit
+    :ensure t)
+#+END_SRC
 ** autoname the buffers
 #+BEGIN_SRC emacs-lisp
   ;; autoname buffers
@@ -301,8 +310,8 @@ The only time I actually had to use comments, this is for ease of removal if you
 
 ** System tray
 #+BEGIN_SRC emacs-lisp
-  ;; (require 'exwm-systemtray)
-  ;; (exwm-systemtray-enable)
+  (require 'exwm-systemtray)
+  (exwm-systemtray-enable)
 #+END_SRC
 
 ** Launchers
@@ -382,10 +391,10 @@ These won't work in the terminal version or the virtual console, obvious reasons
       (call-process "convert" nil nil nil ".newScreen.png" "-shave" "1x1"
                     (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".png"))
       (call-process "rm" nil nil nil ".newScreen.png")))
-  (global-set-key (kbd "<Scroll_Lock>") 'daedreth/take-screenshot-region)
+  (global-set-key (kbd "S-<print>") 'daedreth/take-screenshot-region)
 #+END_SRC
 
-** eaf
+** COMMENT eaf
 gui applications from inside emacs using python repl connected to the lisp
 #+BEGIN_SRC emacs-lisp
   (use-package eaf
@@ -413,10 +422,10 @@ gui applications from inside emacs using python repl connected to the lisp
 
 
 ** Default browser
-I use eww for most browsing, and I use icecat when I need to open something in an external browser.
+I use eww for most browsing, and I use qutebrowser when I need to open something in an external browser.
 #+BEGIN_SRC emacs-lisp
   (setq browse-url-browser-function 'eww-browse-url
-        browse-url-generic-program "icecat")
+        browse-url-generic-program "qutebrowser")
 #+END_SRC
 
 
@@ -591,7 +600,6 @@ Dashboard with recent files and projects
 #+END_SRC
 
 * Modeline
-
 ** Clock
 *** Time format
 #+BEGIN_SRC emacs-lisp
@@ -638,42 +646,42 @@ https://github.com/masasam/emacs-counsel-tramp
 ** helm
 
 #+BEGIN_SRC emacs-lisp
-    (use-package helm
-      :ensure t
-      :bind
-      ("C-x C-f" . 'helm-find-files)
-      ("C-x C-b" . 'helm-buffers-list)
-      ("M-x" . 'helm-M-x)
-      :config
-      ;; (defun daedreth/helm-hide-minibuffer ()
-      ;;   (when (with-helm-buffer helm-echo-input-in-header-line)
-      ;;     (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
-      ;;       (overlay-put ov 'window (selected-window))
-      ;;       (overlay-put ov 'face
-      ;;                    (let ((bg-color (face-background 'default nil)))
-      ;;                      `(:background ,bg-color :foreground ,bg-color)))
-      ;;       (setq-local cursor-type nil))))
-      ;; (add-hook 'helm-minibuffer-set-up-hook 'daedreth/helm-hide-minibuffer)
+  (use-package helm
+    :ensure t
+    :bind
+    ("C-x C-f" . 'helm-find-files)
+    ("C-x C-b" . 'helm-buffers-list)
+    ("M-x" . 'helm-M-x)
+    :config
+    ;; (defun daedreth/helm-hide-minibuffer ()
+    ;;   (when (with-helm-buffer helm-echo-input-in-header-line)
+    ;;     (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+    ;;       (overlay-put ov 'window (selected-window))
+    ;;       (overlay-put ov 'face
+    ;;                    (let ((bg-color (face-background 'default nil)))
+    ;;                      `(:background ,bg-color :foreground ,bg-color)))
+    ;;       (setq-local cursor-type nil))))
+    ;; (add-hook 'helm-minibuffer-set-up-hook 'daedreth/helm-hide-minibuffer)
 
-      ;; (setq helm-autoresize-max-height 0
-      ;;       helm-autoresize-min-height 40
-      ;;       helm-M-x-fuzzy-match t
-      ;;       helm-buffers-fuzzy-matching t
-      ;;       helm-recentf-fuzzy-match t
-      ;;       helm-semantic-fuzzy-match t
-      ;;       helm-imenu-fuzzy-match t
-      ;;       helm-split-window-in-side-p nil
-      ;;       helm-move-to-line-cycle-in-source nil
-      ;;       helm-ff-search-library-in-sexp t
-      ;;       helm-scroll-amount 8 
-      ;;       helm-echo-input-in-header-line t)
-      :init
-      (helm-mode 1))
+    ;; (setq helm-autoresize-max-height 0
+    ;;       helm-autoresize-min-height 40
+    ;;       helm-M-x-fuzzy-match t
+    ;;       helm-buffers-fuzzy-matching t
+    ;;       helm-recentf-fuzzy-match t
+    ;;       helm-semantic-fuzzy-match t
+    ;;       helm-imenu-fuzzy-match t
+    ;;       helm-split-window-in-side-p nil
+    ;;       helm-move-to-line-cycle-in-source nil
+    ;;       helm-ff-search-library-in-sexp t
+    ;;       helm-scroll-amount 8 
+    ;;       helm-echo-input-in-header-line t)
+    :init
+    (helm-mode 1))
 
-    (require 'helm-config)    
-    (helm-autoresize-mode 0)
-    ;; (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
-    ;; (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
+  ;; (require 'helm-config)    
+  (helm-autoresize-mode 0)
+  ;; (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
+  ;; (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
   #+END_SRC
 *** silver searcher helm
   #+BEGIN_SRC emacs-lisp
@@ -690,14 +698,6 @@ automatic cheat sheet once you press part of a key series
     :ensure t
     :config
     (which-key-mode))
-#+END_SRC
-** prescient
-better auto completion - sorts by length and prioritizes more commonly used selections
-#+BEGIN_SRC emacs-lisp
-  (use-package ivy-prescient
-    :ensure t
-    :after counsel
-    :config (ivy-prescient-mode 1))
 #+END_SRC
 * Moving around emacs
 ** windows,panes and why I hate other-window
@@ -998,7 +998,7 @@ Backspace or Delete will get rid of all whitespace until the next non-whitespace
 * Programming
 Minor, non-completion related settings and plugins for writing code.
 
-** paredit
+** COMMENT paredit
 #+BEGIN_SRC emacs-lisp
   (use-package paredit
     :ensure t
@@ -1027,9 +1027,9 @@ Minor, non-completion related settings and plugins for writing code.
   (use-package flycheck
     :ensure t
     :config
-  
     (add-hook 'after-init-hook #'global-flycheck-mode)
-    (flycheck-add-mode 'javascript-eslint 'web-mode 'scala-mode))
+    ;; (flycheck-add-mode 'javascript-eslint 'web-mode 'scala-mode)
+    )
 #+END_SRC
 
 ** company mode
@@ -1066,12 +1066,12 @@ Each category also has additional settings.
 
 **** flycheck
 #+BEGIN_SRC emacs-lisp
-  (use-package flycheck-clang-analyzer
-    :ensure t
-    :config
-    (with-eval-after-load 'flycheck
-      (require 'flycheck-clang-analyzer)
-      (flycheck-clang-analyzer-setup)))
+  ;; (use-package flycheck-clang-analyzer
+  ;;   :ensure t
+  ;;   :config
+  ;;   (with-eval-after-load 'flycheck
+  ;;     (require 'flycheck-clang-analyzer)
+  ;;     (flycheck-clang-analyzer-setup)))
 
 
 #+END_SRC
@@ -1339,8 +1339,8 @@ Requires libclang to be installed.
     :ensure t)
 
   ;; Add company-lsp backend for metals
-  (use-package company-lsp
-    :ensure t)
+  ;; (use-package company-lsp
+  ;;   :ensure t)
 
   ;; Use the Debug Adapter Protocol for running tests and debugging
   (use-package posframe
@@ -1383,6 +1383,18 @@ Requires libclang to be installed.
                 (lambda ()
                   (when (string-equal "tsx" (file-name-extension buffer-file-name))
                     (setup-tide-mode))))
+#+END_SRC
+
+*** elisp
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-lispy
+    :ensure t)
+#+END_SRC
+
+*** kotlin
+#+BEGIN_SRC emacs-lisp
+  (use-package kotlin-mode
+    :ensure t)
 #+END_SRC
 
 ** web programming
@@ -1630,7 +1642,7 @@ Obviously you might have to adjust /server-name/ and /server-port/ to fit your c
     :ensure t
     :config
     (require 'emms-setup)
-    (require 'emms-player-mpd)
+    ;; (require 'emms-player-mpd)
     (emms-all) ; don't change this to values you see on stackoverflow questions if you expect emms to work
     (setq emms-seek-seconds 5)
     (emms-default-players)
@@ -1659,10 +1671,10 @@ Adjust according to your setup.
 #+END_SRC
 *** mpv
 #+BEGIN_SRC emacs-lisp
-  (use-package emms-player-mpv
-:ensure t
-:config
-(add-to-list 'emms-player-list 'emms-player-mpv))
+  ;;   (use-package emms-player-mpv
+  ;; :ensure t
+  ;; :config
+  ;; (add-to-list 'emms-player-list 'emms-player-mpv))
 #+END_SRC
 *** Some more fun stuff
 **** Starting the daemon from within emacs
