@@ -393,6 +393,38 @@ These won't work in the terminal version or the virtual console, obvious reasons
       (call-process "rm" nil nil nil ".newScreen.png")))
   (global-set-key (kbd "S-<print>") 'daedreth/take-screenshot-region)
 #+END_SRC
+** byzanz record
+use byzanz to record the screen, with ability to select region
+#+BEGIN_SRC emacs-lisp
+  (defun emacs-byzanz-record (&optional w h x y)
+    (interactive)
+
+      (add-to-list 'display-buffer-alist
+      (cons "emacs-record" (cons #'display-buffer-no-window nil)))
+    (async-shell-command (format "byzanz-record -e \"bash -c 'exec -a emacs_record sleep infinity'\" %s" (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".gif")) "emacs-record")
+   )
+
+  (defun emacs-byzanz-record-stop ()
+    (interactive)
+    (shell-command "pkill -xef 'emacs_record infinity'")
+    )
+  (defun byzanz-record-region ()
+    (interactive)
+    (when window-system
+        (call-process "import" nil nil nil ".newScreen.png")
+        (let ((width (shell-command-to-string "identify -format '%w' .newScreen.png"))
+              (height (shell-command-to-string "identify -format '%h' .newScreen.png"))
+              (xoff (shell-command-to-string "identify -format '%X' .newScreen.png"))
+              (yoff (shell-command-to-string "identify -format '%Y' .newScreen.png")))
+          (message (format "capturing on: w:%s h:%s X:%s Y:%s" width height xoff yoff))
+          (message (format "byzanz-record -w %s -h %s -x %s -y %s -e \"bash -c 'exec -a emacs_record sleep infinity'\" %s" width height xoff yoff (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".gif")) )
+          (add-to-list 'display-buffer-alist
+                       (cons "emacs-record" (cons #'display-buffer-no-window nil)))
+          (async-shell-command (format "byzanz-record -w %s -h %s -x %s -y %s -e \"bash -c 'exec -a emacs_record sleep infinity'\" %s" width height xoff yoff (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".gif")) "emacs-record" )
+          )
+        (call-process "rm" nil nil nil ".newScreen.png")
+        (message "byzanz capture started")) )
+#+END_SRC
 
 ** COMMENT eaf
 gui applications from inside emacs using python repl connected to the lisp
