@@ -59,7 +59,9 @@ Since we are going to use emacs as our window manager, it would be nice to have 
     :after evil
     :ensure t
     :config
-    (evil-collection-init))
+    (evil-collection-init)
+    (evil-set-initial-state 'eaf-mode 'emacs)
+    (evil-set-initial-state 'exwm-mode 'emacs))
   (use-package evil-surround
     :ensure t
     :config
@@ -359,6 +361,14 @@ You can also change those if you'd like, but I highly recommend keeping 'em the 
   (global-set-key (kbd "<XF86AudioRaiseVolume>") 'audio/raise-volume)
   (global-set-key (kbd "<XF86AudioLowerVolume>") 'audio/lower-volume)
 #+END_SRC
+** vterm
+sometimes need better than ansi-term
+
+#+BEGIN_SRC emacs-lisp
+  (use-package vterm
+    :ensure t)
+
+#+END_SRC
 ** Screenshots
 I don't need scrot to take screenshots, or shutter or whatever tools you might have. This is enough.
 These won't work in the terminal version or the virtual console, obvious reasons.
@@ -443,13 +453,9 @@ gui applications from inside emacs using python repl connected to the lisp
     (require 'eaf-video-player)
     (require 'eaf-browser)
     (require 'eaf-markdown-previewer)
-    (require 'eaf-rss-reader)
-    (require 'eaf-demo)
     (require 'eaf-image-viewer)
     (require 'eaf-mindmap)
-    (require 'eaf-terminal)
-    (require 'eaf-system-monitor)
-    (require 'eaf-vue-demo))
+    (require 'eaf-system-monitor))
 #+END_SRC
 
 
@@ -458,6 +464,8 @@ I use eww for most browsing, and I use qutebrowser when I need to open something
 #+BEGIN_SRC emacs-lisp
   (setq browse-url-browser-function 'eww-browse-url
         browse-url-generic-program "qutebrowser")
+
+  (setq eww-search-prefix "http://localhost/?preferences=eJx9VsFu5DYM_Zr6YiTodg89zaFoUewCBbJosr0atER7uJZErSSPo3x9qRmPR55se8ggpqnHR_KRsoKEIwfCeBjRYQDTGHDjDCMe0D18fW4MKzDloYE5sWLrDSY8nJ8GVnM8vIQZGwjqSCfsEmvIhz_BRGzICkznA79eLRbTkfXhy9PzSxNhwIjl3OHnJh3R4iFSQW8Cxtmk2LHrHC5dgn49rpk6ecnmhOHAII-PHMaGo4LwEFMWnoZHUqzx1IA-gVOouzXICkEReiNWdCM5SZus7rtuTf6nX35faCJLjva2PtfPGHghXVscCKXaUDj0GMauo1QQOGhHU-0BbyYHUrG2RbTgEqk2qiMbEMSoCCULeWezRcshtymAi0Yat2Mweta6cBjIYBTDRGqCKPB2jqQKOBvSiUNAJ8Xd_AJqTUl4lm7FM4k3B7bGDnOfR7RxTebDa-XtMsAtBrkTaeJZXOUf5OKxHEVAUWLjji_zaLD1BnIL3leE9KzR1a4V6DVOhiPzD9OPrAhMa1ETlGQShOSLDivnQQcu_btGtPwNcbpTQSJ2EHZ9_75Id9pL6lUJtkpvKWsevWDvCEqERBavRSw6-z5z2jklkWTGCnoOPThN6gdkZhelePFYedc1tXwirDmlk4W3XTSfPa1sEk-ZE8cjT-BuZS4kT5zvyrfOeks77Q4BLBjqA66YeRxXtVX68ENsLwN5M4KfWkshcKXekUaZU4hpJ4T6dDWOKVt2Rmq3YxmnvYZtXzqy1eOq-zoDxDbykBYI2GoKqCSBvKajZzWVv1F0t2Bf6ocJzJ4Is7kb6EK2LIO2_KxQ19Cy3QoTpdRDOlXUNjFXytg36OZKyUC_4g6B3ESgam3CPMhG362KDx8__vpaYfRBtlftcAQxlZ8V9zLjG-ZlDC7HK5htDK49XPiVJnaPknzMjp0ssF1H1ircTWwtmw1JdKghQX3ccB8TPoZ6oCLPQe2C9JR6aRqmd118P8ceMaS5r0VSk7lNtx5bjYNcEmUsd_2uRVLpogdRkfTOe3JjKai3K5-dpDcmd92-lqGX07sSyLTJVmiLJe6nsVSjZ57eGeWeipTyvblIcRMkOajSjd_8o1_cfw7i5sgeXUDPlQQuyrl4NOj2Vy87fD_MlxPX82ep_W_KZ8_bte7NLODx8IljklsM5XtB1uH5Av3szi1DuVMDmwL2JIS735RCUe0fT5_FdwniIG_-IftgaMLuyGnCfOO-4ZfNe3kQ95cAorHQff37LwGR1YtBrM9ohk6icrBwVsrZdk5YShVAlFVMn15evjxXsa8urlOXr7MsnzBGdlEjskCJ_S8t36lz&q=" )
 #+END_SRC
 
 
@@ -583,6 +591,31 @@ this highlights syntax in eww, good for elisp snippets on the wiki.
 
 #+END_SRC
 
+** shr settings
+#+BEGIN_SRC emacs-lisp
+  (setq shr-indentation 2
+        shr-width 90)
+#+END_SRC
+
+** rename eww buffer to title of page
+#+BEGIN_SRC emacs-lisp
+  (when (fboundp 'eww)
+    (defun xah-rename-eww-buffer ()
+      "Rename `eww-mode' buffer so sites open in new page.
+  URL `http://xahlee.info/emacs/emacs/emacs_eww_web_browser.html'
+  Version 2017-11-10"
+      (let (($title (plist-get eww-data :title)))
+        (when (eq major-mode 'eww-mode )
+          (if $title
+              (rename-buffer (concat "eww " $title ) t)
+            (rename-buffer "eww" t)))))
+
+    (add-hook 'eww-after-render-hook 'xah-rename-eww-buffer))
+#+END_SRC
+
+** TODO eww create new buffer when goto url
+** TODO eww buffer selection based on url
+
 * File Manager
 ** Dired
 #+BEGIN_SRC emacs-lisp
@@ -653,30 +686,7 @@ This turns on the clock globally.
   (ad-activate 'ansi-term)
 #+END_SRC
 * discoverablility and completion
-** Ivy
-#+BEGIN_SRC emacs-lisp
-  ;; (use-package counsel
-  ;;   :ensure t
-  ;;   :after ivy
-  ;;   :config (counsel-mode))
-
-  ;; (use-package ivy
-  ;;   :ensure t
-  ;;   :config
-  ;;   (ivy-mode 1)
-  ;;   :bind
-  ;;   ("C-x C-b" . 'ivy-switch-buffer))
-
-  ;; (use-package ivy-rich
-  ;;   :ensure t
-  ;;   :after counsel
-  ;;   :init
-  ;;   (ivy-rich-mode 1))
-#+END_SRC
-*** potential:
-https://github.com/masasam/emacs-counsel-tramp
 ** helm
-
 #+BEGIN_SRC emacs-lisp
   (use-package helm
     :ensure t
@@ -827,65 +837,12 @@ personally i have tried using avy but plain isearch seems to do the job the best
 
 
 #+END_SRC
-* non-sinful custom bindings (C-c lowercase)
-** Mark Multiple
+* (C-c lowercase)
+** COMMENT Mark Multiple
 #+BEGIN_SRC emacs-lisp
   (use-package mark-multiple
     :ensure t
     :bind ("C-c q" . 'mark-next-like-this))
-#+END_SRC
-** vim-like (v)
-everything is inner-object because the rest is easy enough in emacs way
-*** list of actions 
-kill - k
-copy - w
-mark - m
-yank into
-occur
-multicursor
-*** word
-**** kill (k)
-#+BEGIN_SRC emacs-lisp
-  (defun daedreth/kill-inner-word ()
-    "Kills the entire word your cursor is in. Equivalent to 'ciw' in vim."
-    (interactive)
-    (forward-char 1)
-    (backward-word)
-    (kill-word 1))
-  (global-set-key (kbd "C-c v w k") 'daedreth/kill-inner-word)
-#+END_SRC
-
-**** copy (w)
-And again, the same as above but we make sure to not delete the source word.
-#+BEGIN_SRC emacs-lisp
-  (defun daedreth/copy-whole-word ()
-    (interactive)
-    (save-excursion
-      (forward-char 1)
-      (backward-word)
-      (kill-word 1)
-      (yank)))
-  (global-set-key (kbd "C-c v w w") 'daedreth/copy-whole-word)
-#+END_SRC
-*** line (l)
-**** copy (w)
-Regardless of where your cursor is, this quickly copies a line.
-#+BEGIN_SRC emacs-lisp
-  (defun daedreth/copy-whole-line ()
-    "Copies a line without regard for cursor position."
-    (interactive)
-    (save-excursion
-      (kill-new
-       (buffer-substring
-        (point-at-bol)
-        (point-at-eol)))))
-  (global-set-key (kbd "C-c v l w") 'daedreth/copy-whole-line)
-#+END_SRC
-
-**** kill (k)
-And this quickly deletes a line.
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c v l k") 'kill-whole-line)
 #+END_SRC
 ** media (d)
 *** management (m)
@@ -926,14 +883,8 @@ And this quickly deletes a line.
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-c w w") 'eww)
 #+END_SRC
-** mark (m)
-*** TODO line (l)
-*** TODO word (w)
 ** insert (i)
 *** TODO insert unicode (u)
-** TODO snippet (s)
-** TODO compile (c)
-
 ** capture/journal (j)
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-c j") 'org-capture)
@@ -1383,8 +1334,7 @@ Requires libclang to be installed.
     :ensure t
     :hook
     (lsp-mode . dap-mode)
-    (lsp-mode . dap-ui-mode)
-    )
+    (lsp-mode . dap-ui-mode))
 #+END_SRC
 
 *** TS
@@ -1648,7 +1598,9 @@ this way you always know who you are typing to.
 What it says on the tin, this changes the =erc= history to include the server I connect to often.
 #+BEGIN_SRC emacs-lisp
   (setq erc-server-history-list '("irc.libera.chat"
+                                  "irc.deft.com"
                                   "localhost"))
+  (setq erc-autojoin-channels-alist '( ("libera.chat" "#pine64" "#fsf" "#searx" "#guix" "#emacs" "#hurd" "#guix" "#lisp" "##trans" "##transgeeks") ))
 #+END_SRC
 
 *** Nick highlighting
@@ -1681,8 +1633,8 @@ Obviously you might have to adjust /server-name/ and /server-port/ to fit your c
     (emms-all) ; don't change this to values you see on stackoverflow questions if you expect emms to work
     (setq emms-seek-seconds 5)
     (emms-default-players)
-    ;; (setq emms-player-list '(emms-player-mpd))
-    ;; (setq emms-info-functions '(emms-info-mpd))
+    (setq emms-player-list '(emms-player-mpd))
+    (setq emms-info-functions '(emms-info-mpd))
     (setq emms-player-mpd-server-name "localhost")
     (setq emms-player-mpd-server-port "6600")     
     (setq emms-source-file-default-directory "~/Media/")
@@ -1999,8 +1951,92 @@ i may turn this back on once i have a better grasp of gnus
         '((sequence "TODO(t)" "PLAN(p)" "WAIT(w@)" "|" "DONE(d!)" "CANCELED(c@)" "MISSED(m@)")))
 #+END_SRC
 ** TODO figure out how to refile and stuff in evil
+* TODO emacs notification system
+#+BEGIN_SRC emacs-lisp
+  (use-package alert
+    :ensure t
+    :init
+    (setq alert-default-style 'notifier))
+#+END_SRC
 
+* Circe
+mostly as a dependency for slack (can this be avoided?)
+#+BEGIN_SRC emacs-lisp
+    (use-package circe
+      :ensure t)
+#+END_SRC
+* emojis
+#+BEGIN_SRC emacs-lisp
+    (use-package emojify
+      :ensure t)
+#+END_SRC
 * TODO slack
+#+BEGIN_SRC emacs-lisp
+  ;; https://github.com/jackellenberger/emojme#user-content-finding-a-slack-cookie
+  (use-package el-get :ensure t)
+  (use-package use-package-el-get :ensure t)
+  (use-package-el-get-setup)
+  (use-package slack
+    :ensure t
+    :init
+    (setq slack-buffer-emojify t) ;; if you want to enable emoji, default nil
+    (setq slack-prefer-current-team t)
+    :config
+
+    (slack-register-team
+     :name "spectral subverse"
+     :default nil
+     :token (auth-source-pick-first-password
+           :host "spectralsubverse.slack.com"
+           :user "slack^token")
+     :cookie (auth-source-pick-first-password
+           :host "spectralsubverse.slack.com"
+           :user "slack^cookie")
+     :subscribed-channels '(random)
+     :full-and-display-names t)
+    (slack-register-team
+     :name "work"
+     :default t
+     :token (auth-source-pick-first-password
+           :host "work.slack.com"
+           :user "slack")
+     :cookie (auth-source-pick-first-password
+           :host "work.slack.com"
+           :user "slack")
+     :subscribed-channels '(random)
+     :full-and-display-names t)
+    (evil-define-key 'normal slack-info-mode-map
+      ",u" 'slack-room-update-messages)
+    (evil-define-key 'normal slack-mode-map
+      ",c" 'slack-buffer-kill
+      ",ra" 'slack-message-add-reaction
+      ",rr" 'slack-message-remove-reaction
+      ",rs" 'slack-message-show-reaction-users
+      ",pl" 'slack-room-pins-list
+      ;; ",pa" 'slack-message-pins-add
+      ;; ",pr" 'slack-message-pins-remove
+      ",mm" 'slack-message-write-another-buffer
+      ",me" 'slack-message-edit
+      ",md" 'slack-message-delete
+      ",u" 'slack-room-update-messages
+      ",2" 'slack-message-embed-mention
+      ",3" 'slack-message-embed-channel
+      "\C-n" 'slack-buffer-goto-next-message
+      "\C-p" 'slack-buffer-goto-prev-message)
+    (evil-define-key 'normal slack-edit-message-mode-map
+      ",k" 'slack-message-cancel-edit
+      ",s" 'slack-message-send-from-buffer
+      ",2" 'slack-message-embed-mention
+      ",3" 'slack-message-embed-channel) )
+
+
+  (el-get-bundle yuya373/helm-slack) ;; optional
+  (use-package helm-slack  :after (slack)) ;; optional
+#+END_SRC
+
+* byzanz record
+todo: use import and then identify to get the geometry
+
 * TODO discord in emacs
 * TODO everything in emacs
 * TODO yas for inserting emacs lisp begin src
