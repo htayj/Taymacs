@@ -1,0 +1,84 @@
+* questions
+what do linewise do?
+** preserve lines
+ds delete sexp
+|(defun something ()
+(otherfun))
+->
+|
+
+dd delete line or line inside of sexp
+
+* free
+** linewise is useless and should be par-wise instead
+*** yy
+*** cc
+*** C
+*** dd
+*** D
+*** R
+*** o
+*** O
+*** S
+** whitespace motions are not very useful
+*** []
+*** {}
+** unbalancing
+*** x
+*** s
+*** r?
+** uncommon
+*** ,
+*** ;
+*** -
+*** +
+*** <
+*** >
+** drop to emacs state could be changed to drop to normal?
+*** \
+** start/end line should be replaced with start/end sexp?
+*** ^
+*** 0
+*** $
+
+* movement
+** 3 modes for tree move:
+*** replace hjkl
+*** []{} to preserve hjkl
+*** M-hjkl for kinesis
+
+* faces
+** TODO highlight rest of sexp as blue
+** TODO highlight fore of sexp as green
+** TODO highlight rest of atom as yellow
+** TODO highlight fore of atom as purple
+
+* leader x
+** narrow to sexp and drop to normal mode? n
+** join/split xj xs
+** move sexp to new line xo
+
+* oper
+** TODO open
+paredit-open-round
+open a new paren set and insert
+*** after: o
+**** round: r
+**** square: s
+**** doublequote: "
+*** before: O
+** TODO move to new line
+** TODO move up/down tree
+** TODO move in/out tree
+** TODO change
+*** change atom/list
+c-c
+** TODO make-quote
+** TODO visual-select atom
+** TODO slurp
+** TODO barf
+** TODO drop into normal mode for atom
+** TODO insert before atom
+** TODO append after atom
+** TODO comment
+paredit-semicolon
