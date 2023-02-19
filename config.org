@@ -1951,7 +1951,8 @@ i may turn this back on once i have a better grasp of gnus
         '((sequence "TODO(t)" "PLAN(p)" "WAIT(w@)" "|" "DONE(d!)" "CANCELED(c@)" "MISSED(m@)")))
 #+END_SRC
 ** TODO figure out how to refile and stuff in evil
-* TODO emacs notification system
+* DONE emacs notification system
+- State "DONE"       from "TODO"       [2023-01-25 Wed 20:18]
 #+BEGIN_SRC emacs-lisp
   (use-package alert
     :ensure t
@@ -1970,7 +1971,8 @@ mostly as a dependency for slack (can this be avoided?)
     (use-package emojify
       :ensure t)
 #+END_SRC
-* TODO slack
+* DONE slack
+- State "DONE"       from "TODO"       [2023-01-25 Wed 20:18]
 #+BEGIN_SRC emacs-lisp
   ;; https://github.com/jackellenberger/emojme#user-content-finding-a-slack-cookie
   (use-package el-get :ensure t)
@@ -2032,6 +2034,17 @@ mostly as a dependency for slack (can this be avoided?)
 
   (el-get-bundle yuya373/helm-slack) ;; optional
   (use-package helm-slack  :after (slack)) ;; optional
+#+END_SRC
+
+* chatgpt openai
+#+BEGIN_SRC emacs-lisp
+  ;; https://github.com/jackellenberger/emojme#user-content-finding-a-slack-cookie
+  (require 'openai)
+  ;; (el-get-bundle emacs-openai/openai) ;; optional
+  ;; (use-package openai
+  ;;   :ensure t)
+
+
 #+END_SRC
 
 * byzanz record
