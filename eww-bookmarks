@@ -1,5 +1,6 @@
-;; Auto-generated file; don't edit
-((:url "https://www.thelatinlibrary.com/" :title "The Latin Library" :time "Fri Feb 18 12:37:29 2022")
+;; Auto-generated file; don't edit -*- mode: lisp-data -*-
+((:url "https://github.com/emacs-helm/helm-system-packages" :title "GitHub - emacs-helm/helm-system-packages: A Helm interface to the package manager of your operating system" :time "Mon Jan  9 16:52:40 2023")
+ (:url "https://www.thelatinlibrary.com/" :title "The Latin Library" :time "Fri Feb 18 12:37:29 2022")
  (:url "https://www.alllanguageresources.com/learning-latin/" :title "Learning Latin Made Simple(r): A Self-Study Guide" :time "Fri Feb 18 11:51:06 2022")
  (:url "https://www.culturaclasica.com/lingualatina/recursos.htm" :title "LINGVA LATINA per se illustrata, de HANS ORBERG  .::RECURSOS::." :time "Fri Feb 18 11:35:26 2022")
  (:url "https://la.wikisource.org/wiki/Easy_Latin_Stories" :title "Easy Latin Stories - Wikisource" :time "Fri Feb 11 14:09:13 2022")

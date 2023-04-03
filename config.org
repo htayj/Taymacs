@@ -45,6 +45,24 @@ Since we are going to use emacs as our window manager, it would be nice to have 
     (normal-top-level-add-subdirs-to-load-path))
 #+END_SRC
 
+* COMMENT straight
+
+#+BEGIN_SRC emacs-lisp
+  ;; (defvar bootstrap-version)
+  ;; (let ((bootstrap-file
+  ;;        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+  ;;       (bootstrap-version 5))
+  ;;   (unless (file-exists-p bootstrap-file)
+  ;;     (with-current-buffer
+  ;;         (url-retrieve-synchronously
+  ;;          "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+  ;;          'silent 'inhibit-cookies)
+  ;;       (goto-char (point-max))
+  ;;       (eval-print-last-sexp)))
+  ;;   (load bootstrap-file nil 'nomessage))
+  ;; (use-package straight
+  ;;   :custom (straight-use-package-by-default nil))
+#+END_SRC
 * evil
 #+BEGIN_SRC emacs-lisp
   (use-package evil
@@ -73,6 +91,7 @@ Since we are going to use emacs as our window manager, it would be nice to have 
   (use-package undo-tree
     :ensure t
     :config
+    (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
     (global-undo-tree-mode))
 #+END_SRC
 
@@ -104,7 +123,7 @@ Since we are going to use emacs as our window manager, it would be nice to have 
   ;; Set default font
   (set-face-attribute 'default nil
                       :family "Hack"
-                      :height 160
+                      :height 120
                       ;; :weight 'normal
                       :width 'normal)
   ;; set fallback font for emoji
@@ -192,7 +211,7 @@ The only time I actually had to use comments, this is for ease of removal if you
     ;;      (exwm-config-ido)
 
     ;; a number between 1 and 9, exwm creates workspaces dynamically so I like starting out with 1
-    (setq exwm-workspace-number 1)
+    (setq exwm-workspace-number 5)
 
     ;; make x buffers available on all workspaces
     (setq exwm-workspace-show-all-buffers t)
@@ -284,18 +303,18 @@ The only time I actually had to use comments, this is for ease of removal if you
                  print))
       (cl-pushnew k exwm-input-prefix-keys))
 
+    (require 'exwm-randr)
+    (setq exwm-randr-workspace-output-plist '(0 "eDP1" 1 "eDP1" 2 "HDMI1"  3 "HDMI1"  4 "HDMI1"  5 "HDMI1"   ))
+    (add-hook 'exwm-randr-screen-change-hook
+              (lambda ()
+                (start-process-shell-command
+                 "xrandr" nil "xrandr --output HDMI1 --mode 1920x1080 --pos 0x0 --rotate normal --output eDP1 --primary --mode 1920x1080 --pos 1920x300 --rotate normal")))
+    (exwm-randr-enable)
     ;; this just enables exwm, it started automatically once everything is ready
     (exwm-enable))'
 #+END_SRC
 ** Multi monitor
 #+BEGIN_SRC emacs-lisp
-  ;; (require 'exwm-randr)
-  ;; (setq exwm-randr-workspace-output-plist '(0 "DP-4"))
-  ;; (add-hook 'exwm-randr-screen-change-hook
-  ;;           (lambda ()
-  ;;             (start-process-shell-command
-  ;;              "xrandr" nil "xrandr --output DP-4 --auto")))
-  ;; (exwm-randr-enable)
 #+END_SRC
 ** exwm edit
 #+BEGIN_SRC emacs-lisp
@@ -361,6 +380,18 @@ You can also change those if you'd like, but I highly recommend keeping 'em the 
   (global-set-key (kbd "<XF86AudioRaiseVolume>") 'audio/raise-volume)
   (global-set-key (kbd "<XF86AudioLowerVolume>") 'audio/lower-volume)
 #+END_SRC
+** COMMENT ansi term enhancement
+#+BEGIN_SRC emacs-lisp
+  (defun singpolyma/term-insert-literal (key)
+      "Take a keypress and insert it literally into a terminal."
+      (interactive "cPress key:")
+      (term-send-raw-string (format "%c" key))
+      )
+
+  (add-hook 'term-mode-hook (lambda ()
+          (define-key evil-insert-state-map (kbd "C-'") 'singpolyma/term-insert-literal)
+          )
+#+END_SRC
 ** vterm
 sometimes need better than ansi-term
 
@@ -402,6 +433,7 @@ These won't work in the terminal version or the virtual console, obvious reasons
                     (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".png"))
       (call-process "rm" nil nil nil ".newScreen.png")))
   (global-set-key (kbd "S-<print>") 'daedreth/take-screenshot-region)
+  (global-set-key (kbd "C-c l") 'daedreth/take-screenshot-region)
 #+END_SRC
 ** byzanz record
 use byzanz to record the screen, with ability to select region
@@ -980,7 +1012,20 @@ Backspace or Delete will get rid of all whitespace until the next non-whitespace
 
 * Programming
 Minor, non-completion related settings and plugins for writing code.
+** treesitter TODO: disable when upgrade to 29
+#+BEGIN_SRC emacs-lisp
 
+  (use-package tree-sitter
+    :ensure t )
+
+  (use-package tree-sitter-langs
+    :ensure t
+    :config
+    (tree-sitter-require 'tsx)
+    (add-to-list 'tree-sitter-major-mode-language-alist '(typescript-tsx-mode . tsx)))
+
+  (use-package evil-textobj-tree-sitter :ensure t)
+#+END_SRC
 ** COMMENT paredit
 #+BEGIN_SRC emacs-lisp
   (use-package paredit
@@ -1252,13 +1297,13 @@ Requires libclang to be installed.
     :init   (add-hook 'js2-mode-hook 'js2-refactor-mode)
     :config (js2r-add-keybindings-with-prefix "C-c ."))
 
-  ;; (use-package prettier
-  ;;   :ensure t
-  ;;   :config
-  ;;   (add-hook 'after-init-hook #'global-prettier-mode)
-  ;;   ;; (add-hook 'js2-mode-hook 'prettier-mode)
-  ;;   ;; (add-hook 'web-mode-hook 'prettier-mode)
-  ;;   )
+  (use-package prettier
+    :ensure t
+    :config
+    (add-hook 'after-init-hook #'global-prettier-mode)
+    (add-hook 'js2-mode-hook 'prettier-mode)
+    (add-hook 'web-mode-hook 'prettier-mode)
+    )
 #+END_SRC
 
 *** drools
@@ -1339,32 +1384,49 @@ Requires libclang to be installed.
 
 *** TS
 #+BEGIN_SRC emacs-lisp
-    (use-package tide
-      :ensure t
-      :config
-      (defun setup-tide-mode ()
-        (interactive)
-        (tide-setup)
-        (flycheck-mode +1)
-        (setq flycheck-check-syntax-automatically '(save mode-enabled))
-        (eldoc-mode +1)
-        (tide-hl-identifier-mode +1)
-        ;; company is an optional dependency. You have to
-        ;; install it separately via package-install
-        ;; `M-x package-install [ret] company`
-        (company-mode +1))
 
-      ;; aligns annotation to the right hand side
-      (setq company-tooltip-align-annotations t)
+  (use-package coverlay
+    :ensure t)
 
-      ;; formats the buffer before saving
-      (add-hook 'before-save-hook 'tide-format-before-save)
+  (define-derived-mode typescript-tsx-mode typescript-mode "TSX"
+    "Major mode for editing TSX files.
 
-      (add-hook 'typescript-mode-hook #'setup-tide-mode))
-      (add-hook 'web-mode-hook
-                (lambda ()
-                  (when (string-equal "tsx" (file-name-extension buffer-file-name))
-                    (setup-tide-mode))))
+  Refer to Typescript documentation for syntactic differences between normal and TSX
+  variants of Typescript.")
+
+  (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-tsx-mode))
+  (defun typescript-tsx-mode-fix-tree-sitter()
+     (set (make-local-variable 'tree-sitter-hl-use-font-lock-keywords) nil))
+  (add-hook 'typescript-tsx-mode-hook #'typescript-tsx-mode-fix-tree-sitter)
+  (add-hook 'typescript-tsx-mode-hook #'tree-sitter-hl-mode)
+
+  (use-package tide
+    :ensure t
+    :config
+    (defun setup-tide-mode ()
+      (interactive)
+      (tide-setup)
+      (flycheck-mode +1)
+      (setq flycheck-check-syntax-automatically '(save mode-enabled))
+      (eldoc-mode +1)
+      (tide-hl-identifier-mode +1)
+      ;; company is an optional dependency. You have to
+      ;; install it separately via package-install
+      ;; `M-x package-install [ret] company`
+      (company-mode +1))
+
+    ;; aligns annotation to the right hand side
+    (setq company-tooltip-align-annotations t)
+
+    ;; formats the buffer before saving
+    (add-hook 'before-save-hook nil)
+
+    (add-hook 'typescript-mode-hook #'setup-tide-mode))
+
+  ;; (add-hook 'web-mode-hook
+  ;;           (lambda ()
+  ;;             (when (string-equal "tsx" (file-name-extension buffer-file-name))
+  ;;               (setup-tide-mode))))
 #+END_SRC
 
 *** elisp
@@ -1429,7 +1491,6 @@ Requires libclang to be installed.
     (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
     (add-hook 'editorconfig-custom-hooks
               (lambda (hash) (setq web-mode-block-padding 0)))
     (add-hook 'web-mode-hook 'company-mode)
@@ -1440,13 +1501,13 @@ Requires libclang to be installed.
 
 #+END_SRC
 
-** LaTeX
+** COMMENT LaTeX
 #+BEGIN_SRC emacs-lisp
-  (use-package tex
-    :defer t
-    :ensure auctex
-    :config
-    (setq TeX-auto-save t))
+  ;; (use-package tex			;
+  ;;   :defer t
+  ;;   :ensure auctex
+  ;;   :config
+  ;;   (setq TeX-auto-save t))
   ;; (use-package auctex
   ;; :ensure t)
 
@@ -1473,7 +1534,7 @@ great. It's easy and intuitive to use, shows its options at a keypress and much 
     :config
     (global-diff-hl-mode))
 #+END_SRC
-** magit forge
+** COMMENT magit forge
 #+BEGIN_SRC emacs-lisp
   (use-package forge
     :ensure t
@@ -1564,9 +1625,9 @@ Here is how we add more of them!
 
 *** latex
 #+BEGIN_SRC emacs-lisp
-  (when (file-directory-p "/usr/share/emacs/site-lisp/tex-utils")
-    (add-to-list 'load-path "/usr/share/emacs/site-lisp/tex-utils")
-    (require 'xdvi-search))
+  ;; (when (file-directory-p "/usr/share/emacs/site-lisp/tex-utils")
+  ;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/tex-utils")
+  ;;   (require 'xdvi-search))
 #+END_SRC
 
 * web browser
@@ -1893,7 +1954,7 @@ replacing gnus with elfeed
     user-mail-address "taylor@taylorhardy.net")
 #+END_SRC
 * gnus
-** hackernews in gnus
+** COMMENT hackernews in gnus
 i may turn this back on once i have a better grasp of gnus
 
 #+BEGIN_SRC emacs-lisp
