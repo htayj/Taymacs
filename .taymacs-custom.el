@@ -3,9 +3,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["#303030" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
  '(browse-url-secondary-browser-function 'eaf-open-browser)
+ '(code-review-gitlab-base-url "git.codemettle.com")
+ '(code-review-gitlab-graphql-host "git.codemettle.com/api")
+ '(code-review-gitlab-host "git.codemettle.com/api")
  '(create-lockfiles nil)
  '(custom-file "~/.emacs.d/.taymacs-custom.el")
  '(custom-safe-themes
@@ -14,23 +15,8 @@
  '(eaf-find-alternate-file-in-dired t t)
  '(eaf-wm-focus-fix-wms
    '("i3" "/usr/share/xsessions/i3" "qtile" "/usr/share/xsessions/qtile" "emacs" "wmctrl -m"))
- '(elfeed-enclosure-default-dir "/mnt/Ext4Storage/ytdl/elfeed")
- '(elfeed-search-filter "@6-months-ago +unread -vid")
- '(erc-autojoin-channels-alist
-   '(("libera.chat" "#pine64" "#fsf" "#searx" "#guix" "#emacs" "#hurd" "#guix" "#lisp")))
- '(erc-autojoin-timing 'ident)
- '(erc-interpret-mirc-color t)
- '(erc-modules
-   '(completion log notifications hl-nicks netsplit fill button match track readonly networks ring autojoin noncommands irccontrols move-to-prompt stamp menu list))
- '(erc-prompt-for-password nil)
- '(erc-track-exclude
-   '("##latinitas" "##latin" "#EsperantoAmeriko#1" "#kulupupitokipona#1"))
- '(erc-track-exclude-types '("JOIN" "KICK" "NICK" "PART" "333" "353"))
  '(evil-insert-state-modes nil)
  '(evil-motion-state-modes nil)
- '(evil-search-module 'evil-search)
- '(evil-want-keybinding t)
- '(eww-search-prefix "https://duckduckgo.com/lite/?q=")
  '(forge-alist
    '(("github.com" "api.github.com" "github.com" forge-github-repository)
      ("git.codemettle.com" "git.codemettle.com/api/v4" "git.codemettle.com" forge-gitlab-repository)
@@ -45,52 +31,32 @@
      ("repo.or.cz" nil "repo.or.cz" forge-repoorcz-repository)
      ("git.suckless.org" nil "git.suckless.org" forge-stagit-repository)
      ("git.sr.ht" nil "git.sr.ht" forge-srht-repository)))
- '(global-prettier-mode nil)
  '(gnus-asynchronous t)
  '(gnus-use-full-window nil)
  '(helm-autoresize-mode nil)
  '(helm-completion-style 'helm)
  '(helm-minibuffer-history-key "M-p")
- '(ivy-mode t)
  '(lsp-metals-treeview-show-when-views-received nil t)
  '(org-agenda-files '("~/notes/notes.org"))
  '(org-capture-templates
    '(("k" "koan" entry
       (file+headline "~/notes/notes.org" "unsorted")
-      "** %? %i :koan:
-Submitted:%U
-From:%a
-During:%K")
+      "** %? %i :koan:\12Submitted:%U\12From:%a\12During:%K")
      ("d" "todo" entry
       (file+headline "~/notes/notes.org" "unsorted")
-      "** TODO %? %i :general: 
-Submitted:%U
-From:%a
-During:%K")
+      "** TODO %? %i :general: \12Submitted:%U\12From:%a\12During:%K")
      ("p" "projects" entry
       (file+headline "~/notes/notes.org" "unsorted")
-      "** %? %i :projects:
-Submitted:%U
-From:%a
-During:%K")
+      "** %? %i :projects:\12Submitted:%U\12From:%a\12During:%K")
      ("j" "journal" entry
       (file+headline "~/notes/notes.org" "diary")
-      "** %U %i :journal:diary:general:
-Submitted:%U
-From:%a
-%?")
+      "** %U %i :journal:diary:general:\12Submitted:%U\12From:%a\12%?")
      ("n" "notes" entry
       (file+headline "~/notes/notes.org" "unsorted")
-      "** %? %i :general:
-Submitted:%U
-From:%a
-During:%K")
+      "** %? %i :general:\12Submitted:%U\12From:%a\12During:%K")
      ("b" "booklist" entry
       (file+headline "~/notes/notes.org" "unsorted")
-      "** TODO %? %i :toread:
-Submitted:%U
-From:%a
-During:%K")))
+      "** TODO %? %i :toread:\12Submitted:%U\12From:%a\12During:%K")))
  '(org-datetree-add-timestamp 'inactive)
  '(org-default-notes-file "~/notes/notes.org")
  '(org-directory "~/notes")
@@ -99,8 +65,6 @@ During:%K")))
      ("\\.mm\\'" . default)
      ("\\.x?html?\\'" . "firefox %s")
      ("\\.pdf\\'" . default)))
- '(org-journal-date-format "%A, %d %B %Y")
- '(org-journal-dir "~/notes/journal/")
  '(org-structure-template-alist
    '(("el" "emacs-lisp")
      ("a" . "export ascii")
@@ -115,13 +79,8 @@ During:%K")))
      ("v" . "verse")))
  '(package-selected-packages
    '(eloud nnhackernews elfeed-org elfeed emms-player-mpv elpher auctex tide company-lsp lsp-ui lsp-metals lsp-mode sbt-mode scala-mode prettier paredit ace-link ivy-prescient counsel-projectile all-the-icons-dired language-detection modus-vivendi-theme evil-surround evil-collection moe-theme color-theme-modern cider haskell-mode forge prettier-js org-journal web-mode key-chord evil doom-modeline diff-hl aggressive-indent ace-window helm-ag vue-mode salaire-mode doom-themes editorconfig telephone-line eyeliner spaceline-all-the-icons tabbar neotree js2-refactor company-tern tern ergoemacs-mode dracula-theme golden-ratio-scroll-screen slime-company slime company-jedi zzz-to-char rainbow-delimiters avy ivy projectile sunrise-x-modeline sunrise-x-buttons sunrise-commander twittering-mode zerodark-theme pretty-mode flycheck-clang-analyzer flycheck-irony flycheck yasnippet-snippets yasnippet company-c-headers company-shell company-irony irony irony-mode company-lua mark-multiple expand-region swiper popup-kill-ring dmenu ido-vertical-mode ido-vertical ox-html5slide centered-window-mode htmlize ox-twbs diminish erc-hl-nicks symon rainbow-mode switch-window dashboard smex company sudo-edit emms magit org-bullets hungry-delete beacon linum-relative spaceline fancy-battery exwm which-key use-package))
- '(pos-tip-background-color "#36473A")
- '(pos-tip-foreground-color "#FFFFC8")
- '(prettier-js-args
-   '("--print-width" "120" "--arrow-parens" "avoid" "--trailing-comma" "all" "--find-config-path"))
  '(projectile-completion-system nil)
  '(projectile-ignored-projects nil)
- '(projectile-indexing-method 'hybrid)
  '(projectile-project-root-files '(".projectile"))
  '(projectile-project-root-files-bottom-up '(".projectile"))
  '(projectile-project-root-files-top-down-recurring nil)

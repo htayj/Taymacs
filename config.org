@@ -70,15 +70,20 @@ Since we are going to use emacs as our window manager, it would be nice to have 
     :init
     (setq evil-want-integration t)
     (setq evil-want-keybinding nil)
+    :custom
+    (evil-undo-system 'undo-tree)
+    (evil-search-module 'isearch)
     :config
     (evil-mode 1)
     (setq evil-search-module 'isearch)
     (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state))
+
   (use-package evil-collection
     :after evil
     :straight t
     :config
     (evil-collection-init)
+    (setq evil-want-keybinding t)
     (evil-set-initial-state 'eaf-mode 'emacs)
     (evil-set-initial-state 'exwm-mode 'emacs))
   (use-package evil-surround
@@ -129,6 +134,11 @@ Since we are going to use emacs as our window manager, it would be nice to have 
                       :width 'normal)
   ;; set fallback font for emoji
   (set-fontset-font t nil (font-spec :size 20 :name "Unifont"))
+#+END_SRC
+** ansi color names
+#+BEGIN_SRC emacs-lisp
+(setq ansi-color-names-vector
+   ["#303030" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
 #+END_SRC
 * Basic Interface Settings
 These are setting that do not depend on packages and are built-in enhancements to the UI.
@@ -668,6 +678,8 @@ This makes sure that everything can be a project.
   (use-package projectile
     :straight t
     :init (projectile-mode 1)
+    :custom 
+    (projectile-indexing-method 'hybrid)
     ;; :custom
     ;; (projectile-completion-system)
     :bind ("C-c p" . 'projectile-command-map))
@@ -1310,13 +1322,6 @@ Requires libclang to be installed.
     :init   (add-hook 'js2-mode-hook 'js2-refactor-mode)
     :config (js2r-add-keybindings-with-prefix "C-c ."))
 
-  ;; (use-package prettier
-  ;;   :straight t
-  ;;   :config
-  ;;   (add-hook 'after-init-hook #'global-prettier-mode)
-  ;;   (add-hook 'js2-mode-hook 'prettier-mode)
-  ;;   (add-hook 'web-mode-hook 'prettier-mode)
-  ;;   )
   (use-package apheleia
     :straight t
     :config
@@ -1695,15 +1700,27 @@ this way you always know who you are typing to.
   (setq erc-nick "htayj")
   (setq erc-prompt (lambda () (concat "[" (buffer-name) "]")))
   (setq erc-hide-list '("JOIN" "PART" "QUIT"))
+  (setq erc-interpret-mirc-color t)
+  (setq erc-modules
+     '(completion log notifications hl-nicks netsplit fill button match track readonly networks ring autojoin noncommands irccontrols move-to-prompt stamp menu list))
+  '(erc-prompt-for-password nil)
+
+
+  (setq erc-track-exclude-types '("JOIN" "KICK" "NICK" "PART" "333" "353"))
 #+END_SRC
 
 *** selectable server list
 What it says on the tin, this changes the =erc= history to include the server I connect to often.
 #+BEGIN_SRC emacs-lisp
   (setq erc-server-history-list '("irc.libera.chat"
-                                  "irc.deft.com"
-                                  "localhost"))
+                                   "irc.deft.com"
+                                   "localhost"))
   (setq erc-autojoin-channels-alist '( ("libera.chat" "#pine64" "#fsf" "#searx" "#guix" "#emacs" "#hurd" "#guix" "#lisp" "##trans" "##transgeeks") ))
+
+  (setq erc-autojoin-timing 'ident)
+
+  (setq erc-track-exclude
+     '("##latinitas" "##latin" "#EsperantoAmeriko#1" "#kulupupitokipona#1"))
 #+END_SRC
 
 *** Nick highlighting
@@ -1965,8 +1982,10 @@ Edit this list as you see fit!
 replacing gnus with elfeed
 ** elfeed itself
 #+BEGIN_SRC emacs-lisp
-    (use-package elfeed
-      :straight t)
+  (use-package elfeed
+    :straight t
+    :custom
+    (elfeed-search-filter "@6-months-ago +unread -vid"))
 #+END_SRC
 ** elfeed goodies
 ** org mode feed list
