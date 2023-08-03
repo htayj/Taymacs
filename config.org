@@ -61,12 +61,12 @@ Since we are going to use emacs as our window manager, it would be nice to have 
         (eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage))
   (use-package straight
-    :custom (straight-use-package-by-default nil))
+    :custom (straight-use-package-by-default t))
 #+END_SRC
 * evil
 #+BEGIN_SRC emacs-lisp
   (use-package evil
-    :ensure t
+    :straight t
     :init
     (setq evil-want-integration t)
     (setq evil-want-keybinding nil)
@@ -76,13 +76,13 @@ Since we are going to use emacs as our window manager, it would be nice to have 
     (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state))
   (use-package evil-collection
     :after evil
-    :ensure t
+    :straight t
     :config
     (evil-collection-init)
     (evil-set-initial-state 'eaf-mode 'emacs)
     (evil-set-initial-state 'exwm-mode 'emacs))
   (use-package evil-surround
-    :ensure t
+    :straight t
     :config
     (global-evil-surround-mode 1))
 #+END_SRC
@@ -90,7 +90,7 @@ Since we are going to use emacs as our window manager, it would be nice to have 
 * undo tree
 #+BEGIN_SRC emacs-lisp
   (use-package undo-tree
-    :ensure t
+    :straight t
     :config
     (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
     (global-undo-tree-mode))
@@ -102,7 +102,7 @@ Since we are going to use emacs as our window manager, it would be nice to have 
 #+BEGIN_SRC emacs-lisp
 
   (use-package modus-themes
-    :ensure t 
+    :straight t 
     :init 
     (setq modus-vivendi-theme-slanted-constructs t
           modus-vivendi-theme-bold-constructs t
@@ -184,7 +184,7 @@ I don't use either, you might want to turn those from =nil= to =t= if you do.
 use asynchronous processes wherever possible
 #+BEGIN_SRC emacs-lisp
   (use-package async
-    :ensure t
+    :straight t
     :init (dired-async-mode 1))
 #+END_SRC
 
@@ -196,7 +196,7 @@ The only time I actually had to use comments, this is for ease of removal if you
 *** Installation
 #+BEGIN_SRC emacs-lisp
   (use-package exwm
-    :ensure t
+    :straight t
     :config
 
     ;; necessary to configure exwm manually
@@ -320,7 +320,7 @@ The only time I actually had to use comments, this is for ease of removal if you
 ** exwm edit
 #+BEGIN_SRC emacs-lisp
   (use-package exwm-edit
-    :ensure t)
+    :straight t)
 #+END_SRC
 ** autoname the buffers
 #+BEGIN_SRC emacs-lisp
@@ -346,7 +346,7 @@ Who would've thought this was available, together with ido-vertical it's a nice 
 with its own cache for most launched applications.
 #+BEGIN_SRC emacs-lisp
   (use-package dmenu
-    :ensure t
+    :straight t
     :bind
     ("s-SPC" . 'dmenu))
 #+END_SRC
@@ -398,7 +398,7 @@ sometimes need better than ansi-term
 
 #+BEGIN_SRC emacs-lisp
   (use-package vterm
-    :ensure t)
+    :straight t)
 
 #+END_SRC
 ** Screenshots
@@ -507,7 +507,7 @@ shrface for eww that is more like org mode
 #+BEGIN_SRC emacs-lisp
   ;; (use-package shrface
   ;;   :defer t
-  ;;   :ensure t
+  ;;   :straight t
   ;;   :config
   ;;   (shrface-basic)
   ;;   (shrface-trial)
@@ -544,7 +544,7 @@ this highlights syntax in eww, good for elisp snippets on the wiki.
 #+BEGIN_SRC emacs-lisp
   ;; syntax highlighting 
   (use-package language-detection
-    :ensure t
+    :straight t
     :config
     (require 'cl-lib)
 
@@ -655,7 +655,7 @@ this highlights syntax in eww, good for elisp snippets on the wiki.
 #+BEGIN_SRC emacs-lisp
   (setq-default dired-listing-switches "-alh")
   (use-package all-the-icons-dired
-    :ensure t
+    :straight t
     :hook (dired-mode . all-the-icons-dired-mode)
     )
 #+END_SRC
@@ -666,17 +666,17 @@ This makes sure that everything can be a project.
 
 #+BEGIN_SRC emacs-lisp
   (use-package projectile
-    :ensure t
+    :straight t
     :init (projectile-mode 1)
     ;; :custom
     ;; (projectile-completion-system)
     :bind ("C-c p" . 'projectile-command-map))
 
   (use-package helm-projectile
-    :ensure t
+    :straight t
     :config (helm-projectile-on))
   ;; (use-package counsel-projectile
-  ;;   :ensure t
+  ;;   :straight t
   ;;   :config (counsel-projectile-mode))
 #+END_SRC
 
@@ -689,7 +689,7 @@ This makes sure that everything can be a project.
 Dashboard with recent files and projects
 #+BEGIN_SRC emacs-lisp
   (use-package dashboard
-    :ensure t
+    :straight t
     :config
     (dashboard-setup-startup-hook)
     (setq dashboard-startup-banner "~/.emacs.d/img/dashLogo.png")
@@ -723,7 +723,7 @@ This turns on the clock globally.
 ** helm
 #+BEGIN_SRC emacs-lisp
   (use-package helm
-    :ensure t
+    :straight t
     :bind
     ("C-x C-f" . 'helm-find-files)
     ("C-x C-b" . 'helm-buffers-list)
@@ -762,7 +762,7 @@ This turns on the clock globally.
 *** silver searcher helm
   #+BEGIN_SRC emacs-lisp
     (use-package helm-ag
-      :ensure t)
+      :straight t)
   #+END_SRC
 #+END_SRC
 ** TODO  look into icicles
@@ -771,7 +771,7 @@ This turns on the clock globally.
 automatic cheat sheet once you press part of a key series
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
-    :ensure t
+    :straight t
     :config
     (which-key-mode))
 #+END_SRC
@@ -785,7 +785,7 @@ you probably use more than 2 panes/windows at times, cycling through all of them
 switch window uses an ace type jump if more than 2 windows are open
 #+BEGIN_SRC emacs-lisp
   (use-package switch-window
-    :ensure t
+    :straight t
     :config
     (setq switch-window-input-style 'minibuffer)
     (setq switch-window-increase 4)
@@ -852,7 +852,7 @@ If you feel like you know how ibuffer works and need not to be asked for confirm
 Relative line numbers
 #+BEGIN_SRC emacs-lisp
   (use-package linum-relative
-    :ensure t
+    :straight t
     :config
     (setq linum-relative-current-symbol "")
     (add-hook 'prog-mode-hook 'linum-relative-mode))
@@ -864,7 +864,7 @@ personally i have tried using avy but plain isearch seems to do the job the best
 *** ace-link for eww 
 #+BEGIN_SRC emacs-lisp
   (use-package ace-link
-    :ensure t
+    :straight t
     :config
     (ace-link-setup-default)
   )
@@ -875,7 +875,7 @@ personally i have tried using avy but plain isearch seems to do the job the best
 ** COMMENT Mark Multiple
 #+BEGIN_SRC emacs-lisp
   (use-package mark-multiple
-    :ensure t
+    :straight t
     :bind ("C-c q" . 'mark-next-like-this))
 #+END_SRC
 ** media (d)
@@ -976,7 +976,7 @@ And now to enable it
 shows color of hex color
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-mode
-    :ensure t
+    :straight t
     :init
     (add-hook 'prog-mode-hook 'rainbow-mode))
 #+END_SRC
@@ -990,7 +990,7 @@ highlight matching paren
 Colors parentheses and other delimiters depending on their depth
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-delimiters
-    :ensure t
+    :straight t
     :init
     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 #+END_SRC
@@ -999,7 +999,7 @@ Colors parentheses and other delimiters depending on their depth
 grow region over levels of semantic objects.
 #+BEGIN_SRC emacs-lisp
   (use-package expand-region
-    :ensure t
+    :straight t
     :bind ("C-M-q" . er/expand-region))
 #+END_SRC
 
@@ -1007,7 +1007,7 @@ grow region over levels of semantic objects.
 Backspace or Delete will get rid of all whitespace until the next non-whitespace character is encountered.
 #+BEGIN_SRC emacs-lisp
   (use-package hungry-delete
-    :ensure t
+    :straight t
     :config
     (global-hungry-delete-mode))
 #+END_SRC
@@ -1017,21 +1017,21 @@ Minor, non-completion related settings and plugins for writing code.
 ** lsp
 #+BEGIN_SRC emacs-lisp
   (use-package eglot
-    :ensure t)
+    :straight t)
 #+END_SRC
 ** COMMENT treesitter TODO: disable when upgrade to 29
 #+BEGIN_SRC emacs-lisp
 
   (use-package tree-sitter
-    :ensure t )
+    :straight t )
 
   (use-package tree-sitter-langs
-    :ensure t
+    :straight t
     :config
     (tree-sitter-require 'tsx)
     (add-to-list 'tree-sitter-major-mode-language-alist '(typescript-tsx-mode . tsx)))
 
-  (use-package evil-textobj-tree-sitter :ensure t)
+  (use-package evil-textobj-tree-sitter :straight t)
 #+END_SRC
 ** built in tree sit
 
@@ -1042,7 +1042,7 @@ Minor, non-completion related settings and plugins for writing code.
 ** COMMENT paredit
 #+BEGIN_SRC emacs-lisp
   (use-package paredit
-    :ensure t
+    :straight t
     :config
     (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
     (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
@@ -1056,17 +1056,17 @@ Minor, non-completion related settings and plugins for writing code.
 ** yasnippet
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
-    :ensure t
+    :straight t
     :config
     (use-package yasnippet-snippets
-      :ensure t)
+      :straight t)
     (yas-reload-all))
 #+END_SRC
 
 ** flycheck
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
-    :ensure t
+    :straight t
     :config
     (add-hook 'after-init-hook #'global-flycheck-mode)
     ;; (flycheck-add-mode 'javascript-eslint 'web-mode 'scala-mode)
@@ -1080,7 +1080,7 @@ it starts doing its magic after typing in only 2 characters.
 I prefer =C-n= and =C-p= to move around the items, so I remap those accordingly.
 #+BEGIN_SRC emacs-lisp
   (use-package company
-    :ensure t
+    :straight t
 
     :bind (:map company-active-map
                 ("<tab>" . company-complete-selection))
@@ -1108,7 +1108,7 @@ Each category also has additional settings.
 **** flycheck
 #+BEGIN_SRC emacs-lisp
   ;; (use-package flycheck-clang-analyzer
-  ;;   :ensure t
+  ;;   :straight t
   ;;   :config
   ;;   (with-eval-after-load 'flycheck
   ;;     (require 'flycheck-clang-analyzer)
@@ -1125,17 +1125,17 @@ Requires libclang to be installed.
     (add-hook 'c-mode-hook 'company-mode))
 
   (use-package company-c-headers
-    :ensure t)
+    :straight t)
 
   (use-package company-irony
-    :ensure t
+    :straight t
     :config
     (setq company-backends '((company-c-headers
                               company-dabbrev-code
                               company-irony))))
 
   (use-package irony
-    :ensure t
+    :straight t
     :config
     (add-hook 'c++-mode-hook 'irony-mode)
     (add-hook 'c-mode-hook 'irony-mode)
@@ -1159,7 +1159,7 @@ Requires libclang to be installed.
     (add-hook 'python-mode-hook 'company-mode))
 
   (use-package company-jedi
-    :ensure t
+    :straight t
     :config
     (require 'company)
     (add-to-list 'company-backends 'company-jedi))
@@ -1170,7 +1170,7 @@ Requires libclang to be installed.
                                     company-dabbrev-code))))
 
   (use-package company-jedi
-    :ensure t
+    :straight t
     :config
     (require 'company)
     (add-hook 'python-mode-hook 'python-mode-company-init))
@@ -1192,13 +1192,13 @@ Requires libclang to be installed.
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
 
   (use-package slime
-    :ensure t
+    :straight t
     :config
     (setq inferior-lisp-program "/usr/bin/sbcl")
     (setq slime-contribs '(slime-fancy)))
 
   (use-package slime-company
-    :ensure t
+    :straight t
     :init
     (require 'company)
     (slime-setup '(slime-fancy slime-company)))
@@ -1229,7 +1229,7 @@ Requires libclang to be installed.
                                     company-dabbrev-code))))
 
   (use-package company-lua
-    :ensure t
+    :straight t
     :config
     (require 'company)
     (setq lua-indent-level 4)
@@ -1261,7 +1261,7 @@ Requires libclang to be installed.
                                     company-dabbrev-code))))
 
   (use-package company-shell
-    :ensure t
+    :straight t
     :config
     (require 'company)
     (add-hook 'shell-mode-hook 'shell-mode-company-init))
@@ -1269,14 +1269,14 @@ Requires libclang to be installed.
 *** haskell
 #+BEGIN_SRC emacs-lisp
   (use-package haskell-mode
-    :ensure t)
+    :straight t)
 #+END_SRC
 *** COMMENT JS
 #+BEGIN_SRC emacs-lisp
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
   (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
   (use-package js2-mode
-    :ensure t
+    :straight t
     :init
     (setq js-basic-indent 2)
     (setq js2-strict-missing-semi-warning nil)
@@ -1298,27 +1298,27 @@ Requires libclang to be installed.
 
   ;; jump to definition
   ;;(use-package tern
-  ;;   :ensure t
+  ;;   :straight t
   ;;   :init (add-hook 'js2-mode-hook (lambda () (tern-mode t)))
   ;;   :config
   ;;     (use-package company-tern
-  ;;        :ensure t
+  ;;        :straight t
   ;;        :init (add-to-list 'company-backends 'company-tern)))
   ;; refactoring (C-c)
   (use-package js2-refactor
-    :ensure t
+    :straight t
     :init   (add-hook 'js2-mode-hook 'js2-refactor-mode)
     :config (js2r-add-keybindings-with-prefix "C-c ."))
 
   ;; (use-package prettier
-  ;;   :ensure t
+  ;;   :straight t
   ;;   :config
   ;;   (add-hook 'after-init-hook #'global-prettier-mode)
   ;;   (add-hook 'js2-mode-hook 'prettier-mode)
   ;;   (add-hook 'web-mode-hook 'prettier-mode)
   ;;   )
   (use-package apheleia
-    :ensure t
+    :straight t
     :config
     (apheleia-global-mode +1)
     (setf (alist-get 'tsx-mode apheleia-mode-alist)
@@ -1354,13 +1354,13 @@ Requires libclang to be installed.
 *** scala
 #+BEGIN_SRC emacs-lisp
   (use-package scala-mode
-    :ensure t
+    :straight t
     :interpreter
     ("scala" . scala-mode))
 
   (use-package sbt-mode
     :commands sbt-start sbt-command
-    :ensure t
+    :straight t
     :config
     ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
     ;; allows using SPACE when in the minibuffer
@@ -1374,31 +1374,31 @@ Requires libclang to be installed.
 
   (use-package lsp-mode
     ;; Optional - enable lsp-mode automatically in scala files
-    :ensure t
+    :straight t
     :hook  (scala-mode . lsp)
            (lsp-mode . lsp-lens-mode)
     :config (setq lsp-prefer-flymake nil))
 
   ;; Add metals backend for lsp-mode
   (use-package lsp-metals
-    :ensure t
+    :straight t
     :config (setq lsp-metals-treeview-show-when-views-received nil))
 
   ;; Enable nice rendering of documentation on hover
   (use-package lsp-ui
-    :ensure t)
+    :straight t)
 
   ;; Add company-lsp backend for metals
   ;; (use-package company-lsp
-  ;;   :ensure t)
+  ;;   :straight t)
 
   ;; Use the Debug Adapter Protocol for running tests and debugging
   (use-package posframe
-    :ensure t
+    :straight t
     ;; Posframe is a pop-up tool that must be manually installed for dap-mode
     )
   (use-package dap-mode
-    :ensure t
+    :straight t
     :hook
     (lsp-mode . dap-mode)
     (lsp-mode . dap-ui-mode))
@@ -1408,10 +1408,10 @@ Requires libclang to be installed.
 #+BEGIN_SRC emacs-lisp
 
   (use-package coverlay
-    :ensure t)
+    :straight t)
 
   (use-package origami
-    :ensure t)
+    :straight t)
   (straight-use-package '(css-in-js-mode :type git :host github :repo "orzechowskid/tree-sitter-css-in-js"))
   ;; (require 'css-in-js)
 
@@ -1425,7 +1425,7 @@ Requires libclang to be installed.
   ;; variants of Typescript.")
 
   (use-package flymake-eslint
-    :ensure t
+    :straight t
     :config
     (add-hook 'typescript-tsx-mode 
 	      (lambda ()
@@ -1440,7 +1440,7 @@ Requires libclang to be installed.
   ;; (add-hook 'typescript-tsx-mode-hook #'tree-sitter-hl-mode)
 
   ;; (use-package tide
-  ;;   :ensure t
+  ;;   :straight t
   ;;   :config
   ;;   (defun setup-tide-mode ()
   ;;     (interactive)
@@ -1471,13 +1471,13 @@ Requires libclang to be installed.
 *** elisp
 #+BEGIN_SRC emacs-lisp
   (use-package evil-lispy
-    :ensure t)
+    :straight t)
 #+END_SRC
 
 *** kotlin
 #+BEGIN_SRC emacs-lisp
   (use-package kotlin-mode
-    :ensure t)
+    :straight t)
 #+END_SRC
 
 ** web programming
@@ -1485,7 +1485,7 @@ Requires libclang to be installed.
 **** vue-mode
 #+BEGIN_SRC emacs-lisp
   (use-package vue-mode
-    :ensure t
+    :straight t
     :init (add-hook 'vue-mode-hook 'company-mode)
     (add-hook 'vue-mode-hook 'yas-minor-mode)
     :config
@@ -1495,7 +1495,7 @@ Requires libclang to be installed.
 
 #+BEGIN_SRC emacs-lisp
   (use-package vue-html-mode
-    :ensure t)
+    :straight t)
 #+END_SRC
 **** vue lsp?
 #+BEGIN_SRC emacs-lisp
@@ -1505,14 +1505,14 @@ Requires libclang to be installed.
 
 #+BEGIN_SRC emacs-lisp
   (use-package vue-mode
-    :ensure t)
+    :straight t)
 #+END_SRC
 
 *** emmet
 
 #+BEGIN_SRC emacs-lisp
   (use-package emmet-mode
-    :ensure t)
+    :straight t)
 #+END_SRC
 
 *** coffee?
@@ -1520,7 +1520,7 @@ Requires libclang to be installed.
 #+BEGIN_SRC emacs-lisp
 
   (use-package web-mode
-    :ensure t
+    :straight t
     :init
     (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
@@ -1544,11 +1544,11 @@ Requires libclang to be installed.
 #+BEGIN_SRC emacs-lisp
   ;; (use-package tex			;
   ;;   :defer t
-  ;;   :ensure auctex
+  ;;   :straight auctex
   ;;   :config
   ;;   (setq TeX-auto-save t))
   ;; (use-package auctex
-  ;; :ensure t)
+  ;; :straight t)
 
 #+END_SRC
 
@@ -1559,7 +1559,7 @@ great. It's easy and intuitive to use, shows its options at a keypress and much 
 ** magit
 #+BEGIN_SRC emacs-lisp
   (use-package magit
-    :ensure t
+    :straight t
     :config
     (setq magit-push-always-verify nil)
     (setq git-commit-summary-max-length 80)
@@ -1569,14 +1569,14 @@ great. It's easy and intuitive to use, shows its options at a keypress and much 
 ** git gutter
 #+BEGIN_SRC emacs-lisp
   (use-package diff-hl
-    :ensure t
+    :straight t
     :config
     (global-diff-hl-mode))
 #+END_SRC
 ** COMMENT magit forge
 #+BEGIN_SRC emacs-lisp
   (use-package forge
-    :ensure t
+    :straight t
     :after magit)
 
   (straight-use-package '(tsx-mode :type git :host github :repo "phelrine/code-review" :branch "fix/closql-update"))
@@ -1587,7 +1587,7 @@ great. It's easy and intuitive to use, shows its options at a keypress and much 
 Pretty self-explanatory, useful as hell if you use exwm.
 #+BEGIN_SRC emacs-lisp
   (use-package sudo-edit
-    :ensure t
+    :straight t
     :bind
     ("s-e" . sudo-edit))
 #+END_SRC
@@ -1615,7 +1615,7 @@ Those are all rather self-explanatory.
 ** org journal
 #+BEGIN_SRC emacs-lisp
   (use-package org-journal 
-    :ensure t
+    :straight t
     :defer t
     :custom
     (org-journal-dir "~/notes/journal/")
@@ -1624,7 +1624,7 @@ Those are all rather self-explanatory.
 ** Syntax highlighting for documents exported to HTML
 #+BEGIN_SRC emacs-lisp
   (use-package htmlize
-    :ensure t)
+    :straight t)
 #+END_SRC
 
 ** Line wrapping
@@ -1649,7 +1649,7 @@ edit the stuff in a src block with proper modes
 change astrisks to bullets
 #+BEGIN_SRC emacs-lisp
   (use-package org-bullets
-    :ensure t
+    :straight t
     :config
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
 #+END_SRC
@@ -1676,12 +1676,12 @@ Here is how we add more of them!
 ** elpher for gopher and gem
 #+BEGIN_SRC emacs-lisp
   (use-package elpher
-    :ensure t)
+    :straight t)
 #+END_SRC
 ** w3m
 #+BEGIN_SRC emacs-lisp
   (use-package w3m
-    :ensure t)
+    :straight t)
 #+END_SRC
 * irc
 ** circe
@@ -1710,7 +1710,7 @@ What it says on the tin, this changes the =erc= history to include the server I 
 You can even highlight nicks to make the buffers a bit more visually pleasing and easier to look at.
 #+BEGIN_SRC emacs-lisp
   (use-package erc-hl-nicks
-    :ensure t
+    :straight t
     :config
     (erc-update-modules))
 #+END_SRC
@@ -1729,7 +1729,7 @@ by default, so unless you keyboard is broken it should work out of the box.
 Obviously you might have to adjust /server-name/ and /server-port/ to fit your configuration.
 #+BEGIN_SRC emacs-lisp
   (use-package emms
-    :ensure t
+    :straight t
     :config
     (require 'emms-setup)
     ;; (require 'emms-player-mpd)
@@ -1762,7 +1762,7 @@ Adjust according to your setup.
 *** mpv
 #+BEGIN_SRC emacs-lisp
   ;;   (use-package emms-player-mpv
-  ;; :ensure t
+  ;; :straight t
   ;; :config
   ;; (add-to-list 'emms-player-list 'emms-player-mpv))
 #+END_SRC
@@ -1816,7 +1816,7 @@ and only invoke it manually when needed.
 M-x all-the-icons-install-fonts
 #+BEGIN_SRC emacs-lisp
   (use-package all-the-icons
-    :ensure t)
+    :straight t)
 #+END_SRC
 * Atomic actions
 ** Duplicate Line atomically
@@ -1918,7 +1918,7 @@ M-x all-the-icons-install-fonts
 * editorconfig
 #+BEGIN_SRC emacs-lisp
   (use-package editorconfig
-    :ensure t
+    :straight t
     :config
     (editorconfig-mode 1))
   :lighter
@@ -1933,7 +1933,7 @@ them running, it just prevents them from showing up and taking up space.
 Edit this list as you see fit!
 #+BEGIN_SRC emacs-lisp
   (use-package diminish
-    :ensure t
+    :straight t
     :init
     (diminish 'which-key-mode)
     (diminish 'linum-relative-mode)
@@ -1966,13 +1966,13 @@ replacing gnus with elfeed
 ** elfeed itself
 #+BEGIN_SRC emacs-lisp
     (use-package elfeed
-      :ensure t)
+      :straight t)
 #+END_SRC
 ** elfeed goodies
 ** org mode feed list
 #+BEGIN_SRC emacs-lisp
     (use-package elfeed-org
-      :ensure t
+      :straight t
     :config
 (elfeed-org)
 (setq rmh-elfeed-org-files (list "~/Dropbox/newsfeeds.org" )))
@@ -1982,13 +1982,13 @@ replacing gnus with elfeed
 #+BEGIN_SRC emacs-lisp
 
   (use-package helm-system-packages
-    :ensure t)
+    :straight t)
 #+END_SRC
 * email
 #+BEGIN_SRC emacs-lisp
 
   ;; (use-package mu4e
-  ;;   :ensure t)
+  ;;   :straight t)
   (setq
     rmail-primary-inbox-list '("pop://taylor%40taylorhardy.net@pop.gmail.com")
     rmail-preserve-inbox t
@@ -2001,7 +2001,7 @@ i may turn this back on once i have a better grasp of gnus
 
 #+BEGIN_SRC emacs-lisp
     (use-package nnhackernews
-      :ensure t
+      :straight t
     :config
 (add-to-list 'gnus-secondary-select-methods '(nnhackernews "")))
 
@@ -2010,7 +2010,7 @@ i may turn this back on once i have a better grasp of gnus
 i may turn this back on once i have a better grasp of gnus
 #+BEGIN_SRC emacs-lisp
   ;; (use-package nnreddit
-  ;; :ensure t
+  ;; :straight t
   ;; :config 
 
   ;; (add-to-list 'gnus-secondary-select-methods '(nnreddit "")))
@@ -2042,7 +2042,7 @@ i may turn this back on once i have a better grasp of gnus
 ** eloud
 #+BEGIN_SRC emacs-lisp
   (use-package eloud
-    :ensure t
+    :straight t
     :config
     (setq eloud-espeak-path "/usr/bin/espeak"))
 #+END_SRC
@@ -2058,56 +2058,47 @@ i may turn this back on once i have a better grasp of gnus
 - State "DONE"       from "TODO"       [2023-01-25 Wed 20:18]
 #+BEGIN_SRC emacs-lisp
   (use-package alert
-    :ensure t
+    :straight t
     :init
-    (setq alert-default-style 'notifier))
+    (setq alert-default-style 'notifications)) ;using wired-notif
 #+END_SRC
 
 * Circe
-mostly as a dependency for slack (can this be avoided?)
 #+BEGIN_SRC emacs-lisp
     (use-package circe
-      :ensure t)
+      :straight t)
 #+END_SRC
 * emojis
 #+BEGIN_SRC emacs-lisp
     (use-package emojify
-      :ensure t)
+      :straight t)
 #+END_SRC
 * DONE slack
 - State "DONE"       from "TODO"       [2023-01-25 Wed 20:18]
 #+BEGIN_SRC emacs-lisp
   ;; https://github.com/jackellenberger/emojme#user-content-finding-a-slack-cookie
-  (use-package el-get :ensure t)
-  (use-package use-package-el-get :ensure t)
+
+  (use-package websocket :straight t)
+  (use-package request :straight t)
+  (use-package oauth2 :straight t)
+  (use-package el-get :straight t)
+  (use-package use-package-el-get :straight t)
   (use-package-el-get-setup)
   (use-package slack
-    :ensure t
+    :straight t
     :init
     (setq slack-buffer-emojify t) ;; if you want to enable emoji, default nil
     (setq slack-prefer-current-team t)
     :config
-
     (slack-register-team
-     :name "spectral subverse"
-     :default nil
-     :token (auth-source-pick-first-password
-           :host "spectralsubverse.slack.com"
-           :user "slack^token")
-     :cookie (auth-source-pick-first-password
-           :host "spectralsubverse.slack.com"
-           :user "slack^cookie")
-     :subscribed-channels '(random)
-     :full-and-display-names t)
-    (slack-register-team
-     :name "work"
+     :name "codemettle"
      :default t
      :token (auth-source-pick-first-password
-           :host "work.slack.com"
-           :user "slack")
+           :host "codemettle.slack.com"
+           :user "slack^token")
      :cookie (auth-source-pick-first-password
-           :host "work.slack.com"
-           :user "slack")
+           :host "codemettle.slack.com"
+           :user "slack^cookie")
      :subscribed-channels '(random)
      :full-and-display-names t)
     (evil-define-key 'normal slack-info-mode-map
@@ -2136,7 +2127,9 @@ mostly as a dependency for slack (can this be avoided?)
 
 
   (el-get-bundle yuya373/helm-slack) ;; optional
-  (use-package helm-slack  :after (slack)) ;; optional
+  (use-package helm-slack
+    :straight (helm-slack :type git :host github :repo "yuya373/helm-slack") 
+    :after (slack)) ;; optional
 #+END_SRC
 
 * COMMENT chatgpt openai
@@ -2145,14 +2138,14 @@ mostly as a dependency for slack (can this be avoided?)
   (require 'openai)
   ;; (el-get-bundle emacs-openai/openai) ;; optional
   ;; (use-package openai
-  ;;   :ensure t)
+  ;;   :straight t)
 #+END_SRC
 
 * gptel for a real interface to chatgpt
 
 #+BEGIN_SRC emacs-lisp
   (use-package gptel
-    :ensure t
+    :straight t
     :config
     (setq gptel-api-key (auth-source-pick-first-password
              :host "chatgpt")))
