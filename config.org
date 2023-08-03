@@ -715,7 +715,7 @@ Dashboard with recent files and projects
 *** Time format
 #+BEGIN_SRC emacs-lisp
   (setq display-time-24hr-format nil)
-  (setq display-time-format "%H:%M - %m/%d")
+  (setq display-time-format "%H:%M %m/%d")
 #+END_SRC
 
 *** Enabling the mode
@@ -1972,10 +1972,12 @@ Edit this list as you see fit!
     (diminish 'undo-tree-mode)
     (diminish 'ivy-mode)
     (diminish 'flycheck-mode)
-
-    ;; (diminish 'projectile-mode "➶")
-    ;; (diminish 'helm-mode "⛫")
-    ;; (diminish 'company-mode "✓")
+    (diminish 'evil-collection-unimpaired-mode)
+    (diminish 'yas-minor-mode)
+    (diminish 'org-src-mode)
+    (diminish 'eldoc-mode)
+    (diminish 'coverlay-minor-mode)
+    (diminish 'css-in-js-mode)
     (diminish 'rainbow-mode))
 #+END_SRC
 * elfeed
