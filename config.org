@@ -22,20 +22,11 @@ Since we are going to use emacs as our window manager, it would be nice to have 
 - A composite manager (highly recommended, I personally use =compton=, the built in one does not work as intended.).
 - =noto-cjk=, for all the fonts imaginable.
 - =slock=, if you would like to lock the screen.
-
   
 ** EMMS
 *** From the package manager:
 - =mpd=, since we are going to be using EMMS for music playback, I recommend setting up a working mpd server.
 - =mpv=, for video playback.
-
-** Programming
-*** Package manager
-- =clang=, for c/c++ completion.
-- =sbcl=, for clisp completion and repl.
-- =virtualenv=, for python completion.
-- =lua=, for obvious reasons.
-
 
 * import manually installed packages
 #+BEGIN_SRC emacs-lisp
@@ -47,14 +38,6 @@ Since we are going to use emacs as our window manager, it would be nice to have 
 
 
 * Org
-One of the absolute greatest features of emacs is called "org-mode".
-This very file has been written in org-mode, a lot of other configurations are written in org-mode, same goes for
-academic papers, presentations, schedules, blogposts and guides.
-Org-mode is one of the most complex things ever, lets make it a bit more usable with some basic configuration.
-
-
-Those are all rather self-explanatory.
-
 ** Common settings
 
 #+BEGIN_SRC emacs-lisp
@@ -854,10 +837,6 @@ automatic cheat sheet once you press part of a key series
 #+END_SRC
 * Moving around emacs
 ** windows,panes and why I hate other-window
-Some of us have large displays, others have tiny netbook screens, but regardless of your hardware
-you probably use more than 2 panes/windows at times, cycling through all of them with
-=C-c o= is annoying to say the least, it's a lot of keystrokes and takes time, time you could spend doing something more productive.
-
 *** switch-window
 switch window uses an ace type jump if more than 2 windows are open
 #+BEGIN_SRC emacs-lisp
@@ -1004,10 +983,6 @@ personally i have tried using avy but plain isearch seems to do the job the best
 
 
 * Minor conveniences
-Emacs is at it's best when it just does things for you, shows you the way, guides you so to speak.
-This can be best achieved using a number of small extensions. While on their own they might not be particularly
-impressive. Together they create a nice environment for you to work in.
-
 ** Visiting the configuration
 Quickly edit =~/.emacs.d/config.org=
 #+BEGIN_SRC emacs-lisp
@@ -1090,7 +1065,6 @@ Backspace or Delete will get rid of all whitespace until the next non-whitespace
 #+END_SRC
 
 * Programming
-Minor, non-completion related settings and plugins for writing code.
 ** lsp
 #+BEGIN_SRC emacs-lisp
   (use-package eglot
@@ -1657,9 +1631,6 @@ Requires libclang to be installed.
 #+END_SRC
 
 * Git integration
-Countless are the times where I opened ansi-term to use =git= on something.
-These times are also something that I'd prefer stay in the past, since =magit= is
-great. It's easy and intuitive to use, shows its options at a keypress and much more.
 ** magit
 #+BEGIN_SRC emacs-lisp
   (use-package magit
@@ -1729,7 +1700,7 @@ this way you always know who you are typing to.
 #+END_SRC
 
 *** selectable server list
-What it says on the tin, this changes the =erc= history to include the server I connect to often.
+this changes the =erc= history to include the server I connect to often.
 #+BEGIN_SRC emacs-lisp
   (setq erc-server-history-list '("irc.libera.chat"
                                    "irc.deft.com"
@@ -1847,101 +1818,11 @@ and only invoke it manually when needed.
 
 #+END_SRC
 * UI modernization
-
 ** Icons to make things pretty
 M-x all-the-icons-install-fonts
 #+BEGIN_SRC emacs-lisp
   (use-package all-the-icons
     :straight t)
-#+END_SRC
-* Atomic actions
-** Duplicate Line atomically
-#+BEGIN_SRC emacs-lisp
-  ;; https://stackoverflow.com/questions/88399/how-do-i-duplicate-a-whole-line-in-emacs
-  (defun duplicate-line (arg)
-    "Duplicate current line, leaving point in lower line."
-    (interactive "*p")
-
-    ;; save the point for undo
-    (setq buffer-undo-list (cons (point) buffer-undo-list))
-
-    ;; local variables for start and end of line
-    (let ((bol (save-excursion (beginning-of-line) (point)))
-          eol)
-      (save-excursion
-
-        ;; don't use forward-line for this, because you would have
-        ;; to check whether you are at the end of the buffer
-        (end-of-line)
-        (setq eol (point))
-
-        ;; store the line and disable the recording of undo information
-        (let ((line (buffer-substring bol eol))
-              (buffer-undo-list t)
-              (count arg))
-          ;; insert the line arg times
-          (while (> count 0)
-            (newline)         ;; because there is no newline in 'line'
-            (insert line)
-            (setq count (1- count))))
-
-        ;; create the undo information
-        (setq buffer-undo-list (cons (cons eol (point)) buffer-undo-list)))) ; end-of-let
-
-    ;; put the point in the lowest line and return
-    (next-line arg))
-#+END_SRC
-** making new lines
-#+BEGIN_SRC emacs-lisp
-  (defun newline-below-go ()
-    "1. move to end of the line.
-    2. insert newline with index"
-
-    (interactive)
-    (let ((oldpos (point)))
-      (end-of-line)
-      (newline-and-indent)))
-
-  (defun newline-above-go ()
-    "1. move to end of the line.
-    2. insert newline with index"
-
-    (interactive)
-    (let ((oldpos (point)))
-      (beginning-of-line)
-      (newline-and-indent) ;;fixme indent the new line
-      (previous-line)
-      (end-of-line)))
-
-#+END_SRC
-** deleting lines
-
-#+BEGIN_SRC emacs-lisp
-
-  (defun kill-previous-line ()
-    "1. move to end of the line.
-    2. insert newline with index"
-
-    (interactive)
-    (let ((oldpos (point)))
-      (previous-line)
-      (kill-whole-line)))
-
-
-  (defun kill-next-line ()
-    "1. move to end of the line.
-    2. insert newline with index"
-
-    (interactive)
-    (let ((oldpos (point)))
-      (next-line)
-      (kill-whole-line)))
-
-  (defun backward-kill-line (arg)
-    "Kill ARG lines backward."
-    (interactive "p")
-    (kill-line (- 1 arg)))
-
 #+END_SRC
 * WM startup
 * Tabs
@@ -1951,7 +1832,7 @@ M-x all-the-icons-install-fonts
   (setq tab-stop-list (number-sequence 2 120 2))
 #+END_SRC
 
-* editorconfig
+* COMMENT editorconfig
 #+BEGIN_SRC emacs-lisp
   (use-package editorconfig
     :straight t
