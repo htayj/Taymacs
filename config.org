@@ -8,27 +8,8 @@
 * aknowledgements
 this config was based off of uncle daves emacs who i am forever grateful to for allowing me a user friendly entry point to emacs check out uncle daves repo at https://github.com/daedreth/UncleDavesEmacs
 
-* Dependencies for:
-** EXWM
-Since we are going to use emacs as our window manager, it would be nice to have some external software to make our life easier.
-*** From the package manager:
-- =xorg-server=, for obvious reasons. (there is no wayland support as of now)
-- =pulsemixer=, available from =https://github.com/GeorgeFilipkin/pulsemixer=.
-- =imagemagick=, if you are going to be using emacs to take screenshots.
-- =ibus-daemon=, if you need multiple keyboard input options (emacs handles them well on its own but ibus is nice).
-- =terminus-font=, for it to work out of the box, if you don't want terminus you need to edit your =init.el=.
-**** Optional
-- A browser (sadly, the built in xwidgets-webkit thingie is unreliable).
-- A composite manager (highly recommended, I personally use =compton=, the built in one does not work as intended.).
-- =noto-cjk=, for all the fonts imaginable.
-- =slock=, if you would like to lock the screen.
-  
-** EMMS
-*** From the package manager:
-- =mpd=, since we are going to be using EMMS for music playback, I recommend setting up a working mpd server.
-- =mpv=, for video playback.
-
-* import manually installed packages
+* Dependencies 
+* Import Manually Installed Packages
 #+BEGIN_SRC emacs-lisp
   (let ((default-directory  (concat user-emacs-directory
                                     (convert-standard-filename "lisp/"))))
@@ -120,7 +101,7 @@ Here is how we add more of them!
   (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
   (setq org-refile-use-outline-path t)                  ; Show full paths for refiling
 #+END_SRC
-* Operating system
+* Operating System
 ** Window Manager and Desktop Environment
 Everything regarding the WM or DE-like functionality is bundled here
 
@@ -456,7 +437,7 @@ Pretty self-explanatory, useful as hell if you use exwm.
   (use-package helm-system-packages
     :straight t)
 #+END_SRC
-* command completion
+* Command Completion
 ** helm
 #+BEGIN_SRC emacs-lisp
   (use-package helm
