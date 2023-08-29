@@ -91,7 +91,7 @@ change astrisks to bullets
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
 #+END_SRC
 
-** Easy-to-add emacs-lisp template
+** FIXME Easy-to-add emacs-lisp template
 Hitting tab after an "<el" in an org-mode file will create a template for elisp insertion.
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'org-structure-template-alist
@@ -109,147 +109,27 @@ Here is how we add more of them!
   ;;   (require 'xdvi-search))
 #+END_SRC
 
-* evil
+** todo states
 #+BEGIN_SRC emacs-lisp
-  (use-package evil
-    :straight t
-    :init
-    (setq evil-want-integration t)
-    (setq evil-want-keybinding nil)
-    :custom
-    (evil-undo-system 'undo-tree)
-    (evil-search-module 'isearch)
-    :config
-    (evil-mode 1)
-    (setq evil-search-module 'isearch)
-    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state))
-
-  (use-package evil-collection
-    :after evil
-    :straight t
-    :config
-    (evil-collection-init)
-    (setq evil-want-keybinding t)
-    (evil-set-initial-state 'eaf-mode 'emacs)
-    (evil-set-initial-state 'exwm-mode 'emacs))
-  (use-package evil-surround
-    :straight t
-    :config
-    (global-evil-surround-mode 1))
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "PLAN(p)" "WAIT(w@)" "|" "DONE(d!)" "CANCELED(c@)" "MISSED(m@)")))
 #+END_SRC
-
-* undo tree
+** refile into subtrees
 #+BEGIN_SRC emacs-lisp
-  (use-package undo-tree
-    :straight t
-    :config
-    (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
-    (global-undo-tree-mode))
+  (setq org-refile-targets '((nil :maxlevel . 9)
+                                  (org-agenda-files :maxlevel . 9)))
+  (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
+  (setq org-refile-use-outline-path t)                  ; Show full paths for refiling
 #+END_SRC
-
-* Theme
-** high contrast
-
-#+BEGIN_SRC emacs-lisp
-
-  (use-package modus-themes
-    :straight t 
-    :init 
-    (setq modus-vivendi-theme-slanted-constructs t
-          modus-vivendi-theme-bold-constructs t
-          modus-vivendi-theme-visible-fringes t
-          modus-vivendi-theme-3d-modeline t
-          modus-vivendi-theme-subtle-diffs t
-          modus-vivendi-theme-intense-standard-completions t
-          modus-vivendi-theme-distinct-org-blocks t
-          modus-vivendi-theme-rainbow-org-src-blocks t
-          modus-vivendi-theme-proportional-fonts t
-          modus-vivendi-theme-rainbow-headings t
-          modus-vivendi-theme-section-headings t)
-    :config
-    (load-theme 'modus-vivendi t))
-#+END_SRC
-
-** Font
-#+BEGIN_SRC emacs-lisp
-  ;; Set default font
-  (set-face-attribute 'default nil
-                      :family "Hack"
-                      :height 120
-                      ;; :weight 'normal
-                      :width 'normal)
-  ;; set fallback font for emoji
-  (set-fontset-font t nil (font-spec :size 20 :name "Unifont"))
-#+END_SRC
-** ansi color names
-#+BEGIN_SRC emacs-lisp
-(setq ansi-color-names-vector
-   ["#303030" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
-#+END_SRC
-* Basic Interface Settings
-These are setting that do not depend on packages and are built-in enhancements to the UI.
-
-** Looks
-*** remove original dashboard
-#+BEGIN_SRC emacs-lisp
-  (setq inhibit-startup-message t)
-#+END_SRC
-*** Disable menus and scrollbars
-If you like using any of those, change =-1= to =1=.
-#+BEGIN_SRC emacs-lisp
-  (tool-bar-mode -1)
-  (menu-bar-mode -1)
-  (scroll-bar-mode -1)
-#+END_SRC
-
-*** Set UTF-8 encoding
-#+BEGIN_SRC emacs-lisp 
-  (setq locale-coding-system 'utf-8)
-  (set-terminal-coding-system 'utf-8)
-  (set-keyboard-coding-system 'utf-8)
-  (set-selection-coding-system 'utf-8)
-  (prefer-coding-system 'utf-8)
-#+END_SRC
-*** Highlight current line
-=hl-line= is awesome! It's not very awesome in the terminal version of emacs though, so we don't use that.
-Besides, it's only used for programming.
-#+BEGIN_SRC emacs-lisp
-  (when window-system (add-hook 'prog-mode-hook 'hl-line-mode))
-#+END_SRC
-
-*** visual bell
-#+BEGIN_SRC emacs-lisp
-  (setq visible-bell t)
-#+END_SRC
-
-
-** Functionality
-*** backups and auto-saves
-I don't use either, you might want to turn those from =nil= to =t= if you do.
-#+BEGIN_SRC emacs-lisp
-  (setq make-backup-files nil)
-  (setq auto-save-default nil)
-#+END_SRC
-
-*** Change yes-or-no questions into y-or-n questions
-#+BEGIN_SRC emacs-lisp
-  (defalias 'yes-or-no-p 'y-or-n-p)
-#+END_SRC
-
-*** Async
-use asynchronous processes wherever possible
-#+BEGIN_SRC emacs-lisp
-  (use-package async
-    :straight t
-    :init (dired-async-mode 1))
-#+END_SRC
-
-* Window Manager
+* Operating system
+** desktop environment
+** system administration
+** Window Manager
 Everything regarding the WM or DE-like functionality is bundled here, remove the entire section if you do not wish to use =exwm=.
 
-** exwm
+*** exwm
 The only time I actually had to use comments, this is for ease of removal if you happen to not like exwm.
-*** Installation
+**** Installation
 #+BEGIN_SRC emacs-lisp
   (use-package exwm
     :straight t
@@ -370,15 +250,15 @@ The only time I actually had to use comments, this is for ease of removal if you
     ;; this just enables exwm, it started automatically once everything is ready
     (exwm-enable))'
 #+END_SRC
-** Multi monitor
+*** Multi monitor
 #+BEGIN_SRC emacs-lisp
 #+END_SRC
-** exwm edit
+*** exwm edit
 #+BEGIN_SRC emacs-lisp
   (use-package exwm-edit
     :straight t)
 #+END_SRC
-** autoname the buffers
+*** autoname the buffers
 #+BEGIN_SRC emacs-lisp
   ;; autoname buffers
   (add-hook 'exwm-update-class-hook
@@ -386,18 +266,18 @@ The only time I actually had to use comments, this is for ease of removal if you
               (exwm-workspace-rename-buffer exwm-class-name)))
 #+END_SRC
 
-** System tray
+*** System tray
 #+BEGIN_SRC emacs-lisp
   (require 'exwm-systemtray)
   (exwm-systemtray-enable)
 #+END_SRC
 
-** Launchers
+*** Launchers
 Since I do not use a GUI launcher and do not have an external one like dmenu or rofi,
 I figured the best way to launch my most used applications would be direct emacsy
 keybindings.
 
-*** dmenu for emacs
+**** dmenu for emacs
 Who would've thought this was available, together with ido-vertical it's a nice large menu
 with its own cache for most launched applications.
 #+BEGIN_SRC emacs-lisp
@@ -406,16 +286,16 @@ with its own cache for most launched applications.
     :bind
     ("s-SPC" . 'dmenu))
 #+END_SRC
-** Audio controls
+*** Audio controls
 This is a set of bindings to my XF86 keys that invokes pulsemixer with the correct parameters
 
-*** Volume modifier
+**** Volume modifier
 It goes without saying that you are free to modify the modifier as you see fit, 4 is good enough for me though.
 #+BEGIN_SRC emacs-lisp
   (defconst volumeModifier "4")
 #+END_SRC
 
-*** Functions to start processes
+**** Functions to start processes
 #+BEGIN_SRC emacs-lisp
   (defun audio/mute ()
     (interactive)
@@ -430,14 +310,14 @@ It goes without saying that you are free to modify the modifier as you see fit, 
     (start-process "lower-volume" nil "pulsemixer" "--change-volume" (concat "-" volumeModifier)))
 #+END_SRC
 
-*** Keybindings to start processes
+**** Keybindings to start processes
 You can also change those if you'd like, but I highly recommend keeping 'em the same, chances are, they will just work.
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "<XF86AudioMute>") 'audio/mute)
   (global-set-key (kbd "<XF86AudioRaiseVolume>") 'audio/raise-volume)
   (global-set-key (kbd "<XF86AudioLowerVolume>") 'audio/lower-volume)
 #+END_SRC
-** COMMENT ansi term enhancement
+*** COMMENT ansi term enhancement
 #+BEGIN_SRC emacs-lisp
   (defun singpolyma/term-insert-literal (key)
       "Take a keypress and insert it literally into a terminal."
@@ -449,7 +329,7 @@ You can also change those if you'd like, but I highly recommend keeping 'em the 
           (define-key evil-insert-state-map (kbd "C-'") 'singpolyma/term-insert-literal)
           )
 #+END_SRC
-** vterm
+*** vterm
 sometimes need better than ansi-term
 
 #+BEGIN_SRC emacs-lisp
@@ -457,11 +337,11 @@ sometimes need better than ansi-term
     :straight t)
 
 #+END_SRC
-** Screenshots
+*** Screenshots
 I don't need scrot to take screenshots, or shutter or whatever tools you might have. This is enough.
 These won't work in the terminal version or the virtual console, obvious reasons.
 
-*** Screenshotting the entire screen
+**** Screenshotting the entire screen
 #+BEGIN_SRC emacs-lisp
   (defun daedreth/take-screenshot ()
     "Takes a fullscreen screenshot of the current workspace"
@@ -479,7 +359,7 @@ These won't work in the terminal version or the virtual console, obvious reasons
   (global-set-key (kbd "<print>") 'daedreth/take-screenshot)
 #+END_SRC
 
-*** Screenshotting a region
+**** Screenshotting a region
 #+BEGIN_SRC emacs-lisp
   (defun daedreth/take-screenshot-region ()
     "Takes a screenshot of a region selected by the user."
@@ -492,7 +372,7 @@ These won't work in the terminal version or the virtual console, obvious reasons
   (global-set-key (kbd "S-<print>") 'daedreth/take-screenshot-region)
   (global-set-key (kbd "C-c o") 'daedreth/take-screenshot-region)
 #+END_SRC
-** byzanz record
+*** byzanz record
 use byzanz to record the screen, with ability to select region
 #+BEGIN_SRC emacs-lisp
   (defun emacs-byzanz-record (&optional w h x y)
@@ -525,7 +405,7 @@ use byzanz to record the screen, with ability to select region
         (message "byzanz capture started")) )
 #+END_SRC
 
-** COMMENT eaf
+*** COMMENT eaf
 gui applications from inside emacs using python repl connected to the lisp
 #+BEGIN_SRC emacs-lisp
   (use-package eaf
@@ -548,7 +428,7 @@ gui applications from inside emacs using python repl connected to the lisp
 #+END_SRC
 
 
-** Default browser
+*** Default browser
 I use eww for most browsing, and I use qutebrowser when I need to open something in an external browser.
 #+BEGIN_SRC emacs-lisp
   (setq browse-url-browser-function 'eww-browse-url
@@ -681,13 +561,13 @@ this highlights syntax in eww, good for elisp snippets on the wiki.
 
 #+END_SRC
 
-** shr settings
+*** shr settings
 #+BEGIN_SRC emacs-lisp
   (setq shr-indentation 2
         shr-width 90)
 #+END_SRC
 
-** rename eww buffer to title of page
+*** rename eww buffer to title of page
 #+BEGIN_SRC emacs-lisp
   (when (fboundp 'eww)
     (defun xah-rename-eww-buffer ()
@@ -703,49 +583,75 @@ this highlights syntax in eww, good for elisp snippets on the wiki.
     (add-hook 'eww-after-render-hook 'xah-rename-eww-buffer))
 #+END_SRC
 
-** TODO eww create new buffer when goto url
-** TODO eww buffer selection based on url
+*** TODO eww create new buffer when goto url
+*** TODO eww buffer selection based on url
 
-* File Manager
-** Dired
+*** windows,panes
+**** switch-window
+switch window uses an ace type jump if more than 2 windows are open
 #+BEGIN_SRC emacs-lisp
-  (setq-default dired-listing-switches "-alh")
-  (use-package all-the-icons-dired
+  (use-package switch-window
     :straight t
-    :hook (dired-mode . all-the-icons-dired-mode)
-    )
-#+END_SRC
-* TODO Projectile
-
-** Enable projectile globally
-This makes sure that everything can be a project.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package projectile
-    :straight t
-    :init (projectile-mode 1)
-    :custom 
-    (projectile-indexing-method 'hybrid)
-    ;; :custom
-    ;; (projectile-completion-system)
-    :bind ("C-c p" . 'projectile-command-map))
-
-  (use-package helm-projectile
-    :straight t
-    :config (helm-projectile-on))
-  (use-package helm-rg
-    :straight t)
-  ;; (use-package counsel-projectile
-  ;;   :straight t
-  ;;   :config (counsel-projectile-mode))
+    :config
+    (setq switch-window-input-style 'minibuffer)
+    (setq switch-window-increase 4)
+    (setq switch-window-threshold 2)
+    (setq switch-window-shortcut-style 'qwerty)
+    (setq switch-window-qwerty-shortcuts
+          '("a" "s" "d" "f" "j" "k" "l" "i" "o"))
+    :bind
+    ([remap other-window] . switch-window))
 #+END_SRC
 
-** Let projectile call make
+**** Following window splits
+After you split a window, your focus remains in the previous one.
+This annoyed me so much I wrote these two, they take care of it.
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "<f5>") 'projectile-compile-project)
+  (defun split-and-follow-horizontally ()
+    (interactive)
+    (split-window-below)
+    (balance-windows)
+    (other-window 1))
+  (global-set-key (kbd "C-x 2") 'split-and-follow-horizontally)
+
+  (defun split-and-follow-vertically ()
+    (interactive)
+    (split-window-right)
+    (balance-windows)
+    (other-window 1))
+  (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
+#+END_SRC
+*** TODO buffers
+**** Always murder current buffer
+Doing =C-x k= should kill the current buffer at all times, we have =ibuffer= for more sophisticated thing.
+#+BEGIN_SRC emacs-lisp
+  (defun kill-current-buffer ()
+    "Kills the current buffer."
+    (interactive)
+    (kill-buffer (current-buffer)))
+  (global-set-key (kbd "C-x k") 'kill-current-buffer)
 #+END_SRC
 
-* Dashboard
+**** Kill buffers without asking for confirmation
+Unless you have the muscle memory, I recommend omitting this bit, as you may lose progress for no reason when working.
+#+BEGIN_SRC emacs-lisp
+  (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
+#+END_SRC
+
+**** Turn switch-to-buffer into ibuffer
+I don't understand how ibuffer isn't the default option by now.
+It's vastly superior in terms of ergonomics and functionality, you can delete buffers, rename buffer, move buffers, organize buffers etc.
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x b") 'ibuffer)
+#+END_SRC
+
+***** expert-mode
+If you feel like you know how ibuffer works and need not to be asked for confirmation after every serious command, enable this as follows.
+#+BEGIN_SRC emacs-lisp
+  ;;(setq ibuffer-expert t)
+#+END_SRC
+
+** Dashboard
 Dashboard with recent files and projects
 #+BEGIN_SRC emacs-lisp
   (use-package dashboard
@@ -758,29 +664,21 @@ Dashboard with recent files and projects
     (setq dashboard-banner-logo-title "TAYMACS"))
 #+END_SRC
 
-* Modeline
-** Clock
-*** Time format
+** Modeline
+*** Clock
+**** Time format
 #+BEGIN_SRC emacs-lisp
   (setq display-time-24hr-format nil)
   (setq display-time-format "%H:%M %m/%d")
 #+END_SRC
 
-*** Enabling the mode
+**** Enabling the mode
 This turns on the clock globally.
 #+BEGIN_SRC emacs-lisp
   (display-time-mode 1)
 #+END_SRC
-* The terminal
-** Default shell
-#+BEGIN_SRC emacs-lisp
-  (defvar my-term-shell "/bin/bash")
-  (defadvice ansi-term (before force-bash)
-    (interactive (list my-term-shell)))
-  (ad-activate 'ansi-term)
-#+END_SRC
-* discoverablility and completion
-** helm
+** discoverablility and completion
+*** helm
 #+BEGIN_SRC emacs-lisp
   (use-package helm
     :straight t
@@ -819,15 +717,15 @@ This turns on the clock globally.
   ;; (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
   ;; (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
   #+END_SRC
-*** silver searcher helm
+**** silver searcher helm
   #+BEGIN_SRC emacs-lisp
     (use-package helm-ag
       :straight t)
   #+END_SRC
 #+END_SRC
-** TODO  look into icicles
-** TODO look into anything.el
-** which-key
+*** TODO  look into icicles
+*** TODO look into anything.el
+*** which-key
 automatic cheat sheet once you press part of a key series
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
@@ -835,154 +733,130 @@ automatic cheat sheet once you press part of a key series
     :config
     (which-key-mode))
 #+END_SRC
-* Moving around emacs
-** windows,panes and why I hate other-window
-*** switch-window
-switch window uses an ace type jump if more than 2 windows are open
+** Remote editing
+*** Editing with sudo
+Pretty self-explanatory, useful as hell if you use exwm.
 #+BEGIN_SRC emacs-lisp
-  (use-package switch-window
+  (use-package sudo-edit
     :straight t
-    :config
-    (setq switch-window-input-style 'minibuffer)
-    (setq switch-window-increase 4)
-    (setq switch-window-threshold 2)
-    (setq switch-window-shortcut-style 'qwerty)
-    (setq switch-window-qwerty-shortcuts
-          '("a" "s" "d" "f" "j" "k" "l" "i" "o"))
     :bind
-    ([remap other-window] . switch-window))
+    ("s-e" . sudo-edit))
 #+END_SRC
 
-*** Following window splits
-After you split a window, your focus remains in the previous one.
-This annoyed me so much I wrote these two, they take care of it.
+** Git integration
+*** magit
 #+BEGIN_SRC emacs-lisp
-  (defun split-and-follow-horizontally ()
-    (interactive)
-    (split-window-below)
-    (balance-windows)
-    (other-window 1))
-  (global-set-key (kbd "C-x 2") 'split-and-follow-horizontally)
-
-  (defun split-and-follow-vertically ()
-    (interactive)
-    (split-window-right)
-    (balance-windows)
-    (other-window 1))
-  (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
-#+END_SRC
-** TODO buffers
-Another big thing is, buffers. If you use emacs, you use buffers, everyone loves them.
-Having many buffers is useful, but can be tedious to work with, let us see how we can improve it.
-
-*** Always murder current buffer
-Doing =C-x k= should kill the current buffer at all times, we have =ibuffer= for more sophisticated thing.
-#+BEGIN_SRC emacs-lisp
-  (defun kill-current-buffer ()
-    "Kills the current buffer."
-    (interactive)
-    (kill-buffer (current-buffer)))
-  (global-set-key (kbd "C-x k") 'kill-current-buffer)
-#+END_SRC
-
-*** Kill buffers without asking for confirmation
-Unless you have the muscle memory, I recommend omitting this bit, as you may lose progress for no reason when working.
-#+BEGIN_SRC emacs-lisp
-  (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
-#+END_SRC
-
-*** Turn switch-to-buffer into ibuffer
-I don't understand how ibuffer isn't the default option by now.
-It's vastly superior in terms of ergonomics and functionality, you can delete buffers, rename buffer, move buffers, organize buffers etc.
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-x b") 'ibuffer)
-#+END_SRC
-
-**** expert-mode
-If you feel like you know how ibuffer works and need not to be asked for confirmation after every serious command, enable this as follows.
-#+BEGIN_SRC emacs-lisp
-  ;;(setq ibuffer-expert t)
-#+END_SRC
-
-** line numbers
-Relative line numbers
-#+BEGIN_SRC emacs-lisp
-  (use-package linum-relative
+  (use-package magit
     :straight t
     :config
-    (setq linum-relative-current-symbol "")
-    (add-hook 'prog-mode-hook 'linum-relative-mode))
+    (setq magit-push-always-verify nil)
+    (setq git-commit-summary-max-length 80)
+    :bind
+    ("C-c g" . sudo-edit))
 #+END_SRC
-
-** isearch/avy/ace jump
-personally i have tried using avy but plain isearch seems to do the job the best for me so far, i may revisit avy at some point in the far future if i feel the need
-*** TODO revisit avy mode
-*** ace-link for eww 
+*** git gutter
 #+BEGIN_SRC emacs-lisp
-  (use-package ace-link
+  (use-package diff-hl
     :straight t
     :config
-    (ace-link-setup-default)
-  )
-
-
+    (global-diff-hl-mode))
 #+END_SRC
-* (C-c lowercase)
-** COMMENT Mark Multiple
+*** COMMENT magit forge
 #+BEGIN_SRC emacs-lisp
-  (use-package mark-multiple
+  (use-package forge
     :straight t
-    :bind ("C-c q" . 'mark-next-like-this))
+    :after magit)
+
+  (straight-use-package '(tsx-mode :type git :host github :repo "phelrine/code-review" :branch "fix/closql-update"))
+  (setq code-review-auth-login-marker 'forge)
 #+END_SRC
-** media (d)
-*** management (m)
+** UI modernization
+*** Icons to make things pretty
+M-x all-the-icons-install-fonts
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c d m") 'emms)
+  (use-package all-the-icons
+    :straight t)
 #+END_SRC
-*** add (a)
-**** from dired (d)
+** WM startup
+** Diminishing modes
+Your modeline is sacred, and if you have a lot of modes enabled, as you will if you use this config,
+you might end up with a lot of clutter there, the package =diminish= disables modes on the mode line but keeps
+them running, it just prevents them from showing up and taking up space.
+
+*THIS WILL BE REMOVED SOON AS USE-PACKAGE HAS THE FUNCTIONALITY BUILT IN*
+
+Edit this list as you see fit!
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c a d") 'emms-add-dired)
+  (use-package diminish
+    :straight t
+    :init
+    (diminish 'which-key-mode)
+    (diminish 'linum-relative-mode)
+    (diminish 'hungry-delete-mode)
+    (diminish 'visual-line-mode)
+    (diminish 'subword-mode)
+    (diminish 'beacon-mode)
+    (diminish 'irony-mode)
+    (diminish 'page-break-lines-mode)
+    (diminish 'auto-revert-mode)
+    (diminish 'rainbow-delimiters-mode)
+    (diminish 'editorconfig-mode)
+    (diminish 'subl-mode)
+    (diminish 'emo-mode)
+    (diminish 'org-indent-mode)
+    (diminish 'projectile-mode)
+    (diminish 'helm-mode)
+    (diminish 'company-mode)
+    (diminish 'undo-tree-mode)
+    (diminish 'ivy-mode)
+    (diminish 'flycheck-mode)
+    (diminish 'evil-collection-unimpaired-mode)
+    (diminish 'yas-minor-mode)
+    (diminish 'org-src-mode)
+    (diminish 'eldoc-mode)
+    (diminish 'coverlay-minor-mode)
+    (diminish 'css-in-js-mode)
+    (diminish 'rainbow-mode))
 #+END_SRC
-**** TODO from search (s)
-**** from find-file (f)
+** system admin
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c a f") 'emms-add-find)
+
+  (use-package helm-system-packages
+    :straight t)
 #+END_SRC
-*** streams (s)
+** screen reader
+*** eloud
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c d s") 'emms-streams)
-#+END_SRC
-*** next (n)
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c d n") 'emms-next)
-#+END_SRC
-*** previous (p)
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c d p") 'emms-previous)
-#+END_SRC
-*** pause (SPC)
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c d SPC") 'emms-pause)
+  (use-package eloud
+    :straight t
+    :config
+    (setq eloud-espeak-path "/usr/bin/espeak"))
 #+END_SRC
 
-** framing (f)
-*** TODO maybe something like persp mode?
-** web (w)
-*** wowser (w)
+** DONE emacs notification system
+- State "DONE"       from "TODO"       [2023-01-25 Wed 20:18]
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c w w") 'eww)
-#+END_SRC
-** insert (i)
-*** TODO insert unicode (u)
-** capture/journal (j)
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c j") 'org-capture)
+  (use-package alert
+    :straight t
+    :init
+    (setq alert-default-style 'notifications)) ;using wired-notif
 #+END_SRC
 
+** emojis
+add emoji rendering
+#+BEGIN_SRC emacs-lisp
+    (use-package emojify
+      :straight t)
+#+END_SRC
+** COMMENT chatgpt openai
+#+BEGIN_SRC emacs-lisp
+  ;; https://github.com/jackellenberger/emojme#user-content-finding-a-slack-cookie
+  (require 'openai)
+  ;; (el-get-bundle emacs-openai/openai) ;; optional
+  ;; (use-package openai
+  ;;   :straight t)
+#+END_SRC
 
-
-* Minor conveniences
 ** Visiting the configuration
 Quickly edit =~/.emacs.d/config.org=
 #+BEGIN_SRC emacs-lisp
@@ -1004,68 +878,496 @@ You can also manually invoke =config-reload=.
   (global-set-key (kbd "C-c r") 'config-reload)
 #+END_SRC
 
-** Subwords
-Emacs treats camelCase strings as a single word by default, this changes said behaviour.
+** applications
+*** youtube-dl
 #+BEGIN_SRC emacs-lisp
-  (global-subword-mode 1)
+  (defun play-youtube (url)
+    "plays youtube."
+    (interactive "sUrl of video: ")
+  (shell-command (concat "youtube-dl " url " --add-metadata --write-info-json &" ))
+  (emms-add-file (substring (shell-command-to-string (concat "youtube-dl " url " --get-filename ")) 0 -1)))
+
+#+END_SRC
+*** irc
+**** circe
+**** erc, also known as "a way to ask for help on #emacs"
+***** TODO find a way to ignore some channels and only show notifications in modeline
+***** Some common settings
+This also hides some of the channel messages to avoid cluttering the buffer.
+The other line changes the prompt for each channel buffer to match the channel name,
+this way you always know who you are typing to.
+#+BEGIN_SRC emacs-lisp
+  (setq erc-nick "htayj")
+  (setq erc-prompt (lambda () (concat "[" (buffer-name) "]")))
+  (setq erc-hide-list '("JOIN" "PART" "QUIT"))
+  (setq erc-interpret-mirc-color t)
+  (setq erc-modules
+     '(completion log notifications hl-nicks netsplit fill button match track readonly networks ring autojoin noncommands irccontrols move-to-prompt stamp menu list))
+  '(erc-prompt-for-password nil)
+
+
+  (setq erc-track-exclude-types '("JOIN" "KICK" "NICK" "PART" "333" "353"))
 #+END_SRC
 
-** Electric
-autocomplete pairs
+***** selectable server list
+this changes the =erc= history to include the server I connect to often.
 #+BEGIN_SRC emacs-lisp
-  (setq electric-pair-pairs '(
-                              (?\{ . ?\})
-                              (?\( . ?\))
-                              (?\[ . ?\])
-                              (?\" . ?\")))
+  (setq erc-server-history-list '("irc.libera.chat"
+                                   "irc.deft.com"
+                                   "localhost"))
+  (setq erc-autojoin-channels-alist '( ("libera.chat" "#pine64" "#fsf" "#searx" "#guix" "#emacs" "#hurd" "#guix" "#lisp" "##trans" "##transgeeks") ))
+
+  (setq erc-autojoin-timing 'ident)
+
+  (setq erc-track-exclude
+     '("##latinitas" "##latin" "#EsperantoAmeriko#1" "#kulupupitokipona#1"))
 #+END_SRC
 
-And now to enable it
+***** Nick highlighting
+You can even highlight nicks to make the buffers a bit more visually pleasing and easier to look at.
 #+BEGIN_SRC emacs-lisp
-  (electric-pair-mode t)
-#+END_SRC
-** Rainbow
-shows color of hex color
-#+BEGIN_SRC emacs-lisp
-  (use-package rainbow-mode
-    :straight t
-    :init
-    (add-hook 'prog-mode-hook 'rainbow-mode))
-#+END_SRC
-
-** Show parens
-highlight matching paren
-#+BEGIN_SRC emacs-lisp
-  (show-paren-mode 1)
-#+END_SRC
-** Rainbow delimiters
-Colors parentheses and other delimiters depending on their depth
-#+BEGIN_SRC emacs-lisp
-  (use-package rainbow-delimiters
-    :straight t
-    :init
-    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
-#+END_SRC
-
-** Expand region
-grow region over levels of semantic objects.
-#+BEGIN_SRC emacs-lisp
-  (use-package expand-region
-    :straight t
-    :bind ("C-M-q" . er/expand-region))
-#+END_SRC
-
-** Hungry deletion
-Backspace or Delete will get rid of all whitespace until the next non-whitespace character is encountered.
-#+BEGIN_SRC emacs-lisp
-  (use-package hungry-delete
+  (use-package erc-hl-nicks
     :straight t
     :config
-    (global-hungry-delete-mode))
+    (erc-update-modules))
+#+END_SRC
+**** ELIM
+#+BEGIN_SRC emacs-lisp
+  ;; (add-to-list 'load-path "~/elim/elisp")
+  ;; (load-library "garak")
+#+END_SRC
+**** Circe
+another irc client
+#+BEGIN_SRC emacs-lisp
+    (use-package circe
+      :straight t)
+#+END_SRC
+*** EMMS 
+There is many backends, many players and codecs for EMMS, we use mpd now.
+
+***** Basic setup for mpd
+The non XF86 keys are made to be somewhat logical to follow and easy to remember.
+At the bottom part of the configuration, you will notice how XF86 keys are used
+by default, so unless you keyboard is broken it should work out of the box.
+Obviously you might have to adjust /server-name/ and /server-port/ to fit your configuration.
+#+BEGIN_SRC emacs-lisp
+  (use-package emms
+    :straight t
+    :config
+    (require 'emms-setup)
+    ;; (require 'emms-player-mpd)
+    (emms-all) ; don't change this to values you see on stackoverflow questions if you expect emms to work
+    (setq emms-seek-seconds 5)
+    (emms-default-players)
+    (setq emms-player-list '(emms-player-mpd))
+    (setq emms-info-functions '(emms-info-mpd))
+    (setq emms-player-mpd-server-name "localhost")
+    (setq emms-player-mpd-server-port "6600")     
+    (setq emms-source-file-default-directory "~/Media/")
+    :bind
+    ;; ("s-m p" . emms)
+    ;; ("s-m b" . emms-smart-browse)
+    ;; ("s-m r" . emms-player-mpd-update-all-reset-cache)
+    ("<XF86AudioPrev>" . emms-previous)
+    ("<XF86AudioNext>" . emms-next)
+    ("<XF86AudioPlay>" . emms-pause)
+    ("<XF86AudioPause>" . emms-pause)
+    ("<XF86AudioStop>" . emms-stop))
 #+END_SRC
 
-* Programming
-** lsp
+***** MPC Setup
+****** Setting the default port
+We use non-default settings for the socket, to use the built in =mpc= functionality we need to set up a variable.
+Adjust according to your setup.
+#+BEGIN_SRC emacs-lisp
+  (setq mpc-host "localhost:6601")
+#+END_SRC
+***** mpv
+#+BEGIN_SRC emacs-lisp
+  ;;   (use-package emms-player-mpv
+  ;; :straight t
+  ;; :config
+  ;; (add-to-list 'emms-player-list 'emms-player-mpv))
+#+END_SRC
+***** Some more fun stuff
+****** Starting the daemon from within emacs
+If you have an absolutely massive music library, it might be a good idea to get rid of =mpc-update=
+and only invoke it manually when needed.
+#+BEGIN_SRC emacs-lisp
+  (defun mpd/start-music-daemon ()
+    "Start MPD, connects to it and syncs the metadata cache."
+    (interactive)
+    (shell-command "mpd")
+    (mpd/update-database)
+    (emms-player-mpd-connect)
+    (emms-cache-set-from-mpd-all)
+    (message "MPD Started!"))
+  ;;(global-set-key (kbd "s-m c") 'mpd/start-music-daemon)
+#+END_SRC
+
+****** Killing the daemon from within emacs
+#+BEGIN_SRC emacs-lisp
+  (defun mpd/kill-music-daemon ()
+    "Stops playback and kill the music daemon."
+    (interactive)
+    (emms-stop)
+    (call-process "killall" nil nil nil "mpd")
+    (message "MPD Killed!"))
+  ;;(global-set-key (kbd "s-m k") 'mpd/kill-music-daemon)
+#+END_SRC
+****** Updating the database easily.
+#+BEGIN_SRC emacs-lisp
+  (defun mpd/update-database ()
+    "Updates the MPD database synchronously."
+    (interactive)
+    (call-process "mpc" nil nil nil "update")
+    (message "MPD Database Updated!"))
+  ;;(global-set-key (kbd "s-m u") 'mpd/update-database)
+#+END_SRC
+*** File Manager
+**** Dired
+#+BEGIN_SRC emacs-lisp
+  (setq-default dired-listing-switches "-alh")
+  (use-package all-the-icons-dired
+    :straight t
+    :hook (dired-mode . all-the-icons-dired-mode)
+    )
+#+END_SRC
+*** The terminal
+**** Default shell
+#+BEGIN_SRC emacs-lisp
+  (defvar my-term-shell "/bin/bash")
+  (defadvice ansi-term (before force-bash)
+    (interactive (list my-term-shell)))
+  (ad-activate 'ansi-term)
+#+END_SRC
+*** web browser
+**** elpher for gopher and gem
+#+BEGIN_SRC emacs-lisp
+  (use-package elpher
+    :straight t)
+#+END_SRC
+**** w3m
+#+BEGIN_SRC emacs-lisp
+  (use-package w3m
+    :straight t)
+#+END_SRC
+**** ace-link for eww 
+#+BEGIN_SRC emacs-lisp
+  (use-package ace-link
+    :straight t
+    :config
+    (ace-link-setup-default)
+  )
+
+
+#+END_SRC
+*** elfeed
+replacing gnus with elfeed
+**** COMMENT elfeed itself
+#+BEGIN_SRC emacs-lisp
+  (use-package elfeed
+    :straight t
+    :custom
+    (elfeed-search-filter "@6-months-ago +unread -vid"))
+#+END_SRC
+**** COMMENT elfeed goodies
+**** COMMENT org mode feed list
+#+BEGIN_SRC emacs-lisp
+    (use-package elfeed-org
+      :straight t
+    :config
+(elfeed-org)
+(setq rmh-elfeed-org-files (list "~/Dropbox/newsfeeds.org" )))
+#+END_SRC
+*** COMMENT gnus
+**** COMMENT hackernews in gnus
+i may turn this back on once i have a better grasp of gnus
+
+#+BEGIN_SRC emacs-lisp
+    (use-package nnhackernews
+      :straight t
+    :config
+(add-to-list 'gnus-secondary-select-methods '(nnhackernews "")))
+
+#+END_SRC
+**** reddit in gnus
+i may turn this back on once i have a better grasp of gnus
+#+BEGIN_SRC emacs-lisp
+  ;; (use-package nnreddit
+  ;; :straight t
+  ;; :config 
+
+  ;; (add-to-list 'gnus-secondary-select-methods '(nnreddit "")))
+#+END_SRC
+**** convert atom feeds to rss
+#+BEGIN_SRC emacs-lisp
+
+  ;; (require 'mm-url)
+  ;; (defadvice mm-url-insert (after DE-convert-atom-to-rss () )
+  ;;   "Converts atom to RSS by calling xsltproc."
+  ;;   (when (re-search-forward "xmlns=\"http://www.w3.org/.*/Atom\"" 
+  ;; 			   nil t)
+  ;;     (goto-char (point-min))
+  ;;     (message "Converting Atom to RSS... ")
+  ;;     (call-process-region (point-min) (point-max) 
+  ;; 			 "xsltproc" 
+  ;; 			 t t nil 
+  ;; 			 (expand-file-name "~/atom2rss.xsl") "-")
+  ;;     (goto-char (point-min))
+  ;;     (message "Converting Atom to RSS... done")))
+
+  ;; (ad-activate 'mm-url-insert)
+
+#+END_SRC
+
+*** DONE slack
+- State "DONE"       from "TODO"       [2023-01-25 Wed 20:18]
+#+BEGIN_SRC emacs-lisp
+  ;; https://github.com/jackellenberger/emojme#user-content-finding-a-slack-cookie
+
+  (use-package websocket :straight t)
+  (use-package request :straight t)
+  (use-package oauth2 :straight t)
+  (use-package slack
+    :straight t
+    :init
+    (setq slack-buffer-emojify t) ;; if you want to enable emoji, default nil
+    (setq slack-prefer-current-team t)
+    :config
+    (slack-register-team
+     :name "codemettle"
+     :default t
+     :token (auth-source-pick-first-password
+           :host "codemettle.slack.com"
+           :user "slack^token")
+     :cookie (auth-source-pick-first-password
+           :host "codemettle.slack.com"
+           :user "slack^cookie")
+     :subscribed-channels '(random)
+     :full-and-display-names t)
+    (evil-define-key 'normal slack-info-mode-map
+      ",u" 'slack-room-update-messages)
+    (evil-define-key 'normal slack-mode-map
+      ",c" 'slack-buffer-kill
+      ",ra" 'slack-message-add-reaction
+      ",rr" 'slack-message-remove-reaction
+      ",rs" 'slack-message-show-reaction-users
+      ",pl" 'slack-room-pins-list
+      ;; ",pa" 'slack-message-pins-add
+      ;; ",pr" 'slack-message-pins-remove
+      ",mm" 'slack-message-write-another-buffer
+      ",me" 'slack-message-edit
+      ",md" 'slack-message-delete
+      ",u" 'slack-room-update-messages
+      ",2" 'slack-message-embed-mention
+      ",3" 'slack-message-embed-channel
+      "\C-n" 'slack-buffer-goto-next-message
+      "\C-p" 'slack-buffer-goto-prev-message)
+    (evil-define-key 'normal slack-edit-message-mode-map
+      ",k" 'slack-message-cancel-edit
+      ",s" 'slack-message-send-from-buffer
+      ",2" 'slack-message-embed-mention
+      ",3" 'slack-message-embed-channel) )
+
+
+  (use-package helm-slack
+    :straight (helm-slack :type git :host github :repo "yuya373/helm-slack") 
+    :after (slack)) ;; optional
+#+END_SRC
+
+*** gptel for a real interface to chatgpt
+
+#+BEGIN_SRC emacs-lisp
+  (use-package gptel
+    :straight t
+    :config
+    (setq gptel-api-key (auth-source-pick-first-password
+             :host "chatgpt")))
+#+END_SRC
+
+
+*** TODO discord in emacs
+*** TODO everything in emacs
+*** TODO email
+#+BEGIN_SRC emacs-lisp
+
+  ;; (use-package mu4e
+  ;;   :straight t)
+  (setq
+    rmail-primary-inbox-list '("pop://taylor%40taylorhardy.net@pop.gmail.com")
+    rmail-preserve-inbox t
+    user-full-name "Taylor Hardy"
+    user-mail-address "taylor@taylorhardy.net")
+#+END_SRC
+* text editor
+** evil
+#+BEGIN_SRC emacs-lisp
+  (use-package evil
+    :straight t
+    :init
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    :custom
+    (evil-undo-system 'undo-tree)
+    (evil-search-module 'isearch)
+    :config
+    (evil-mode 1)
+    (setq evil-search-module 'isearch)
+    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state))
+
+  (use-package evil-collection
+    :after evil
+    :straight t
+    :config
+    (evil-collection-init)
+    (setq evil-want-keybinding t)
+    (evil-set-initial-state 'eaf-mode 'emacs)
+    (evil-set-initial-state 'exwm-mode 'emacs))
+  (use-package evil-surround
+    :straight t
+    :config
+    (global-evil-surround-mode 1))
+#+END_SRC
+
+** undo tree
+#+BEGIN_SRC emacs-lisp
+  (use-package undo-tree
+    :straight t
+    :config
+    (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+    (global-undo-tree-mode))
+#+END_SRC
+
+** Theme
+*** high contrast
+
+#+BEGIN_SRC emacs-lisp
+
+  (use-package modus-themes
+    :straight t 
+    :init 
+    (setq modus-vivendi-theme-slanted-constructs t
+          modus-vivendi-theme-bold-constructs t
+          modus-vivendi-theme-visible-fringes t
+          modus-vivendi-theme-3d-modeline t
+          modus-vivendi-theme-subtle-diffs t
+          modus-vivendi-theme-intense-standard-completions t
+          modus-vivendi-theme-distinct-org-blocks t
+          modus-vivendi-theme-rainbow-org-src-blocks t
+          modus-vivendi-theme-proportional-fonts t
+          modus-vivendi-theme-rainbow-headings t
+          modus-vivendi-theme-section-headings t)
+    :config
+    (load-theme 'modus-vivendi t))
+#+END_SRC
+
+*** Font
+#+BEGIN_SRC emacs-lisp
+  ;; Set default font
+  (set-face-attribute 'default nil
+                      :family "Hack"
+                      :height 120
+                      ;; :weight 'normal
+                      :width 'normal)
+  ;; set fallback font for emoji
+  (set-fontset-font t nil (font-spec :size 20 :name "Unifont"))
+#+END_SRC
+*** ansi color names
+#+BEGIN_SRC emacs-lisp
+(setq ansi-color-names-vector
+   ["#303030" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
+#+END_SRC
+** Basic Interface Settings
+These are setting that do not depend on packages and are built-in enhancements to the UI.
+
+*** Looks
+**** remove original dashboard
+#+BEGIN_SRC emacs-lisp
+  (setq inhibit-startup-message t)
+#+END_SRC
+**** Disable menus and scrollbars
+If you like using any of those, change =-1= to =1=.
+#+BEGIN_SRC emacs-lisp
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+#+END_SRC
+
+**** Set UTF-8 encoding
+#+BEGIN_SRC emacs-lisp 
+  (setq locale-coding-system 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (set-keyboard-coding-system 'utf-8)
+  (set-selection-coding-system 'utf-8)
+  (prefer-coding-system 'utf-8)
+#+END_SRC
+**** Highlight current line
+=hl-line= is awesome! It's not very awesome in the terminal version of emacs though, so we don't use that.
+Besides, it's only used for programming.
+#+BEGIN_SRC emacs-lisp
+  (when window-system (add-hook 'prog-mode-hook 'hl-line-mode))
+#+END_SRC
+
+**** visual bell
+#+BEGIN_SRC emacs-lisp
+  (setq visible-bell t)
+#+END_SRC
+
+
+*** Functionality
+**** backups and auto-saves
+I don't use either, you might want to turn those from =nil= to =t= if you do.
+#+BEGIN_SRC emacs-lisp
+  (setq make-backup-files nil)
+  (setq auto-save-default nil)
+#+END_SRC
+
+**** Change yes-or-no questions into y-or-n questions
+#+BEGIN_SRC emacs-lisp
+  (defalias 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+
+**** Async
+use asynchronous processes wherever possible
+#+BEGIN_SRC emacs-lisp
+  (use-package async
+    :straight t
+    :init (dired-async-mode 1))
+#+END_SRC
+
+** TODO Projectile
+
+*** Enable projectile globally
+This makes sure that everything can be a project.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :straight t
+    :init (projectile-mode 1)
+    :custom 
+    (projectile-indexing-method 'hybrid)
+    ;; :custom
+    ;; (projectile-completion-system)
+    :bind ("C-c p" . 'projectile-command-map))
+
+  (use-package helm-projectile
+    :straight t
+    :config (helm-projectile-on))
+  (use-package helm-rg
+    :straight t)
+  ;; (use-package counsel-projectile
+  ;;   :straight t
+  ;;   :config (counsel-projectile-mode))
+#+END_SRC
+
+*** Let projectile call make
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "<f5>") 'projectile-compile-project)
+#+END_SRC
+
+** Programming
+*** lsp
 #+BEGIN_SRC emacs-lisp
   (use-package eglot
     :straight t)
@@ -1101,7 +1403,7 @@ Backspace or Delete will get rid of all whitespace until the next non-whitespace
   (use-package dap-mode)
   (require 'dap-node)
 #+END_SRC
-** COMMENT treesitter TODO: disable when upgrade to 29
+*** COMMENT treesitter TODO: disable when upgrade to 29
 #+BEGIN_SRC emacs-lisp
 
   (use-package tree-sitter
@@ -1116,13 +1418,13 @@ Backspace or Delete will get rid of all whitespace until the next non-whitespace
 
   (use-package evil-textobj-tree-sitter :straight t)
 #+END_SRC
-** built in tree sit
+*** built in tree sit
 
 #+BEGIN_SRC emacs-lisp
 
   (require 'treesit)
 #+END_SRC
-** COMMENT paredit
+*** COMMENT paredit
 #+BEGIN_SRC emacs-lisp
   (use-package paredit
     :straight t
@@ -1136,7 +1438,7 @@ Backspace or Delete will get rid of all whitespace until the next non-whitespace
     (add-hook 'scheme-mode-hook           #'enable-paredit-mode))
 #+END_SRC
 
-** yasnippet
+*** yasnippet
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
     :straight t
@@ -1146,7 +1448,7 @@ Backspace or Delete will get rid of all whitespace until the next non-whitespace
     (yas-reload-all))
 #+END_SRC
 
-** flycheck
+*** flycheck
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
     :straight t
@@ -1156,7 +1458,7 @@ Backspace or Delete will get rid of all whitespace until the next non-whitespace
     )
 #+END_SRC
 
-** company mode
+*** company mode
 I set the delay for company mode to kick in to half a second, I also make sure that
 it starts doing its magic after typing in only 2 characters.
 
@@ -1174,21 +1476,21 @@ I prefer =C-n= and =C-p= to move around the items, so I remap those accordingly.
 
 #+END_SRC
 emacs
-** specific languages
+*** specific languages
 Be it for code or prose, completion is a must.
 After messing around with =auto-completion= for a while I decided to drop it
 in favor of =company=, and it turns out to have been a great decision.
 
 Each category also has additional settings.
 
-*** c/c++
-**** yasnippet
+**** c/c++
+***** yasnippet
 #+BEGIN_SRC emacs-lisp
   (add-hook 'c++-mode-hook 'yas-minor-mode)
   (add-hook 'c-mode-hook 'yas-minor-mode)
 #+END_SRC
 
-**** flycheck
+***** flycheck
 #+BEGIN_SRC emacs-lisp
   ;; (use-package flycheck-clang-analyzer
   ;;   :straight t
@@ -1200,7 +1502,7 @@ Each category also has additional settings.
 
 #+END_SRC
 
-**** company
+***** company
 Requires libclang to be installed.
 #+BEGIN_SRC emacs-lisp
   (with-eval-after-load 'company
@@ -1225,18 +1527,18 @@ Requires libclang to be installed.
     (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 #+END_SRC
 
-*** python
-**** yasnippet
+**** python
+***** yasnippet
 #+BEGIN_SRC emacs-lisp
   (add-hook 'python-mode-hook 'yas-minor-mode)
 #+END_SRC
 
-**** flycheck
+***** flycheck
 #+BEGIN_SRC emacs-lisp
   (add-hook 'python-mode-hook 'flycheck-mode)
 #+END_SRC
 
-**** company
+***** company
 #+BEGIN_SRC emacs-lisp
   (with-eval-after-load 'company
     (add-hook 'python-mode-hook 'company-mode))
@@ -1259,18 +1561,18 @@ Requires libclang to be installed.
     (add-hook 'python-mode-hook 'python-mode-company-init))
 #+END_SRC
 
-*** emacs-lisp
-**** eldoc
+**** emacs-lisp
+***** eldoc
 #+BEGIN_SRC emacs-lisp
   (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
 #+END_SRC
 
-**** yasnippet
+***** yasnippet
 #+BEGIN_SRC emacs-lisp
   (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
 #+END_SRC
 
-**** company
+***** company
 #+BEGIN_SRC emacs-lisp
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
 
@@ -1287,18 +1589,18 @@ Requires libclang to be installed.
     (slime-setup '(slime-fancy slime-company)))
 #+END_SRC
 
-*** lua
-**** yasnippet
+**** lua
+***** yasnippet
 #+BEGIN_SRC emacs-lisp
   (add-hook 'lua-mode-hook 'yas-minor-mode)
 #+END_SRC
 
-**** flycheck
+***** flycheck
 #+BEGIN_SRC emacs-lisp
   (add-hook 'lua-mode-hook 'flycheck-mode)
 #+END_SRC
 
-**** company
+***** company
 #+BEGIN_SRC emacs-lisp
   (add-hook 'lua-mode-hook 'company-mode)
 
@@ -1321,19 +1623,19 @@ Requires libclang to be installed.
     (add-hook 'lua-mode-hook 'lua-mode-company-init))
 #+END_SRC
 
-*** bash
-**** yasnippet
+**** bash
+***** yasnippet
 #+BEGIN_SRC emacs-lisp
   (add-hook 'shell-mode-hook 'yas-minor-mode)
 #+END_SRC
 
-**** flycheck
+***** flycheck
 #+BEGIN_SRC emacs-lisp
   (add-hook 'shell-mode-hook 'flycheck-mode)
 
 #+END_SRC
 
-**** company
+***** company
 #+BEGIN_SRC emacs-lisp
   (add-hook 'shell-mode-hook 'company-mode)
 
@@ -1349,12 +1651,12 @@ Requires libclang to be installed.
     (require 'company)
     (add-hook 'shell-mode-hook 'shell-mode-company-init))
 #+END_SRC
-*** haskell
+**** haskell
 #+BEGIN_SRC emacs-lisp
   (use-package haskell-mode
     :straight t)
 #+END_SRC
-*** COMMENT JS
+**** COMMENT JS
 #+BEGIN_SRC emacs-lisp
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
   (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
@@ -1404,7 +1706,7 @@ Requires libclang to be installed.
 
 #+END_SRC
 
-*** drools
+**** drools
 #+BEGIN_SRC emacs-lisp
   (autoload 'drools-mode "drools-mode")
 
@@ -1427,7 +1729,7 @@ Requires libclang to be installed.
     (local-set-key [?\C-m] 'drools-return-and-indent) )
 #+END_SRC
 
-*** scala
+**** scala
 #+BEGIN_SRC emacs-lisp
   (use-package scala-mode
     :straight t
@@ -1474,7 +1776,7 @@ Requires libclang to be installed.
     (lsp-mode . dap-ui-mode))
 #+END_SRC
 
-*** TS
+**** TS
 #+BEGIN_SRC emacs-lisp
 
   (use-package coverlay
@@ -1546,21 +1848,21 @@ Requires libclang to be installed.
           '(prettier-typescript)))
 #+END_SRC
 
-*** elisp
+**** elisp
 #+BEGIN_SRC emacs-lisp
   (use-package evil-lispy
     :straight t)
 #+END_SRC
 
-*** kotlin
+**** kotlin
 #+BEGIN_SRC emacs-lisp
   (use-package kotlin-mode
     :straight t)
 #+END_SRC
 
-** web programming
-*** vue
-**** vue-mode
+*** web programming
+**** vue
+***** vue-mode
 #+BEGIN_SRC emacs-lisp
   (use-package vue-mode
     :straight t
@@ -1569,13 +1871,13 @@ Requires libclang to be installed.
     :config
     (setq mmm-submode-decoration-level 0))
 #+END_SRC
-**** vue-html-mode
+***** vue-html-mode
 
 #+BEGIN_SRC emacs-lisp
   (use-package vue-html-mode
     :straight t)
 #+END_SRC
-**** vue lsp?
+***** vue lsp?
 #+BEGIN_SRC emacs-lisp
 
 
@@ -1586,15 +1888,15 @@ Requires libclang to be installed.
     :straight t)
 #+END_SRC
 
-*** emmet
+**** emmet
 
 #+BEGIN_SRC emacs-lisp
   (use-package emmet-mode
     :straight t)
 #+END_SRC
 
-*** coffee?
-*** web-mode
+**** coffee?
+**** web-mode
 #+BEGIN_SRC emacs-lisp
 
   (use-package web-mode
@@ -1618,7 +1920,7 @@ Requires libclang to be installed.
 
 #+END_SRC
 
-** COMMENT LaTeX
+*** COMMENT LaTeX
 #+BEGIN_SRC emacs-lisp
   ;; (use-package tex			;
   ;;   :defer t
@@ -1630,209 +1932,86 @@ Requires libclang to be installed.
 
 #+END_SRC
 
-* Git integration
-** magit
-#+BEGIN_SRC emacs-lisp
-  (use-package magit
-    :straight t
-    :config
-    (setq magit-push-always-verify nil)
-    (setq git-commit-summary-max-length 80)
-    :bind
-    ("C-c g" . sudo-edit))
-#+END_SRC
-** git gutter
-#+BEGIN_SRC emacs-lisp
-  (use-package diff-hl
-    :straight t
-    :config
-    (global-diff-hl-mode))
-#+END_SRC
-** COMMENT magit forge
-#+BEGIN_SRC emacs-lisp
-  (use-package forge
-    :straight t
-    :after magit)
-
-  (straight-use-package '(tsx-mode :type git :host github :repo "phelrine/code-review" :branch "fix/closql-update"))
-  (setq code-review-auth-login-marker 'forge)
-#+END_SRC
-* Remote editing
-** Editing with sudo
-Pretty self-explanatory, useful as hell if you use exwm.
-#+BEGIN_SRC emacs-lisp
-  (use-package sudo-edit
-    :straight t
-    :bind
-    ("s-e" . sudo-edit))
-#+END_SRC
-
-* web browser
-** elpher for gopher and gem
-#+BEGIN_SRC emacs-lisp
-  (use-package elpher
-    :straight t)
-#+END_SRC
-** w3m
-#+BEGIN_SRC emacs-lisp
-  (use-package w3m
-    :straight t)
-#+END_SRC
-* irc
-** circe
-** erc, also known as "a way to ask for help on #emacs"
-*** TODO find a way to ignore some channels and only show notifications in modeline
-*** Some common settings
-This also hides some of the channel messages to avoid cluttering the buffer.
-The other line changes the prompt for each channel buffer to match the channel name,
-this way you always know who you are typing to.
-#+BEGIN_SRC emacs-lisp
-  (setq erc-nick "htayj")
-  (setq erc-prompt (lambda () (concat "[" (buffer-name) "]")))
-  (setq erc-hide-list '("JOIN" "PART" "QUIT"))
-  (setq erc-interpret-mirc-color t)
-  (setq erc-modules
-     '(completion log notifications hl-nicks netsplit fill button match track readonly networks ring autojoin noncommands irccontrols move-to-prompt stamp menu list))
-  '(erc-prompt-for-password nil)
-
-
-  (setq erc-track-exclude-types '("JOIN" "KICK" "NICK" "PART" "333" "353"))
-#+END_SRC
-
-*** selectable server list
-this changes the =erc= history to include the server I connect to often.
-#+BEGIN_SRC emacs-lisp
-  (setq erc-server-history-list '("irc.libera.chat"
-                                   "irc.deft.com"
-                                   "localhost"))
-  (setq erc-autojoin-channels-alist '( ("libera.chat" "#pine64" "#fsf" "#searx" "#guix" "#emacs" "#hurd" "#guix" "#lisp" "##trans" "##transgeeks") ))
-
-  (setq erc-autojoin-timing 'ident)
-
-  (setq erc-track-exclude
-     '("##latinitas" "##latin" "#EsperantoAmeriko#1" "#kulupupitokipona#1"))
-#+END_SRC
-
-*** Nick highlighting
-You can even highlight nicks to make the buffers a bit more visually pleasing and easier to look at.
-#+BEGIN_SRC emacs-lisp
-  (use-package erc-hl-nicks
-    :straight t
-    :config
-    (erc-update-modules))
-#+END_SRC
-** ELIM
-#+BEGIN_SRC emacs-lisp
-  ;; (add-to-list 'load-path "~/elim/elisp")
-  ;; (load-library "garak")
-#+END_SRC
-* EMMS 
-There is many backends, many players and codecs for EMMS, we use mpd now.
-
-*** Basic setup for mpd
-The non XF86 keys are made to be somewhat logical to follow and easy to remember.
-At the bottom part of the configuration, you will notice how XF86 keys are used
-by default, so unless you keyboard is broken it should work out of the box.
-Obviously you might have to adjust /server-name/ and /server-port/ to fit your configuration.
-#+BEGIN_SRC emacs-lisp
-  (use-package emms
-    :straight t
-    :config
-    (require 'emms-setup)
-    ;; (require 'emms-player-mpd)
-    (emms-all) ; don't change this to values you see on stackoverflow questions if you expect emms to work
-    (setq emms-seek-seconds 5)
-    (emms-default-players)
-    (setq emms-player-list '(emms-player-mpd))
-    (setq emms-info-functions '(emms-info-mpd))
-    (setq emms-player-mpd-server-name "localhost")
-    (setq emms-player-mpd-server-port "6600")     
-    (setq emms-source-file-default-directory "~/Media/")
-    :bind
-    ;; ("s-m p" . emms)
-    ;; ("s-m b" . emms-smart-browse)
-    ;; ("s-m r" . emms-player-mpd-update-all-reset-cache)
-    ("<XF86AudioPrev>" . emms-previous)
-    ("<XF86AudioNext>" . emms-next)
-    ("<XF86AudioPlay>" . emms-pause)
-    ("<XF86AudioPause>" . emms-pause)
-    ("<XF86AudioStop>" . emms-stop))
-#+END_SRC
-
-*** MPC Setup
-**** Setting the default port
-We use non-default settings for the socket, to use the built in =mpc= functionality we need to set up a variable.
-Adjust according to your setup.
-#+BEGIN_SRC emacs-lisp
-  (setq mpc-host "localhost:6601")
-#+END_SRC
-*** mpv
-#+BEGIN_SRC emacs-lisp
-  ;;   (use-package emms-player-mpv
-  ;; :straight t
-  ;; :config
-  ;; (add-to-list 'emms-player-list 'emms-player-mpv))
-#+END_SRC
-*** Some more fun stuff
-**** Starting the daemon from within emacs
-If you have an absolutely massive music library, it might be a good idea to get rid of =mpc-update=
-and only invoke it manually when needed.
-#+BEGIN_SRC emacs-lisp
-  (defun mpd/start-music-daemon ()
-    "Start MPD, connects to it and syncs the metadata cache."
-    (interactive)
-    (shell-command "mpd")
-    (mpd/update-database)
-    (emms-player-mpd-connect)
-    (emms-cache-set-from-mpd-all)
-    (message "MPD Started!"))
-  ;;(global-set-key (kbd "s-m c") 'mpd/start-music-daemon)
-#+END_SRC
-
-**** Killing the daemon from within emacs
-#+BEGIN_SRC emacs-lisp
-  (defun mpd/kill-music-daemon ()
-    "Stops playback and kill the music daemon."
-    (interactive)
-    (emms-stop)
-    (call-process "killall" nil nil nil "mpd")
-    (message "MPD Killed!"))
-  ;;(global-set-key (kbd "s-m k") 'mpd/kill-music-daemon)
-#+END_SRC
-**** Updating the database easily.
-#+BEGIN_SRC emacs-lisp
-  (defun mpd/update-database ()
-    "Updates the MPD database synchronously."
-    (interactive)
-    (call-process "mpc" nil nil nil "update")
-    (message "MPD Database Updated!"))
-  ;;(global-set-key (kbd "s-m u") 'mpd/update-database)
-#+END_SRC
-* youtube-dl
-#+BEGIN_SRC emacs-lisp
-  (defun play-youtube (url)
-    "plays youtube."
-    (interactive "sUrl of video: ")
-  (shell-command (concat "youtube-dl " url " --add-metadata --write-info-json &" ))
-  (emms-add-file (substring (shell-command-to-string (concat "youtube-dl " url " --get-filename ")) 0 -1)))
-
-#+END_SRC
-* UI modernization
-** Icons to make things pretty
-M-x all-the-icons-install-fonts
-#+BEGIN_SRC emacs-lisp
-  (use-package all-the-icons
-    :straight t)
-#+END_SRC
-* WM startup
-* Tabs
+** Tabs
 #+BEGIN_SRC emacs-lisp
   ;; abolish tabs
   (setq-default indent-tabs-mode nil)
   (setq tab-stop-list (number-sequence 2 120 2))
 #+END_SRC
 
-* COMMENT editorconfig
+** TODO yas for inserting emacs lisp begin src
+minor mode not set up?
+** Subwords
+Emacs treats camelCase strings as a single word by default, this changes said behaviour.
+#+BEGIN_SRC emacs-lisp
+  (global-subword-mode 1)
+#+END_SRC
+
+** Electric
+autocomplete pairs
+#+BEGIN_SRC emacs-lisp
+  (setq electric-pair-pairs '(
+                              (?\{ . ?\})
+                              (?\( . ?\))
+                              (?\[ . ?\])
+                              (?\" . ?\")))
+#+END_SRC
+
+And now to enable it
+#+BEGIN_SRC emacs-lisp
+  (electric-pair-mode t)
+#+END_SRC
+** Rainbow
+shows color of hex color
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-mode
+    :straight t
+    :init
+    (add-hook 'prog-mode-hook 'rainbow-mode))
+#+END_SRC
+
+** Show parens
+highlight matching paren
+#+BEGIN_SRC emacs-lisp
+  (show-paren-mode 1)
+#+END_SRC
+** Rainbow delimiters
+Colors parentheses and other delimiters depending on their depth
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-delimiters
+    :straight t
+    :init
+    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+#+END_SRC
+
+** Expand region
+grow region over levels of semantic objects.
+#+BEGIN_SRC emacs-lisp
+  (use-package expand-region
+    :straight t
+    :bind ("C-M-q" . er/expand-region))
+#+END_SRC
+
+** Hungry deletion
+Backspace or Delete will get rid of all whitespace until the next non-whitespace character is encountered.
+#+BEGIN_SRC emacs-lisp
+  (use-package hungry-delete
+    :straight t
+    :config
+    (global-hungry-delete-mode))
+#+END_SRC
+
+** line numbers
+Relative line numbers
+#+BEGIN_SRC emacs-lisp
+  (use-package linum-relative
+    :straight t
+    :config
+    (setq linum-relative-current-symbol "")
+    (add-hook 'prog-mode-hook 'linum-relative-mode))
+#+END_SRC
+
+** COMMENT editorconfig
 #+BEGIN_SRC emacs-lisp
   (use-package editorconfig
     :straight t
@@ -1840,238 +2019,59 @@ M-x all-the-icons-install-fonts
     (editorconfig-mode 1))
   :lighter
 #+END_SRC
-* Diminishing modes
-Your modeline is sacred, and if you have a lot of modes enabled, as you will if you use this config,
-you might end up with a lot of clutter there, the package =diminish= disables modes on the mode line but keeps
-them running, it just prevents them from showing up and taking up space.
-
-*THIS WILL BE REMOVED SOON AS USE-PACKAGE HAS THE FUNCTIONALITY BUILT IN*
-
-Edit this list as you see fit!
+* Moving around emacs
+* (C-c lowercase)
+** COMMENT Mark Multiple
 #+BEGIN_SRC emacs-lisp
-  (use-package diminish
+  (use-package mark-multiple
     :straight t
-    :init
-    (diminish 'which-key-mode)
-    (diminish 'linum-relative-mode)
-    (diminish 'hungry-delete-mode)
-    (diminish 'visual-line-mode)
-    (diminish 'subword-mode)
-    (diminish 'beacon-mode)
-    (diminish 'irony-mode)
-    (diminish 'page-break-lines-mode)
-    (diminish 'auto-revert-mode)
-    (diminish 'rainbow-delimiters-mode)
-    (diminish 'editorconfig-mode)
-    (diminish 'subl-mode)
-    (diminish 'emo-mode)
-    (diminish 'org-indent-mode)
-    (diminish 'projectile-mode)
-    (diminish 'helm-mode)
-    (diminish 'company-mode)
-    (diminish 'undo-tree-mode)
-    (diminish 'ivy-mode)
-    (diminish 'flycheck-mode)
-    (diminish 'evil-collection-unimpaired-mode)
-    (diminish 'yas-minor-mode)
-    (diminish 'org-src-mode)
-    (diminish 'eldoc-mode)
-    (diminish 'coverlay-minor-mode)
-    (diminish 'css-in-js-mode)
-    (diminish 'rainbow-mode))
+    :bind ("C-c q" . 'mark-next-like-this))
 #+END_SRC
-* elfeed
-replacing gnus with elfeed
-** COMMENT elfeed itself
+** media (d)
+*** management (m)
 #+BEGIN_SRC emacs-lisp
-  (use-package elfeed
-    :straight t
-    :custom
-    (elfeed-search-filter "@6-months-ago +unread -vid"))
+  (global-set-key (kbd "C-c d m") 'emms)
 #+END_SRC
-** COMMENT elfeed goodies
-** COMMENT org mode feed list
+*** add (a)
+**** from dired (d)
 #+BEGIN_SRC emacs-lisp
-    (use-package elfeed-org
-      :straight t
-    :config
-(elfeed-org)
-(setq rmh-elfeed-org-files (list "~/Dropbox/newsfeeds.org" )))
+  (global-set-key (kbd "C-c a d") 'emms-add-dired)
 #+END_SRC
-* system admin
+**** TODO from search (s)
+**** from find-file (f)
 #+BEGIN_SRC emacs-lisp
-
-  (use-package helm-system-packages
-    :straight t)
+  (global-set-key (kbd "C-c a f") 'emms-add-find)
 #+END_SRC
-* TODO email
+*** streams (s)
 #+BEGIN_SRC emacs-lisp
-
-  ;; (use-package mu4e
-  ;;   :straight t)
-  (setq
-    rmail-primary-inbox-list '("pop://taylor%40taylorhardy.net@pop.gmail.com")
-    rmail-preserve-inbox t
-    user-full-name "Taylor Hardy"
-    user-mail-address "taylor@taylorhardy.net")
+  (global-set-key (kbd "C-c d s") 'emms-streams)
 #+END_SRC
-* COMMENT gnus
-** COMMENT hackernews in gnus
-i may turn this back on once i have a better grasp of gnus
-
+*** next (n)
 #+BEGIN_SRC emacs-lisp
-    (use-package nnhackernews
-      :straight t
-    :config
-(add-to-list 'gnus-secondary-select-methods '(nnhackernews "")))
-
+  (global-set-key (kbd "C-c d n") 'emms-next)
 #+END_SRC
-** reddit in gnus
-i may turn this back on once i have a better grasp of gnus
+*** previous (p)
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package nnreddit
-  ;; :straight t
-  ;; :config 
-
-  ;; (add-to-list 'gnus-secondary-select-methods '(nnreddit "")))
+  (global-set-key (kbd "C-c d p") 'emms-previous)
 #+END_SRC
-** convert atom feeds to rss
+*** pause (SPC)
 #+BEGIN_SRC emacs-lisp
-
-  ;; (require 'mm-url)
-  ;; (defadvice mm-url-insert (after DE-convert-atom-to-rss () )
-  ;;   "Converts atom to RSS by calling xsltproc."
-  ;;   (when (re-search-forward "xmlns=\"http://www.w3.org/.*/Atom\"" 
-  ;; 			   nil t)
-  ;;     (goto-char (point-min))
-  ;;     (message "Converting Atom to RSS... ")
-  ;;     (call-process-region (point-min) (point-max) 
-  ;; 			 "xsltproc" 
-  ;; 			 t t nil 
-  ;; 			 (expand-file-name "~/atom2rss.xsl") "-")
-  ;;     (goto-char (point-min))
-  ;;     (message "Converting Atom to RSS... done")))
-
-  ;; (ad-activate 'mm-url-insert)
-
+  (global-set-key (kbd "C-c d SPC") 'emms-pause)
 #+END_SRC
 
-* screen reader
-** eloud
+** framing (f)
+*** TODO maybe something like persp mode?
+** web (w)
+*** wowser (w)
 #+BEGIN_SRC emacs-lisp
-  (use-package eloud
-    :straight t
-    :config
-    (setq eloud-espeak-path "/usr/bin/espeak"))
+  (global-set-key (kbd "C-c w w") 'eww)
 #+END_SRC
-
-* org
-** todo states
+** insert (i)
+*** TODO insert unicode (u)
+** capture/journal (j)
 #+BEGIN_SRC emacs-lisp
-  (setq org-todo-keywords
-        '((sequence "TODO(t)" "PLAN(p)" "WAIT(w@)" "|" "DONE(d!)" "CANCELED(c@)" "MISSED(m@)")))
-#+END_SRC
-** TODO figure out how to refile and stuff in evil
-* DONE emacs notification system
-- State "DONE"       from "TODO"       [2023-01-25 Wed 20:18]
-#+BEGIN_SRC emacs-lisp
-  (use-package alert
-    :straight t
-    :init
-    (setq alert-default-style 'notifications)) ;using wired-notif
-#+END_SRC
-
-* Circe
-another irc client
-#+BEGIN_SRC emacs-lisp
-    (use-package circe
-      :straight t)
-#+END_SRC
-* emojis
-add emoji rendering
-#+BEGIN_SRC emacs-lisp
-    (use-package emojify
-      :straight t)
-#+END_SRC
-* DONE slack
-- State "DONE"       from "TODO"       [2023-01-25 Wed 20:18]
-#+BEGIN_SRC emacs-lisp
-  ;; https://github.com/jackellenberger/emojme#user-content-finding-a-slack-cookie
-
-  (use-package websocket :straight t)
-  (use-package request :straight t)
-  (use-package oauth2 :straight t)
-  (use-package slack
-    :straight t
-    :init
-    (setq slack-buffer-emojify t) ;; if you want to enable emoji, default nil
-    (setq slack-prefer-current-team t)
-    :config
-    (slack-register-team
-     :name "codemettle"
-     :default t
-     :token (auth-source-pick-first-password
-           :host "codemettle.slack.com"
-           :user "slack^token")
-     :cookie (auth-source-pick-first-password
-           :host "codemettle.slack.com"
-           :user "slack^cookie")
-     :subscribed-channels '(random)
-     :full-and-display-names t)
-    (evil-define-key 'normal slack-info-mode-map
-      ",u" 'slack-room-update-messages)
-    (evil-define-key 'normal slack-mode-map
-      ",c" 'slack-buffer-kill
-      ",ra" 'slack-message-add-reaction
-      ",rr" 'slack-message-remove-reaction
-      ",rs" 'slack-message-show-reaction-users
-      ",pl" 'slack-room-pins-list
-      ;; ",pa" 'slack-message-pins-add
-      ;; ",pr" 'slack-message-pins-remove
-      ",mm" 'slack-message-write-another-buffer
-      ",me" 'slack-message-edit
-      ",md" 'slack-message-delete
-      ",u" 'slack-room-update-messages
-      ",2" 'slack-message-embed-mention
-      ",3" 'slack-message-embed-channel
-      "\C-n" 'slack-buffer-goto-next-message
-      "\C-p" 'slack-buffer-goto-prev-message)
-    (evil-define-key 'normal slack-edit-message-mode-map
-      ",k" 'slack-message-cancel-edit
-      ",s" 'slack-message-send-from-buffer
-      ",2" 'slack-message-embed-mention
-      ",3" 'slack-message-embed-channel) )
-
-
-  (use-package helm-slack
-    :straight (helm-slack :type git :host github :repo "yuya373/helm-slack") 
-    :after (slack)) ;; optional
-#+END_SRC
-
-* COMMENT chatgpt openai
-#+BEGIN_SRC emacs-lisp
-  ;; https://github.com/jackellenberger/emojme#user-content-finding-a-slack-cookie
-  (require 'openai)
-  ;; (el-get-bundle emacs-openai/openai) ;; optional
-  ;; (use-package openai
-  ;;   :straight t)
-#+END_SRC
-
-* gptel for a real interface to chatgpt
-
-#+BEGIN_SRC emacs-lisp
-  (use-package gptel
-    :straight t
-    :config
-    (setq gptel-api-key (auth-source-pick-first-password
-             :host "chatgpt")))
+  (global-set-key (kbd "C-c j") 'org-capture)
 #+END_SRC
 
 
-* byzanz record
-todo: use import and then identify to get the geometry
 
-* TODO discord in emacs
-* TODO everything in emacs
-* TODO yas for inserting emacs lisp begin src
-minor mode not set up?
