@@ -36,7 +36,6 @@ Since we are going to use emacs as our window manager, it would be nice to have 
     (normal-top-level-add-subdirs-to-load-path))
 #+END_SRC
 
-
 * Org
 ** Common settings
 
@@ -270,7 +269,7 @@ The only time I actually had to use comments, this is for ease of removal if you
     :bind
     ("s-SPC" . 'dmenu))
 #+END_SRC
-*** windows,panes
+*** windows
 **** switch-window
 switch window uses an ace type jump if more than 2 windows are open
 #+BEGIN_SRC emacs-lisp
@@ -454,19 +453,9 @@ Pretty self-explanatory, useful as hell if you use exwm.
 
 ** system admin
 #+BEGIN_SRC emacs-lisp
-
   (use-package helm-system-packages
     :straight t)
 #+END_SRC
-** COMMENT chatgpt openai
-#+BEGIN_SRC emacs-lisp
-  ;; https://github.com/jackellenberger/emojme#user-content-finding-a-slack-cookie
-  (require 'openai)
-  ;; (el-get-bundle emacs-openai/openai) ;; optional
-  ;; (use-package openai
-  ;;   :straight t)
-#+END_SRC
-
 * command completion
 ** helm
 #+BEGIN_SRC emacs-lisp
@@ -542,7 +531,7 @@ automatic cheat sheet once you press part of a key series
     (which-key-mode))
 #+END_SRC
 * Applications
-*** youtube-dl
+** youtube-dl
 #+BEGIN_SRC emacs-lisp
   (defun play-youtube (url)
     "plays youtube."
@@ -551,11 +540,11 @@ automatic cheat sheet once you press part of a key series
   (emms-add-file (substring (shell-command-to-string (concat "youtube-dl " url " --get-filename ")) 0 -1)))
 
 #+END_SRC
-*** irc
-**** circe
-**** erc, also known as "a way to ask for help on #emacs"
-***** TODO find a way to ignore some channels and only show notifications in modeline
-***** Some common settings
+** irc
+*** circe
+*** erc, also known as "a way to ask for help on #emacs"
+**** TODO find a way to ignore some channels and only show notifications in modeline
+**** Some common settings
 This also hides some of the channel messages to avoid cluttering the buffer.
 The other line changes the prompt for each channel buffer to match the channel name,
 this way you always know who you are typing to.
@@ -572,7 +561,7 @@ this way you always know who you are typing to.
   (setq erc-track-exclude-types '("JOIN" "KICK" "NICK" "PART" "333" "353"))
 #+END_SRC
 
-***** selectable server list
+**** selectable server list
 this changes the =erc= history to include the server I connect to often.
 #+BEGIN_SRC emacs-lisp
   (setq erc-server-history-list '("irc.libera.chat"
@@ -586,7 +575,7 @@ this changes the =erc= history to include the server I connect to often.
      '("##latinitas" "##latin" "#EsperantoAmeriko#1" "#kulupupitokipona#1"))
 #+END_SRC
 
-***** Nick highlighting
+**** Nick highlighting
 You can even highlight nicks to make the buffers a bit more visually pleasing and easier to look at.
 #+BEGIN_SRC emacs-lisp
   (use-package erc-hl-nicks
@@ -594,21 +583,21 @@ You can even highlight nicks to make the buffers a bit more visually pleasing an
     :config
     (erc-update-modules))
 #+END_SRC
-**** ELIM
+*** ELIM
 #+BEGIN_SRC emacs-lisp
   ;; (add-to-list 'load-path "~/elim/elisp")
   ;; (load-library "garak")
 #+END_SRC
-**** Circe
+*** Circe
 another irc client
 #+BEGIN_SRC emacs-lisp
     (use-package circe
       :straight t)
 #+END_SRC
-*** EMMS 
+** EMMS 
 There is many backends, many players and codecs for EMMS, we use mpd now.
 
-***** Basic setup for mpd
+**** Basic setup for mpd
 The non XF86 keys are made to be somewhat logical to follow and easy to remember.
 At the bottom part of the configuration, you will notice how XF86 keys are used
 by default, so unless you keyboard is broken it should work out of the box.
@@ -638,22 +627,22 @@ Obviously you might have to adjust /server-name/ and /server-port/ to fit your c
     ("<XF86AudioStop>" . emms-stop))
 #+END_SRC
 
-***** MPC Setup
-****** Setting the default port
+**** MPC Setup
+***** Setting the default port
 We use non-default settings for the socket, to use the built in =mpc= functionality we need to set up a variable.
 Adjust according to your setup.
 #+BEGIN_SRC emacs-lisp
   (setq mpc-host "localhost:6601")
 #+END_SRC
-***** mpv
+**** mpv
 #+BEGIN_SRC emacs-lisp
   ;;   (use-package emms-player-mpv
   ;; :straight t
   ;; :config
   ;; (add-to-list 'emms-player-list 'emms-player-mpv))
 #+END_SRC
-***** Some more fun stuff
-****** Starting the daemon from within emacs
+**** Some more fun stuff
+***** Starting the daemon from within emacs
 If you have an absolutely massive music library, it might be a good idea to get rid of =mpc-update=
 and only invoke it manually when needed.
 #+BEGIN_SRC emacs-lisp
@@ -668,7 +657,7 @@ and only invoke it manually when needed.
   ;;(global-set-key (kbd "s-m c") 'mpd/start-music-daemon)
 #+END_SRC
 
-****** Killing the daemon from within emacs
+***** Killing the daemon from within emacs
 #+BEGIN_SRC emacs-lisp
   (defun mpd/kill-music-daemon ()
     "Stops playback and kill the music daemon."
@@ -678,7 +667,7 @@ and only invoke it manually when needed.
     (message "MPD Killed!"))
   ;;(global-set-key (kbd "s-m k") 'mpd/kill-music-daemon)
 #+END_SRC
-****** Updating the database easily.
+***** Updating the database easily.
 #+BEGIN_SRC emacs-lisp
   (defun mpd/update-database ()
     "Updates the MPD database synchronously."
@@ -687,16 +676,16 @@ and only invoke it manually when needed.
     (message "MPD Database Updated!"))
   ;;(global-set-key (kbd "s-m u") 'mpd/update-database)
 #+END_SRC
-**** Audio controls
+*** Audio controls
 This is a set of bindings to my XF86 keys that invokes pulsemixer with the correct parameters
 
-***** Volume modifier
+**** Volume modifier
 It goes without saying that you are free to modify the modifier as you see fit, 4 is good enough for me though.
 #+BEGIN_SRC emacs-lisp
   (defconst volumeModifier "4")
 #+END_SRC
 
-***** Functions to start processes
+**** Functions to start processes
 #+BEGIN_SRC emacs-lisp
   (defun audio/mute ()
     (interactive)
@@ -711,15 +700,15 @@ It goes without saying that you are free to modify the modifier as you see fit, 
     (start-process "lower-volume" nil "pulsemixer" "--change-volume" (concat "-" volumeModifier)))
 #+END_SRC
 
-***** Keybindings to start processes
+**** Keybindings to start processes
 You can also change those if you'd like, but I highly recommend keeping 'em the same, chances are, they will just work.
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "<XF86AudioMute>") 'audio/mute)
   (global-set-key (kbd "<XF86AudioRaiseVolume>") 'audio/raise-volume)
   (global-set-key (kbd "<XF86AudioLowerVolume>") 'audio/lower-volume)
 #+END_SRC
-*** File Manager
-**** Dired
+** File Manager
+*** Dired
 #+BEGIN_SRC emacs-lisp
   (setq-default dired-listing-switches "-alh")
   (use-package all-the-icons-dired
@@ -727,26 +716,26 @@ You can also change those if you'd like, but I highly recommend keeping 'em the 
     :hook (dired-mode . all-the-icons-dired-mode)
     )
 #+END_SRC
-*** The terminal
-**** Default shell
+** The terminal
+*** Default shell
 #+BEGIN_SRC emacs-lisp
   (defvar my-term-shell "/bin/bash")
   (defadvice ansi-term (before force-bash)
     (interactive (list my-term-shell)))
   (ad-activate 'ansi-term)
 #+END_SRC
-*** web browser
-**** elpher for gopher and gem
+** web browser
+*** elpher for gopher and gem
 #+BEGIN_SRC emacs-lisp
   (use-package elpher
     :straight t)
 #+END_SRC
-**** w3m
+*** w3m
 #+BEGIN_SRC emacs-lisp
   (use-package w3m
     :straight t)
 #+END_SRC
-**** ace-link for eww 
+*** ace-link for eww 
 #+BEGIN_SRC emacs-lisp
   (use-package ace-link
     :straight t
@@ -756,17 +745,17 @@ You can also change those if you'd like, but I highly recommend keeping 'em the 
 
 
 #+END_SRC
-*** elfeed
+** elfeed
 replacing gnus with elfeed
-**** COMMENT elfeed itself
+*** COMMENT elfeed itself
 #+BEGIN_SRC emacs-lisp
   (use-package elfeed
     :straight t
     :custom
     (elfeed-search-filter "@6-months-ago +unread -vid"))
 #+END_SRC
-**** COMMENT elfeed goodies
-**** COMMENT org mode feed list
+*** COMMENT elfeed goodies
+*** COMMENT org mode feed list
 #+BEGIN_SRC emacs-lisp
     (use-package elfeed-org
       :straight t
@@ -774,8 +763,8 @@ replacing gnus with elfeed
 (elfeed-org)
 (setq rmh-elfeed-org-files (list "~/Dropbox/newsfeeds.org" )))
 #+END_SRC
-*** COMMENT gnus
-**** COMMENT hackernews in gnus
+** COMMENT gnus
+*** COMMENT hackernews in gnus
 i may turn this back on once i have a better grasp of gnus
 
 #+BEGIN_SRC emacs-lisp
@@ -785,7 +774,7 @@ i may turn this back on once i have a better grasp of gnus
 (add-to-list 'gnus-secondary-select-methods '(nnhackernews "")))
 
 #+END_SRC
-**** reddit in gnus
+*** reddit in gnus
 i may turn this back on once i have a better grasp of gnus
 #+BEGIN_SRC emacs-lisp
   ;; (use-package nnreddit
@@ -794,7 +783,7 @@ i may turn this back on once i have a better grasp of gnus
 
   ;; (add-to-list 'gnus-secondary-select-methods '(nnreddit "")))
 #+END_SRC
-**** convert atom feeds to rss
+*** convert atom feeds to rss
 #+BEGIN_SRC emacs-lisp
 
   ;; (require 'mm-url)
@@ -815,7 +804,7 @@ i may turn this back on once i have a better grasp of gnus
 
 #+END_SRC
 
-*** DONE slack
+** DONE slack
 - State "DONE"       from "TODO"       [2023-01-25 Wed 20:18]
 #+BEGIN_SRC emacs-lisp
   ;; https://github.com/jackellenberger/emojme#user-content-finding-a-slack-cookie
@@ -870,7 +859,7 @@ i may turn this back on once i have a better grasp of gnus
     :after (slack)) ;; optional
 #+END_SRC
 
-*** gptel for a real interface to chatgpt
+** gptel for a real interface to chatgpt
 
 #+BEGIN_SRC emacs-lisp
   (use-package gptel
@@ -881,9 +870,9 @@ i may turn this back on once i have a better grasp of gnus
 #+END_SRC
 
 
-*** TODO discord in emacs
-*** TODO everything in emacs
-*** TODO email
+** TODO discord in emacs
+** TODO everything in emacs
+** TODO email
 #+BEGIN_SRC emacs-lisp
 
   ;; (use-package mu4e
@@ -894,7 +883,7 @@ i may turn this back on once i have a better grasp of gnus
     user-full-name "Taylor Hardy"
     user-mail-address "taylor@taylorhardy.net")
 #+END_SRC
-*** byzanz record
+** byzanz record
 use byzanz to record the screen, with ability to select region
 #+BEGIN_SRC emacs-lisp
   (defun emacs-byzanz-record (&optional w h x y)
@@ -927,7 +916,7 @@ use byzanz to record the screen, with ability to select region
         (message "byzanz capture started")) )
 #+END_SRC
 
-*** COMMENT eaf
+** COMMENT eaf
 gui applications from inside emacs using python repl connected to the lisp
 #+BEGIN_SRC emacs-lisp
   (use-package eaf
@@ -950,7 +939,7 @@ gui applications from inside emacs using python repl connected to the lisp
 #+END_SRC
 
 
-*** Default browser
+** Default browser
 I use eww for most browsing, and I use qutebrowser when I need to open something in an external browser.
 #+BEGIN_SRC emacs-lisp
   (setq browse-url-browser-function 'eww-browse-url
@@ -1083,17 +1072,17 @@ this highlights syntax in eww, good for elisp snippets on the wiki.
 
 #+END_SRC
 
-*** shr settings
+** shr settings
 #+BEGIN_SRC emacs-lisp
   (setq shr-indentation 2
         shr-width 90)
 #+END_SRC
 
-*** Screenshots
+** Screenshots
 I don't need scrot to take screenshots, or shutter or whatever tools you might have. This is enough.
 These won't work in the terminal version or the virtual console, obvious reasons.
 
-**** Screenshotting the entire screen
+*** Screenshotting the entire screen
 #+BEGIN_SRC emacs-lisp
   (defun daedreth/take-screenshot ()
     "Takes a fullscreen screenshot of the current workspace"
@@ -1111,7 +1100,7 @@ These won't work in the terminal version or the virtual console, obvious reasons
   (global-set-key (kbd "<print>") 'daedreth/take-screenshot)
 #+END_SRC
 
-**** Screenshotting a region
+*** Screenshotting a region
 #+BEGIN_SRC emacs-lisp
   (defun daedreth/take-screenshot-region ()
     "Takes a screenshot of a region selected by the user."
@@ -1124,7 +1113,7 @@ These won't work in the terminal version or the virtual console, obvious reasons
   (global-set-key (kbd "S-<print>") 'daedreth/take-screenshot-region)
   (global-set-key (kbd "C-c o") 'daedreth/take-screenshot-region)
 #+END_SRC
-*** vterm
+** vterm
 sometimes need better than ansi-term
 
 #+BEGIN_SRC emacs-lisp
@@ -1132,8 +1121,8 @@ sometimes need better than ansi-term
     :straight t)
 
 #+END_SRC
-*** Git integration
-**** magit
+** Git integration
+*** magit
 #+BEGIN_SRC emacs-lisp
   (use-package magit
     :straight t
@@ -1143,14 +1132,14 @@ sometimes need better than ansi-term
     :bind
     ("C-c g" . sudo-edit))
 #+END_SRC
-**** git gutter
+*** git gutter
 #+BEGIN_SRC emacs-lisp
   (use-package diff-hl
     :straight t
     :config
     (global-diff-hl-mode))
 #+END_SRC
-**** COMMENT magit forge
+*** COMMENT magit forge
 #+BEGIN_SRC emacs-lisp
   (use-package forge
     :straight t
@@ -1171,6 +1160,15 @@ sometimes need better than ansi-term
           (define-key evil-insert-state-map (kbd "C-'") 'singpolyma/term-insert-literal)
           )
 #+END_SRC
+** COMMENT chatgpt openai
+#+BEGIN_SRC emacs-lisp
+  ;; https://github.com/jackellenberger/emojme#user-content-finding-a-slack-cookie
+  (require 'openai)
+  ;; (el-get-bundle emacs-openai/openai) ;; optional
+  ;; (use-package openai
+  ;;   :straight t)
+#+END_SRC
+
 * Appearance
 ** Theme
 *** high contrast
