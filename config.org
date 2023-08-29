@@ -45,24 +45,87 @@ Since we are going to use emacs as our window manager, it would be nice to have 
     (normal-top-level-add-subdirs-to-load-path))
 #+END_SRC
 
-* straight
+
+* Org
+One of the absolute greatest features of emacs is called "org-mode".
+This very file has been written in org-mode, a lot of other configurations are written in org-mode, same goes for
+academic papers, presentations, schedules, blogposts and guides.
+Org-mode is one of the most complex things ever, lets make it a bit more usable with some basic configuration.
+
+
+Those are all rather self-explanatory.
+
+** Common settings
 
 #+BEGIN_SRC emacs-lisp
-  (defvar bootstrap-version)
-  (let ((bootstrap-file
-         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-        (bootstrap-version 5))
-    (unless (file-exists-p bootstrap-file)
-      (with-current-buffer
-          (url-retrieve-synchronously
-           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-           'silent 'inhibit-cookies)
-        (goto-char (point-max))
-        (eval-print-last-sexp)))
-    (load bootstrap-file nil 'nomessage))
-  (use-package straight
-    :custom (straight-use-package-by-default t))
+  (setq org-ellipsis " ")
+  (setq org-src-fontify-natively t)
+  (setq org-src-tab-acts-natively t)
+  (setq org-confirm-babel-evaluate nil)
+  (setq org-export-with-smart-quotes t)
+  (setq org-src-window-setup 'current-window)
+  (add-hook 'org-mode-hook 'org-indent-mode)
 #+END_SRC
+** org journal
+#+BEGIN_SRC emacs-lisp
+  (use-package org-journal 
+    :straight t
+    :defer t
+    :custom
+    (org-journal-dir "~/notes/journal/")
+    (org-journal-date-format "%A, %d %B %Y"))
+#+END_SRC
+** Syntax highlighting for documents exported to HTML
+#+BEGIN_SRC emacs-lisp
+  (use-package htmlize
+    :straight t)
+#+END_SRC
+
+** Line wrapping
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook
+            '(lambda ()
+               (visual-line-mode 1)))
+#+END_SRC
+** spell checking
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook
+            '(lambda ()
+               (flyspell-mode 1)))
+#+END_SRC
+** Keybindings
+edit the stuff in a src block with proper modes
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c '") 'org-edit-src-code)
+#+END_SRC
+
+** Org Bullets
+change astrisks to bullets
+#+BEGIN_SRC emacs-lisp
+  (use-package org-bullets
+    :straight t
+    :config
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
+#+END_SRC
+
+** Easy-to-add emacs-lisp template
+Hitting tab after an "<el" in an org-mode file will create a template for elisp insertion.
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'org-structure-template-alist
+               '("el" "emacs-lisp"))
+#+END_SRC
+
+** Exporting options
+One of the best things about org is the ability to export your file to many formats.
+Here is how we add more of them!
+
+*** latex
+#+BEGIN_SRC emacs-lisp
+  ;; (when (file-directory-p "/usr/share/emacs/site-lisp/tex-utils")
+  ;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/tex-utils")
+  ;;   (require 'xdvi-search))
+#+END_SRC
+
 * evil
 #+BEGIN_SRC emacs-lisp
   (use-package evil
@@ -444,7 +507,7 @@ These won't work in the terminal version or the virtual console, obvious reasons
                     (concat (getenv "HOME") "/" (subseq (number-to-string (float-time)) 0 10) ".png"))
       (call-process "rm" nil nil nil ".newScreen.png")))
   (global-set-key (kbd "S-<print>") 'daedreth/take-screenshot-region)
-  (global-set-key (kbd "C-c l") 'daedreth/take-screenshot-region)
+  (global-set-key (kbd "C-c o") 'daedreth/take-screenshot-region)
 #+END_SRC
 ** byzanz record
 use byzanz to record the screen, with ability to select region
@@ -687,6 +750,8 @@ This makes sure that everything can be a project.
   (use-package helm-projectile
     :straight t
     :config (helm-projectile-on))
+  (use-package helm-rg
+    :straight t)
   ;; (use-package counsel-projectile
   ;;   :straight t
   ;;   :config (counsel-projectile-mode))
@@ -1030,6 +1095,37 @@ Minor, non-completion related settings and plugins for writing code.
 #+BEGIN_SRC emacs-lisp
   (use-package eglot
     :straight t)
+  ;; (use-package lsp-mode
+  ;;   ;; Optional - enable lsp-mode automatically in scala files
+  ;;   :straight t
+  ;;   :hook  (scala-mode . lsp)
+  ;;          (lsp-mode . lsp-lens-mode)
+  ;;   :config (setq lsp-prefer-flymake nil))
+  (use-package lsp-mode
+    :init
+    ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+    (setq lsp-keymap-prefix "M-l")
+    :straight t
+    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+           (scala-mode . lsp)
+           (tsx-mode . lsp)
+           (tsx-ts-mode . lsp)
+           ;; lens mode
+           (lsp-mode . lsp-lens-mode)
+           ;; if you want which-key integration
+           (lsp-mode . lsp-enable-which-key-integration))
+    :commands lsp)
+
+  ;; optionally
+  (use-package lsp-ui :straight t :commands lsp-ui-mode)
+  ;; if you are helm user
+  (use-package helm-lsp :straight t :commands helm-lsp-workspace-symbol)
+  ;; if you are ivy user
+  (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
+  ;; optionally if you want to use debugger
+  (use-package dap-mode)
+  (require 'dap-node)
 #+END_SRC
 ** COMMENT treesitter TODO: disable when upgrade to 29
 #+BEGIN_SRC emacs-lisp
@@ -1041,7 +1137,8 @@ Minor, non-completion related settings and plugins for writing code.
     :straight t
     :config
     (tree-sitter-require 'tsx)
-    (add-to-list 'tree-sitter-major-mode-language-alist '(typescript-tsx-mode . tsx)))
+    (add-to-list 'tree-sitter-major-mode-language-alist '(tsx-mode . tsx))
+    (add-to-list 'tree-sitter-major-mode-language-alist '(tsx-ts-mode . tsx)))
 
   (use-package evil-textobj-tree-sitter :straight t)
 #+END_SRC
@@ -1377,12 +1474,6 @@ Requires libclang to be installed.
      (setq sbt:program-options '("-Dsbt.supershell=false"))
   )
 
-  (use-package lsp-mode
-    ;; Optional - enable lsp-mode automatically in scala files
-    :straight t
-    :hook  (scala-mode . lsp)
-           (lsp-mode . lsp-lens-mode)
-    :config (setq lsp-prefer-flymake nil))
 
   ;; Add metals backend for lsp-mode
   (use-package lsp-metals
@@ -1433,8 +1524,8 @@ Requires libclang to be installed.
     :straight t
     :config
     (add-hook 'typescript-tsx-mode 
-	      (lambda ()
-		(flymake-eslint-enable)))
+              (lambda ()
+                (flymake-eslint-enable)))
     )
   (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . tsx-mode))
   (add-to-list 'auto-mode-alist '("\\.ts?\\'" . tsx-mode))
@@ -1471,6 +1562,14 @@ Requires libclang to be installed.
   ;;           (lambda ()
   ;;             (when (string-equal "tsx" (file-name-extension buffer-file-name))
   ;;               (setup-tide-mode))))
+  (use-package apheleia
+    :straight t
+    :config
+    (apheleia-global-mode +1)
+    (setf (alist-get 'tsx-mode apheleia-mode-alist)
+          '(prettier-typescript))
+    (setf (alist-get 'tsx-ts-mode apheleia-mode-alist)
+          '(prettier-typescript)))
 #+END_SRC
 
 *** elisp
@@ -1595,86 +1694,6 @@ Pretty self-explanatory, useful as hell if you use exwm.
     :straight t
     :bind
     ("s-e" . sudo-edit))
-#+END_SRC
-
-* Org
-One of the absolute greatest features of emacs is called "org-mode".
-This very file has been written in org-mode, a lot of other configurations are written in org-mode, same goes for
-academic papers, presentations, schedules, blogposts and guides.
-Org-mode is one of the most complex things ever, lets make it a bit more usable with some basic configuration.
-
-
-Those are all rather self-explanatory.
-
-** Common settings
-
-#+BEGIN_SRC emacs-lisp
-  (setq org-ellipsis " ")
-  (setq org-src-fontify-natively t)
-  (setq org-src-tab-acts-natively t)
-  (setq org-confirm-babel-evaluate nil)
-  (setq org-export-with-smart-quotes t)
-  (setq org-src-window-setup 'current-window)
-  (add-hook 'org-mode-hook 'org-indent-mode)
-#+END_SRC
-** org journal
-#+BEGIN_SRC emacs-lisp
-  (use-package org-journal 
-    :straight t
-    :defer t
-    :custom
-    (org-journal-dir "~/notes/journal/")
-    (org-journal-date-format "%A, %d %B %Y"))
-#+END_SRC
-** Syntax highlighting for documents exported to HTML
-#+BEGIN_SRC emacs-lisp
-  (use-package htmlize
-    :straight t)
-#+END_SRC
-
-** Line wrapping
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'org-mode-hook
-            '(lambda ()
-               (visual-line-mode 1)))
-#+END_SRC
-** spell checking
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'org-mode-hook
-            '(lambda ()
-               (flyspell-mode 1)))
-#+END_SRC
-** Keybindings
-edit the stuff in a src block with proper modes
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c '") 'org-edit-src-code)
-#+END_SRC
-
-** Org Bullets
-change astrisks to bullets
-#+BEGIN_SRC emacs-lisp
-  (use-package org-bullets
-    :straight t
-    :config
-    (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
-#+END_SRC
-
-** Easy-to-add emacs-lisp template
-Hitting tab after an "<el" in an org-mode file will create a template for elisp insertion.
-#+BEGIN_SRC emacs-lisp
-  (add-to-list 'org-structure-template-alist
-               '("el" "emacs-lisp"))
-#+END_SRC
-
-** Exporting options
-One of the best things about org is the ability to export your file to many formats.
-Here is how we add more of them!
-
-*** latex
-#+BEGIN_SRC emacs-lisp
-  ;; (when (file-directory-p "/usr/share/emacs/site-lisp/tex-utils")
-  ;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/tex-utils")
-  ;;   (require 'xdvi-search))
 #+END_SRC
 
 * web browser
@@ -1982,15 +2001,15 @@ Edit this list as you see fit!
 #+END_SRC
 * elfeed
 replacing gnus with elfeed
-** elfeed itself
+** COMMENT elfeed itself
 #+BEGIN_SRC emacs-lisp
   (use-package elfeed
     :straight t
     :custom
     (elfeed-search-filter "@6-months-ago +unread -vid"))
 #+END_SRC
-** elfeed goodies
-** org mode feed list
+** COMMENT elfeed goodies
+** COMMENT org mode feed list
 #+BEGIN_SRC emacs-lisp
     (use-package elfeed-org
       :straight t
@@ -2102,9 +2121,6 @@ i may turn this back on once i have a better grasp of gnus
   (use-package websocket :straight t)
   (use-package request :straight t)
   (use-package oauth2 :straight t)
-  (use-package el-get :straight t)
-  (use-package use-package-el-get :straight t)
-  (use-package-el-get-setup)
   (use-package slack
     :straight t
     :init
@@ -2147,7 +2163,6 @@ i may turn this back on once i have a better grasp of gnus
       ",3" 'slack-message-embed-channel) )
 
 
-  (el-get-bundle yuya373/helm-slack) ;; optional
   (use-package helm-slack
     :straight (helm-slack :type git :host github :repo "yuya373/helm-slack") 
     :after (slack)) ;; optional
