@@ -1899,13 +1899,12 @@ replacing gnus with elfeed
 (setq rmh-elfeed-org-files (list "~/Dropbox/newsfeeds.org" )))
 #+END_SRC
 * system admin
-
 #+BEGIN_SRC emacs-lisp
 
   (use-package helm-system-packages
     :straight t)
 #+END_SRC
-* email
+* TODO email
 #+BEGIN_SRC emacs-lisp
 
   ;; (use-package mu4e
@@ -1916,7 +1915,7 @@ replacing gnus with elfeed
     user-full-name "Taylor Hardy"
     user-mail-address "taylor@taylorhardy.net")
 #+END_SRC
-* gnus
+* COMMENT gnus
 ** COMMENT hackernews in gnus
 i may turn this back on once i have a better grasp of gnus
 
@@ -1957,8 +1956,6 @@ i may turn this back on once i have a better grasp of gnus
 
 #+END_SRC
 
-* config management
-** TODO something that sets the indentation of org mode src blocks
 * screen reader
 ** eloud
 #+BEGIN_SRC emacs-lisp
@@ -1985,11 +1982,13 @@ i may turn this back on once i have a better grasp of gnus
 #+END_SRC
 
 * Circe
+another irc client
 #+BEGIN_SRC emacs-lisp
     (use-package circe
       :straight t)
 #+END_SRC
 * emojis
+add emoji rendering
 #+BEGIN_SRC emacs-lisp
     (use-package emojify
       :straight t)
