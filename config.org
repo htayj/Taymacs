@@ -75,7 +75,7 @@ change astrisks to bullets
 Hitting tab after an "<el" in an org-mode file will create a template for elisp insertion.
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'org-structure-template-alist
-               '("el" "emacs-lisp"))
+               '("el" . "src emacs-lisp\n"))
 #+END_SRC
 
 ** Exporting options
@@ -785,7 +785,7 @@ i may turn this back on once i have a better grasp of gnus
 
 #+END_SRC
 
-** DONE slack
+** DONE COMMENT slack
 - State "DONE"       from "TODO"       [2023-01-25 Wed 20:18]
 #+BEGIN_SRC emacs-lisp
   ;; https://github.com/jackellenberger/emojme#user-content-finding-a-slack-cookie
@@ -795,6 +795,7 @@ i may turn this back on once i have a better grasp of gnus
   (use-package oauth2 :straight t)
   (use-package slack
     :straight t
+    :after evil
     :init
     (setq slack-buffer-emojify t) ;; if you want to enable emoji, default nil
     (setq slack-prefer-current-team t)
@@ -1126,7 +1127,7 @@ sometimes need better than ansi-term
     :straight t
     :after magit)
 
-  (straight-use-package '(tsx-mode :type git :host github :repo "phelrine/code-review" :branch "fix/closql-update"))
+  ;; (straight-use-package '(tsx-mode :type git :host github :repo "phelrine/code-review" :branch "fix/closql-update"))
   (setq code-review-auth-login-marker 'forge)
 #+END_SRC
 ** COMMENT ansi term enhancement
@@ -1333,39 +1334,44 @@ This makes sure that everything can be a project.
 ** Programming
 *** lsp
 #+BEGIN_SRC emacs-lisp
-  (use-package eglot
-    :straight t)
-  ;; (use-package lsp-mode
-  ;;   ;; Optional - enable lsp-mode automatically in scala files
-  ;;   :straight t
-  ;;   :hook  (scala-mode . lsp)
-  ;;          (lsp-mode . lsp-lens-mode)
-  ;;   :config (setq lsp-prefer-flymake nil))
-  (use-package lsp-mode
-    :init
-    ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-    (setq lsp-keymap-prefix "M-l")
-    :straight t
-    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-           (scala-mode . lsp)
-           (tsx-mode . lsp)
-           (tsx-ts-mode . lsp)
-           ;; lens mode
-           (lsp-mode . lsp-lens-mode)
-           ;; if you want which-key integration
-           (lsp-mode . lsp-enable-which-key-integration))
-    :commands lsp)
+  (use-package eglot)
 
-  ;; optionally
-  (use-package lsp-ui :straight t :commands lsp-ui-mode)
-  ;; if you are helm user
-  (use-package helm-lsp :straight t :commands helm-lsp-workspace-symbol)
-  ;; if you are ivy user
-  (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+  (add-to-list 'eglot-server-programs
+               '((tsx-mode) "typescript-language-server" "--stdio"))
+  (add-to-list 'eglot-server-programs
+               '((tsx-ts-mode) "typescript-language-server" "--stdio"))
+    ;; (use-package lsp-mode
+       ;;   ;; Optional - enable lsp-mode automatically in scala files
+       ;;   :straight t
+       ;;   :hook  (scala-mode . lsp)
+       ;;          (lsp-mode . lsp-lens-mode)
+       ;;   :config (setq lsp-prefer-flymake nil))
 
-  ;; optionally if you want to use debugger
-  (use-package dap-mode)
-  (require 'dap-node)
+       ;; (use-package lsp-mode
+       ;;   :init
+       ;;   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+       ;;   (setq lsp-keymap-prefix "M-l")
+       ;;   :straight t
+       ;;   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+       ;;          (scala-mode . lsp)
+       ;;          (tsx-mode . lsp)
+       ;;          (tsx-ts-mode . lsp)
+       ;;          ;; lens mode
+       ;;          (lsp-mode . lsp-lens-mode)
+       ;;          ;; if you want which-key integration
+       ;;          (lsp-mode . lsp-enable-which-key-integration))
+       ;;   :commands lsp)
+
+    ;;    ;; optionally
+    ;; (use-package lsp-ui :straight t :commands lsp-ui-mode)
+    ;;    ;; if you are helm user
+    ;; (use-package helm-lsp :straight t :commands helm-lsp-workspace-symbol)
+    ;;    ;; if you are ivy user
+    ;; (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
+    ;;    ;; optionally if you want to use debugger
+    ;; (use-package dap-mode)
+    ;; (require 'dap-node)
 #+END_SRC
 *** COMMENT treesitter TODO: disable when upgrade to 29
 #+BEGIN_SRC emacs-lisp
@@ -1422,6 +1428,26 @@ This makes sure that everything can be a project.
     )
 #+END_SRC
 
+*** eldoc-box 
+shows box with documentation instead of minibuffer
+#+BEGIN_SRC emacs-lisp
+  (use-package eldoc-box
+    :straight t
+    :config (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-at-point-mode t))
+
+
+#+END_SRC
+emacs
+*** corfu mode
+#+BEGIN_SRC emacs-lisp
+  (use-package corfu
+    :straight t
+    :custom
+    (corfu-auto t))
+
+
+#+END_SRC
+emacs
 *** company mode
 I set the delay for company mode to kick in to half a second, I also make sure that
 it starts doing its magic after typing in only 2 characters.
@@ -1716,13 +1742,13 @@ Requires libclang to be installed.
 
 
   ;; Add metals backend for lsp-mode
-  (use-package lsp-metals
-    :straight t
-    :config (setq lsp-metals-treeview-show-when-views-received nil))
+  ;; (use-package lsp-metals
+  ;;   :straight t
+  ;;   :config (setq lsp-metals-treeview-show-when-views-received nil))
 
-  ;; Enable nice rendering of documentation on hover
-  (use-package lsp-ui
-    :straight t)
+  ;; ;; Enable nice rendering of documentation on hover
+  ;; (use-package lsp-ui
+  ;;   :straight t)
 
   ;; Add company-lsp backend for metals
   ;; (use-package company-lsp
@@ -1733,11 +1759,11 @@ Requires libclang to be installed.
     :straight t
     ;; Posframe is a pop-up tool that must be manually installed for dap-mode
     )
-  (use-package dap-mode
-    :straight t
-    :hook
-    (lsp-mode . dap-mode)
-    (lsp-mode . dap-ui-mode))
+  ;; (use-package dap-mode
+  ;;   :straight t
+  ;;   :hook
+  ;;   (lsp-mode . dap-mode)
+  ;;   (lsp-mode . dap-ui-mode))
 #+END_SRC
 
 **** TS
@@ -1748,68 +1774,72 @@ Requires libclang to be installed.
 
   (use-package origami
     :straight t)
-  (straight-use-package '(css-in-js-mode :type git :host github :repo "orzechowskid/tree-sitter-css-in-js"))
-  ;; (require 'css-in-js)
+  (use-package css-in-js-mode
+    :straight (css-in-js-mode :type git :host github :repo "orzechowskid/tree-sitter-css-in-js"))
+    ;; (require 'css-in-js)
 
-  (straight-use-package '(tsx-mode :type git :host github :repo "orzechowskid/tsx-mode.el" :branch "emacs29"))
-  (require 'tsx-mode)
+  (use-package markdown-mode) ;; required for eglot eldoc
+  (use-package tsx-mode
+  :straight (tsx-mode :type git :host github :repo "orzechowskid/tsx-mode.el" :branch "emacs29")
+  :after eglot
+  :config 
+    (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . tsx-mode))
+    (add-to-list 'auto-mode-alist '("\\.ts?\\'" . tsx-mode)))
 
-  ;; (define-derived-mode typescript-tsx-mode typescript-mode "TSX"
-  ;;   "Major mode for editing TSX files.
+    ;; (define-derived-mode typescript-tsx-mode typescript-mode "TSX"
+    ;;   "Major mode for editing TSX files.
 
-  ;; Refer to Typescript documentation for syntactic differences between normal and TSX
-  ;; variants of Typescript.")
+    ;; Refer to Typescript documentation for syntactic differences between normal and TSX
+    ;; variants of Typescript.")
 
-  (use-package flymake-eslint
-    :straight t
-    :config
-    (add-hook 'typescript-tsx-mode 
-              (lambda ()
-                (flymake-eslint-enable)))
-    )
-  (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . tsx-mode))
-  (add-to-list 'auto-mode-alist '("\\.ts?\\'" . tsx-mode))
-  ;; (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-tsx-mode))
-  ;; (defun typescript-tsx-mode-fix-tree-sitter()
-  ;;    (set (make-local-variable 'tree-sitter-hl-use-font-lock-keywords) nil))
-  ;; (add-hook 'typescript-tsx-mode-hook #'typescript-tsx-mode-fix-tree-sitter)
-  ;; (add-hook 'typescript-tsx-mode-hook #'tree-sitter-hl-mode)
+    (use-package flymake-eslint
+      :straight t
+      :config
+      (add-hook 'typescript-tsx-mode 
+                (lambda ()
+                  (flymake-eslint-enable)))
+      )
+    ;; (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-tsx-mode))
+    ;; (defun typescript-tsx-mode-fix-tree-sitter()
+    ;;    (set (make-local-variable 'tree-sitter-hl-use-font-lock-keywords) nil))
+    ;; (add-hook 'typescript-tsx-mode-hook #'typescript-tsx-mode-fix-tree-sitter)
+    ;; (add-hook 'typescript-tsx-mode-hook #'tree-sitter-hl-mode)
 
-  ;; (use-package tide
-  ;;   :straight t
-  ;;   :config
-  ;;   (defun setup-tide-mode ()
-  ;;     (interactive)
-  ;;     (tide-setup)
-  ;;     (flycheck-mode +1)
-  ;;     (setq flycheck-check-syntax-automatically '(save mode-enabled))
-  ;;     (eldoc-mode +1)
-  ;;     (tide-hl-identifier-mode +1)
-  ;;     ;; company is an optional dependency. You have to
-  ;;     ;; install it separately via package-install
-  ;;     ;; `M-x package-install [ret] company`
-  ;;     (company-mode +1))
+    ;; (use-package tide
+    ;;   :straight t
+    ;;   :config
+    ;;   (defun setup-tide-mode ()
+    ;;     (interactive)
+    ;;     (tide-setup)
+    ;;     (flycheck-mode +1)
+    ;;     (setq flycheck-check-syntax-automatically '(save mode-enabled))
+    ;;     (eldoc-mode +1)
+    ;;     (tide-hl-identifier-mode +1)
+    ;;     ;; company is an optional dependency. You have to
+    ;;     ;; install it separately via package-install
+    ;;     ;; `M-x package-install [ret] company`
+    ;;     (company-mode +1))
 
-  ;;   ;; aligns annotation to the right hand side
-  ;;   (setq company-tooltip-align-annotations t)
+    ;;   ;; aligns annotation to the right hand side
+    ;;   (setq company-tooltip-align-annotations t)
 
-  ;;   ;; formats the buffer before saving
-  ;;   (add-hook 'before-save-hook nil)
+    ;;   ;; formats the buffer before saving
+    ;;   (add-hook 'before-save-hook nil)
 
-  ;;   (add-hook 'typescript-mode-hook #'setup-tide-mode))
+    ;;   (add-hook 'typescript-mode-hook #'setup-tide-mode))
 
-  ;; (add-hook 'web-mode-hook
-  ;;           (lambda ()
-  ;;             (when (string-equal "tsx" (file-name-extension buffer-file-name))
-  ;;               (setup-tide-mode))))
-  (use-package apheleia
-    :straight t
-    :config
-    (apheleia-global-mode +1)
-    (setf (alist-get 'tsx-mode apheleia-mode-alist)
-          '(prettier-typescript))
-    (setf (alist-get 'tsx-ts-mode apheleia-mode-alist)
-          '(prettier-typescript)))
+    ;; (add-hook 'web-mode-hook
+    ;;           (lambda ()
+    ;;             (when (string-equal "tsx" (file-name-extension buffer-file-name))
+    ;;               (setup-tide-mode))))
+    (use-package apheleia
+      :straight t
+      :config
+      (apheleia-global-mode +1)
+      (setf (alist-get 'tsx-mode apheleia-mode-alist)
+            '(prettier-typescript))
+      (setf (alist-get 'tsx-ts-mode apheleia-mode-alist)
+            '(prettier-typescript)))
 #+END_SRC
 
 **** elisp
@@ -1975,6 +2005,20 @@ Relative line numbers
     (add-hook 'prog-mode-hook 'linum-relative-mode))
 #+END_SRC
 
+** add eslint compilation buffer regex
+#+begin_src emacs-lisp
+  (use-package compile-eslint
+    :straight (compile-eslint :type git :host github :repo "Fuco1/compile-eslint") 
+    :config (push 'eslint compilation-error-regexp-alist)) ;; optional
+#+end_src
+** add color to compilation buffers
+#+begin_src emacs-lisp
+  (defun my/ansi-colorize-buffer ()
+    (let ((buffer-read-only nil))
+      (ansi-color-apply-on-region (point-min) (point-max))))
+  (add-hook 'compilation-filter-hook 'my/ansi-colorize-buffer)
+
+#+end_src
 ** COMMENT editorconfig
 #+BEGIN_SRC emacs-lisp
   (use-package editorconfig

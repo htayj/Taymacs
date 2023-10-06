@@ -3,6 +3,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector
+   ["#303030" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
  '(browse-url-secondary-browser-function 'eaf-open-browser)
  '(code-review-gitlab-base-url "git.codemettle.com")
  '(code-review-gitlab-graphql-host "git.codemettle.com/api")
@@ -17,6 +19,7 @@
    '("i3" "/usr/share/xsessions/i3" "qtile" "/usr/share/xsessions/qtile" "emacs" "wmctrl -m"))
  '(evil-insert-state-modes nil)
  '(evil-motion-state-modes nil)
+ '(eww-search-prefix "https://duckduckgo.com/lite/?q=")
  '(forge-alist
    '(("github.com" "api.github.com" "github.com" forge-github-repository)
      ("git.codemettle.com" "git.codemettle.com/api/v4" "git.codemettle.com" forge-gitlab-repository)
@@ -65,6 +68,8 @@
      ("\\.mm\\'" . default)
      ("\\.x?html?\\'" . "firefox %s")
      ("\\.pdf\\'" . default)))
+ '(org-journal-date-format "%A, %d %B %Y")
+ '(org-journal-dir "~/notes/journal/")
  '(org-structure-template-alist
    '(("el" "emacs-lisp")
      ("a" . "export ascii")
@@ -79,13 +84,20 @@
      ("v" . "verse")))
  '(package-selected-packages
    '(eloud nnhackernews elfeed-org elfeed emms-player-mpv elpher auctex tide company-lsp lsp-ui lsp-metals lsp-mode sbt-mode scala-mode prettier paredit ace-link ivy-prescient counsel-projectile all-the-icons-dired language-detection modus-vivendi-theme evil-surround evil-collection moe-theme color-theme-modern cider haskell-mode forge prettier-js org-journal web-mode key-chord evil doom-modeline diff-hl aggressive-indent ace-window helm-ag vue-mode salaire-mode doom-themes editorconfig telephone-line eyeliner spaceline-all-the-icons tabbar neotree js2-refactor company-tern tern ergoemacs-mode dracula-theme golden-ratio-scroll-screen slime-company slime company-jedi zzz-to-char rainbow-delimiters avy ivy projectile sunrise-x-modeline sunrise-x-buttons sunrise-commander twittering-mode zerodark-theme pretty-mode flycheck-clang-analyzer flycheck-irony flycheck yasnippet-snippets yasnippet company-c-headers company-shell company-irony irony irony-mode company-lua mark-multiple expand-region swiper popup-kill-ring dmenu ido-vertical-mode ido-vertical ox-html5slide centered-window-mode htmlize ox-twbs diminish erc-hl-nicks symon rainbow-mode switch-window dashboard smex company sudo-edit emms magit org-bullets hungry-delete beacon linum-relative spaceline fancy-battery exwm which-key use-package))
+ '(pos-tip-background-color "#36473A")
+ '(pos-tip-foreground-color "#FFFFC8")
  '(projectile-completion-system nil)
  '(projectile-ignored-projects nil)
  '(projectile-project-root-files '(".projectile"))
  '(projectile-project-root-files-bottom-up '(".projectile"))
  '(projectile-project-root-files-top-down-recurring nil)
  '(safe-local-variable-values
-   '((eval progn
+   '((flymake-eslint-project-root . "/home/tay/terminus/gui")
+     (projectile-project-test-cmd . "npm test")
+     (projectile-project-package-cmd . "../script/build")
+     (projectile-project-configure-cmd . "npx lerna run clean && npm run bootstrap && npx lerna run compile")
+     (projectile-project-run-cmd . "killall node; cd ~/terminus/gui/ ; nvm use v16.5.0; npm run electron:dev-quick")
+     (eval progn
            (add-to-list 'exec-path
                         (concat
                          (locate-dominating-file default-directory ".dir-locals.el")
