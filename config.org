@@ -227,6 +227,7 @@ The only time I actually had to use comments, this is for ease of removal if you
     (exwm-randr-enable)
     ;; this just enables exwm, it started automatically once everything is ready
     (exwm-enable))'
+  (shell-command "picom --config ~/.config/picom.conf -b")
 #+END_SRC
 *** Multi monitor
 #+BEGIN_SRC emacs-lisp
@@ -1408,7 +1409,7 @@ This makes sure that everything can be a project.
     (add-hook 'scheme-mode-hook           #'enable-paredit-mode))
 #+END_SRC
 
-*** yasnippet
+*** TODO yasnippet
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
     :straight t
