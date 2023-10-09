@@ -1438,7 +1438,6 @@ shows box with documentation instead of minibuffer
 
 
 #+END_SRC
-emacs
 *** corfu mode
 #+BEGIN_SRC emacs-lisp
   (use-package corfu
@@ -1448,7 +1447,6 @@ emacs
 
 
 #+END_SRC
-emacs
 *** company mode
 I set the delay for company mode to kick in to half a second, I also make sure that
 it starts doing its magic after typing in only 2 characters.
@@ -1466,7 +1464,6 @@ I prefer =C-n= and =C-p= to move around the items, so I remap those accordingly.
 
 
 #+END_SRC
-emacs
 *** specific languages
 Be it for code or prose, completion is a must.
 After messing around with =auto-completion= for a while I decided to drop it
