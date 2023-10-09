@@ -1302,7 +1302,7 @@ use asynchronous processes wherever possible
     :init (dired-async-mode 1))
 #+END_SRC
 
-** TODO Projectile
+** Projectile
 
 *** Enable projectile globally
 This makes sure that everything can be a project.
@@ -1478,7 +1478,7 @@ Each category also has additional settings.
   (add-hook 'c-mode-hook 'yas-minor-mode)
 #+END_SRC
 
-***** flycheck
+***** COMMENT flycheck
 #+BEGIN_SRC emacs-lisp
   ;; (use-package flycheck-clang-analyzer
   ;;   :straight t
