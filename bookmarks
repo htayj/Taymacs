@@ -1,8 +1,20 @@
-;;;; Emacs Bookmark Format Version 1 ;;;; -*- coding: utf-8-emacs -*-
+;;;; Emacs Bookmark Format Version 1;;;; -*- coding: utf-8-emacs; mode: lisp-data -*-
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("create from sidebar"
+(("cookies generated code"
+ (filename . "~/terminus/gui/gulpfile.ts/openapi2ts/server.ts")
+ (front-context-string . "cookies?.session")
+ (rear-context-string . "sString(request.")
+ (position . 1425)
+ (last-modified 25959 36581 876658 274000))
+("cookies"
+ (filename . "~/terminus/gui/packages/server/src/api/util.ts")
+ (front-context-string . "cookies?.session")
+ (rear-context-string . "sString(request.")
+ (position . 2184)
+ (last-modified 25959 36564 401793 434000))
+("create from sidebar"
  (filename . "~/atom-planner/src/store/actions.js")
  (front-context-string . "\n      context.d")
  (rear-context-string . "...`,\n      });\n")

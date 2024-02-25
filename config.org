@@ -110,7 +110,7 @@ The only time I actually had to use comments, this is for ease of removal if you
 **** Installation
 #+BEGIN_SRC emacs-lisp
   (use-package exwm
-    :straight t
+    :straight (exwm :type git :host github :repo "emacs-straight/exwm" :files ("*" (:exclude ".git")))
     :config
 
     ;; necessary to configure exwm manually
@@ -172,7 +172,7 @@ The only time I actually had to use comments, this is for ease of removal if you
     (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
 
     ;; simulation keys are keys that exwm will send to the exwm buffer upon inputting a key combination
-    (exwm-input-set-simulation-keys
+    (exwm-input--set-simulation-keys
      '(
        ;; movement
        ([?\C-b] . left)
@@ -219,7 +219,7 @@ The only time I actually had to use comments, this is for ease of removal if you
       (cl-pushnew k exwm-input-prefix-keys))
 
     (require 'exwm-randr)
-    (setq exwm-randr-workspace-output-plist '(0 "eDP-1" 1 "eDP-1" 2 "HDMI-1"  3 "HDMI-1"  4 "HDMI-1"  5 "HDMI-1"   ))
+    (setq exwm-randr-workspace-monitor-plist '(0 "eDP-1" 1 "eDP-1" 2 "HDMI-1"  3 "HDMI-1"  4 "HDMI-1"  5 "HDMI-1"   ))
     (add-hook 'exwm-randr-screen-change-hook
               (lambda ()
                 (start-process-shell-command
@@ -227,8 +227,14 @@ The only time I actually had to use comments, this is for ease of removal if you
     (exwm-randr-enable)
     ;; this just enables exwm, it started automatically once everything is ready
     (exwm-enable))'
-  (shell-command "picom --config ~/.config/picom.conf -b")
+  ;; (shell-command "picom --config ~/.config/picom.conf -b")
 #+END_SRC
+*** Fix change workspace not taking focus
+https://github.com/ch11ng/exwm/issues/889
+#+BEGIN_SRC emacs-lisp
+  (setq x-no-window-manager t)
+#+END_SRC 
+*** TODO exwm-xsettings
 *** Multi monitor
 #+BEGIN_SRC emacs-lisp
 #+END_SRC
@@ -472,7 +478,8 @@ Pretty self-explanatory, useful as hell if you use exwm.
     ;;       helm-echo-input-in-header-line t)
     :init
     (helm-mode 1))
-
+  ;; never truncate buffer names
+  (setq helm-buffer-max-length nil)
   ;; (require 'helm-config)    
   (helm-autoresize-mode 0)
   ;; (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
@@ -795,7 +802,7 @@ i may turn this back on once i have a better grasp of gnus
   (use-package request :straight t)
   (use-package oauth2 :straight t)
   (use-package slack
-    :straight t
+    :straight (slack :type git :host github :repo "seblemaguer/emacs-slack")
     :after evil
     :init
     (setq slack-buffer-emojify t) ;; if you want to enable emoji, default nil
@@ -840,6 +847,19 @@ i may turn this back on once i have a better grasp of gnus
   (use-package helm-slack
     :straight (helm-slack :type git :host github :repo "yuya373/helm-slack") 
     :after (slack)) ;; optional
+
+  (url-cookie-store
+   "d"
+   ( auth-source-pick-first-password
+     :host "codemettle.slack.com"
+     :user "slack^cookie" )
+   nil ".slack.com" "/" t)
+  (url-cookie-store
+   "d-s"
+   ( auth-source-pick-first-password
+     :host "codemettle.slack.com"
+     :user "slack^ds" )
+   nil ".slack.com" "/" t)
 #+END_SRC
 
 ** gptel for a real interface to chatgpt
@@ -1122,14 +1142,17 @@ sometimes need better than ansi-term
     :config
     (global-diff-hl-mode))
 #+END_SRC
-*** COMMENT magit forge
+*** magit forge
 #+BEGIN_SRC emacs-lisp
   (use-package forge
     :straight t
     :after magit)
 
+  (use-package code-review
+    :straight '(code-review :type git :host github :repo "phelrine/code-review" :branch "fix/closql-update")
+    :config
+    (setq code-review-auth-login-marker 'forge))
   ;; (straight-use-package '(tsx-mode :type git :host github :repo "phelrine/code-review" :branch "fix/closql-update"))
-  (setq code-review-auth-login-marker 'forge)
 #+END_SRC
 ** COMMENT ansi term enhancement
 #+BEGIN_SRC emacs-lisp
@@ -1178,14 +1201,13 @@ sometimes need better than ansi-term
 
 *** Font
 #+BEGIN_SRC emacs-lisp
-  ;; Set default font
-  (set-face-attribute 'default nil
-                      :family "Hack"
-                      :height 120
-                      ;; :weight 'normal
-                      :width 'normal)
-  ;; set fallback font for emoji
-  (set-fontset-font t nil (font-spec :size 20 :name "Unifont"))
+    ;; Set default font
+    (set-face-attribute 'default nil
+                        :foundry "UW" :family "Ttyp0"
+                        :height 110
+                        :weight 'bold)
+    ;; set fallback font for emoji
+    (set-fontset-font t nil (font-spec :size 20 :name "Unifont"))
 #+END_SRC
 *** ansi color names
 #+BEGIN_SRC emacs-lisp
@@ -1268,7 +1290,7 @@ If you like using any of those, change =-1= to =1=.
   (set-selection-coding-system 'utf-8)
   (prefer-coding-system 'utf-8)
 #+END_SRC
-**** Highlight current line
+**** COMMENT Highlight current line
 =hl-line= is awesome! It's not very awesome in the terminal version of emacs though, so we don't use that.
 Besides, it's only used for programming.
 #+BEGIN_SRC emacs-lisp
@@ -1325,6 +1347,7 @@ This makes sure that everything can be a project.
   ;; (use-package counsel-projectile
   ;;   :straight t
   ;;   :config (counsel-projectile-mode))
+  ;; (setq projectile-project-search-path '("~/ttui/" "~/terminus/" ))
 #+END_SRC
 
 *** Let projectile call make
@@ -1336,43 +1359,52 @@ This makes sure that everything can be a project.
 *** lsp
 #+BEGIN_SRC emacs-lisp
   (use-package eglot)
+  ;; (cl-defmethod project-root ((project (head eglot-project)))
+  ;;   (cdr project))
+
+  ;; (defun my-project-try-tsconfig-json (dir)
+  ;;   (when-let* ((found (locate-dominating-file dir "tsconfig.json")))
+  ;;     (cons 'eglot-project found)))
+
+  ;; (add-hook 'project-find-functions
+  ;;           'my-project-try-tsconfig-json nil nil)
 
   (add-to-list 'eglot-server-programs
                '((tsx-mode) "typescript-language-server" "--stdio"))
   (add-to-list 'eglot-server-programs
                '((tsx-ts-mode) "typescript-language-server" "--stdio"))
-    ;; (use-package lsp-mode
-       ;;   ;; Optional - enable lsp-mode automatically in scala files
-       ;;   :straight t
-       ;;   :hook  (scala-mode . lsp)
-       ;;          (lsp-mode . lsp-lens-mode)
-       ;;   :config (setq lsp-prefer-flymake nil))
+  ;; (use-package lsp-mode
+  ;;   ;; Optional - enable lsp-mode automatically in scala files
+  ;;   :straight t
+  ;;   :hook  (scala-mode . lsp)
+  ;;          (lsp-mode . lsp-lens-mode)
+  ;;   :config (setq lsp-prefer-flymake nil))
 
-       ;; (use-package lsp-mode
-       ;;   :init
-       ;;   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-       ;;   (setq lsp-keymap-prefix "M-l")
-       ;;   :straight t
-       ;;   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-       ;;          (scala-mode . lsp)
-       ;;          (tsx-mode . lsp)
-       ;;          (tsx-ts-mode . lsp)
-       ;;          ;; lens mode
-       ;;          (lsp-mode . lsp-lens-mode)
-       ;;          ;; if you want which-key integration
-       ;;          (lsp-mode . lsp-enable-which-key-integration))
-       ;;   :commands lsp)
+  ;; (use-package lsp-mode
+  ;;   :init
+  ;;   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  ;;   (setq lsp-keymap-prefix "M-l")
+  ;;   :straight t
+  ;;   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+  ;;          (scala-mode . lsp)
+  ;;          (tsx-mode . lsp)
+  ;;          (tsx-ts-mode . lsp)
+  ;;          ;; lens mode
+  ;;          (lsp-mode . lsp-lens-mode)
+  ;;          ;; if you want which-key integration
+  ;;          (lsp-mode . lsp-enable-which-key-integration))
+  ;;   :commands lsp)
 
-    ;;    ;; optionally
-    ;; (use-package lsp-ui :straight t :commands lsp-ui-mode)
-    ;;    ;; if you are helm user
-    ;; (use-package helm-lsp :straight t :commands helm-lsp-workspace-symbol)
-    ;;    ;; if you are ivy user
-    ;; (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+  ;;    ;; optionally
+  ;; (use-package lsp-ui :straight t :commands lsp-ui-mode)
+  ;;    ;; if you are helm user
+  ;; (use-package helm-lsp :straight t :commands helm-lsp-workspace-symbol)
+  ;;    ;; if you are ivy user
+  ;; (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 
-    ;;    ;; optionally if you want to use debugger
-    ;; (use-package dap-mode)
-    ;; (require 'dap-node)
+  ;;    ;; optionally if you want to use debugger
+  ;; (use-package dap-mode)
+  ;; (require 'dap-node)
 #+END_SRC
 *** COMMENT treesitter TODO: disable when upgrade to 29
 #+BEGIN_SRC emacs-lisp
@@ -1434,7 +1466,9 @@ shows box with documentation instead of minibuffer
 #+BEGIN_SRC emacs-lisp
   (use-package eldoc-box
     :straight t
-    :config (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-at-point-mode t))
+    :config
+    (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-at-point-mode t)
+    (add-hook 'emacs-lisp-mode-hook #'eldoc-box-hover-at-point-mode t))
 
 
 #+END_SRC
@@ -1830,15 +1864,41 @@ Requires libclang to be installed.
     ;;           (lambda ()
     ;;             (when (string-equal "tsx" (file-name-extension buffer-file-name))
     ;;               (setup-tide-mode))))
-    (use-package apheleia
-      :straight t
-      :config
-      (apheleia-global-mode +1)
-      (setf (alist-get 'tsx-mode apheleia-mode-alist)
-            '(prettier-typescript))
-      (setf (alist-get 'tsx-ts-mode apheleia-mode-alist)
-            '(prettier-typescript)))
+  (use-package apheleia
+    :straight t
+    :config
+    (apheleia-global-mode +1)
+    (setf (alist-get 'tsx-mode apheleia-mode-alist)
+          '(prettier-typescript))
+    (setf (alist-get 'tsx-ts-mode apheleia-mode-alist)
+          '(prettier-typescript)))
+
+  ;; (use-package eslint-fix
+  ;;   :straight t
+  ;;   :config
+  ;;   (add-hook 'tsx-mode-hook #'eslint-fix-auto-mode)
+  ;;   (add-hook 'tsx-ts-mode-hook #'eslint-fix-auto-mode))
+
+  ;; typescript repl
+  (use-package ts-comint
+    :straight t
+    :config
+    (add-hook 'tsx-mode-hook
+            (lambda ()
+              (local-set-key (kbd "C-x C-e") 'ts-send-last-sexp)
+              (local-set-key (kbd "C-M-x") 'ts-send-last-sexp-and-go)
+              (local-set-key (kbd "C-c b") 'ts-send-buffer)
+              (local-set-key (kbd "C-c C-b") 'ts-send-buffer-and-go)
+              (local-set-key (kbd "C-c l") 'ts-load-file-and-go)))
+    (add-hook 'tsx-ts-mode-hook
+            (lambda ()
+              (local-set-key (kbd "C-x C-e") 'ts-send-last-sexp)
+              (local-set-key (kbd "C-M-x") 'ts-send-last-sexp-and-go)
+              (local-set-key (kbd "C-c b") 'ts-send-buffer)
+              (local-set-key (kbd "C-c C-b") 'ts-send-buffer-and-go)
+              (local-set-key (kbd "C-c l") 'ts-load-file-and-go))))
 #+END_SRC
+***** TODO add something to automatically delete all unused imports
 
 **** elisp
 #+BEGIN_SRC emacs-lisp

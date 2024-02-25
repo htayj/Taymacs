@@ -5,6 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
    ["#303030" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
+ '(auth-source-save-behavior nil)
  '(browse-url-secondary-browser-function 'eaf-open-browser)
  '(code-review-gitlab-base-url "git.codemettle.com")
  '(code-review-gitlab-graphql-host "git.codemettle.com/api")
@@ -19,6 +20,7 @@
    '("i3" "/usr/share/xsessions/i3" "qtile" "/usr/share/xsessions/qtile" "emacs" "wmctrl -m"))
  '(evil-insert-state-modes nil)
  '(evil-motion-state-modes nil)
+ '(evil-move-beyond-eol t)
  '(eww-search-prefix "https://duckduckgo.com/lite/?q=")
  '(forge-alist
    '(("github.com" "api.github.com" "github.com" forge-github-repository)
@@ -63,13 +65,14 @@
  '(org-datetree-add-timestamp 'inactive)
  '(org-default-notes-file "~/notes/notes.org")
  '(org-directory "~/notes")
+ '(org-export-backends '(ascii html icalendar latex md odt texinfo))
  '(org-file-apps
    '((auto-mode . emacs)
      ("\\.mm\\'" . default)
      ("\\.x?html?\\'" . "firefox %s")
      ("\\.pdf\\'" . default)))
- '(org-journal-date-format "%A, %d %B %Y")
- '(org-journal-dir "~/notes/journal/")
+ '(org-journal-date-format "%A, %d %B %Y" nil nil "Customized with use-package org-journal")
+ '(org-journal-dir "~/notes/journal/" nil nil "Customized with use-package org-journal")
  '(org-structure-template-alist
    '(("el" "emacs-lisp")
      ("a" . "export ascii")
@@ -91,6 +94,7 @@
  '(projectile-project-root-files '(".projectile"))
  '(projectile-project-root-files-bottom-up '(".projectile"))
  '(projectile-project-root-files-top-down-recurring nil)
+ '(rmail-primary-inbox-list '("/var/spool/mail/tay"))
  '(safe-local-variable-values
    '((flymake-eslint-project-root . "/home/tay/terminus/gui")
      (projectile-project-test-cmd . "npm test")
@@ -107,11 +111,22 @@
  '(tabbar-separator '(0.5))
  '(tramp-chunksize 500)
  '(tramp-default-method "scp")
- '(tramp-default-proxies-alist '(("192.168.1.137" "pi" "pi"))))
+ '(tramp-default-proxies-alist '(("192.168.1.137" "pi" "pi")))
+ '(window-divider-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 116 :width normal :foundry "1ASC" :family "xos4 Terminus"))))
- '(fringe ((t (:background "#292b2e")))))
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "#000000" :foreground "#ccc" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight bold :height 113 :width normal :foundry "UW" :family "Ttyp0"))))
+ '(bold ((t (:inverse-video t :weight bold))))
+ '(custom-button-unraised ((t (:foreground "blue" :background "gray" :inherit underline))))
+ '(custom-state ((t (:foreground "yellow"))))
+ '(custom-variable-tag ((t (:foreground "cyan" :inherit bold))))
+ '(fringe ((t (:background "black" :foreground "#ffffff"))))
+ '(mode-line ((t (:box nil :foreground "black" :background "dark gray" :inherit modus-themes-ui-variable-pitch))))
+ '(mode-line-highlight ((t (:background "dark magenta" :foreground "#ffffff" :box nil))))
+ '(mode-line-inactive ((t (:box nil :inverse-video t :foreground "black" :background "dark gray" :inherit modus-themes-ui-variable-pitch))))
+ '(window-divider ((t (:foreground "dark gray" :box nil))))
+ '(window-divider-first-pixel ((t (:foreground "dark gray" :inherit window-divider))))
+ '(window-divider-last-pixel ((t (:foreground "dark gray")))))
