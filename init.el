@@ -14,24 +14,34 @@
 
 (add-hook 'emacs-startup-hook 'startup/revert-file-name-handler-alist)
 (add-hook 'emacs-startup-hook 'startup/reset-gc)
+(message "first section")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; This is all kinds of necessary
 (require 'package)
+(message "required package")
 (setq package-enable-at-startup nil)
+(message "set no startup")
 
 ;;; remove SC if you are not using sunrise commander and org if you like outdated packages
 (setq package-archives '(("ELPA"  . "http://tromey.com/elpa/")
 			 ("gnu"   . "http://elpa.gnu.org/packages/")
 			 ("melpa" . "https://melpa.org/packages/")
 			 ("org"   . "https://orgmode.org/elpa/")))
+
+(message "set archives")
 (package-initialize)
+(message "2nd section")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; Bootstrapping use-package
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+
+
+
+
 
 ;;; Bootstrapping straight
 
@@ -52,6 +62,68 @@
   :custom (straight-use-package-by-default t))
 
 (straight-use-package 'org)
+
+;;; adding use package evil binding from https://www.mattduck.com/2023-08-28-extending-use-package-bind
+(add-to-list 'use-package-keywords :vbind t)
+
+(defun use-package-normalize/:vbind (name keyword args)
+  "Custom use-keyword :vbind. I use this to provide something similar to ':bind',
+but with two additional features that I miss from the default implementation:
+
+1. Integration with 'evil-define-key', so I can extend the keymap declaration
+   to specify one or more evil states that the binding should apply to.
+
+2. The ability to detect keymaps that aren't defined as prefix commands. This
+   allows me to define a binding to a keymap variable, eg. maybe I want '<leader>h'
+   to trigger 'help-map'. This fails using the default ':bind', meaning that I
+   have to fall back to calling 'bind-key' manually if I want to assign a
+   prefix.
+
+The expected form is slightly different to 'bind':
+
+((:map (KEYMAP . STATE) (KEY . FUNC) (KEY . FUNC) ...)
+ (:map (KEYMAP . STATE) (KEY . FUNC) (KEY . FUNC) ...) ...)
+
+STATE is the evil state. It can be nil or omitted entirely. If given, it should be an
+argument suitable for passing to 'evil-define-key' -- meaning a symbol like 'normal', or
+a list like '(normal insert)'."
+  (setq args (car args))
+  (unless (listp args)
+    (use-package-error ":vbind expects ((:map (MAP . STATE) (KEY . FUNC) ..) ..)"))
+  (dolist (def args args)
+    (unless (and (eq (car def) :map)
+                 (consp (cdr def))
+                 (listp (cddr def)))
+      (use-package-error ":vbind expects ((:map (MAP . STATE) (KEY . FUNC) ..) ..)"))))
+
+(defun use-package-handler/:vbind (name _keyword args rest state)
+  "Handler for ':vbind' use-package extension. See 'use-package-normalize/:vbind' for docs."
+  (let ((body (use-package-process-keywords name rest
+                (use-package-plist-delete state :vbind))))
+    (use-package-concat
+     `((with-eval-after-load ',name
+         ,@(mapcan
+            (lambda (entry)
+              (let ((keymap (car (cadr entry)))
+                    (state (cdr (cadr entry)))
+                    (bindings (cddr entry)))
+                (mapcar
+                 (lambda (binding)
+                   (let ((key (car binding))
+                         (val (if (and (boundp (cdr binding)) (keymapp (symbol-value (cdr binding))))
+                                  ;; Keymaps need to be vars without quotes
+                                  (cdr binding)
+                                ;; But functions need to be quoted symbols
+                                `(quote ,(cdr binding)))))
+                     ;; When state is provided, use evil-define-key. Otherwise fall back to bind-key.
+                     (if state
+                         `(evil-define-key ',state ,keymap (kbd ,key) ,val)
+                       `(bind-key ,key ,val ,keymap))))
+                 bindings)))
+            args)))
+     body)))
+
+
 
 ;;; This is the actual config file. It is omitted if it doesn't exist so emacs won't refuse to launch.
 (when (file-readable-p "~/.emacs.d/config.org")
@@ -129,10 +201,9 @@
                          (locate-dominating-file default-directory ".dir-locals.el")
                          "node_modules/.bin/")))))
  '(tabbar-separator '(0.5)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "SRC" :family "Hack"))))
- '(fringe ((t (:background "#292b2e")))))
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight bold :height 120 :width normal :foundry "SRC" :family "Hack")))))

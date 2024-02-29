@@ -12,12 +12,14 @@
  '(code-review-gitlab-host "git.codemettle.com/api")
  '(create-lockfiles nil)
  '(custom-file "~/.emacs.d/.taymacs-custom.el")
+ '(custom-raised-buttons nil)
  '(custom-safe-themes
    '("0230fd6c26a0805f34a634fc34de284e414982db2e31c696638f521201919f83" "26d49386a2036df7ccbe802a06a759031e4455f07bda559dcf221f53e8850e69" "922b4d7f68af5017f980398284229c81bb94ac17b9f3f23082dd0a4b2d0c7666" default))
  '(dired-mode-hook nil)
  '(eaf-find-alternate-file-in-dired t t)
  '(eaf-wm-focus-fix-wms
    '("i3" "/usr/share/xsessions/i3" "qtile" "/usr/share/xsessions/qtile" "emacs" "wmctrl -m"))
+ '(eval-expression-print-length 1200)
  '(evil-insert-state-modes nil)
  '(evil-motion-state-modes nil)
  '(evil-move-beyond-eol t)
@@ -39,8 +41,10 @@
  '(gnus-asynchronous t)
  '(gnus-use-full-window nil)
  '(helm-autoresize-mode nil)
+ '(helm-candidate-number-limit 500)
  '(helm-completion-style 'helm)
  '(helm-minibuffer-history-key "M-p")
+ '(helm-reuse-last-window-split-state t)
  '(lsp-metals-treeview-show-when-views-received nil t)
  '(org-agenda-files '("~/notes/notes.org"))
  '(org-capture-templates
@@ -118,12 +122,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :background "#000000" :foreground "#ccc" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight bold :height 113 :width normal :foundry "UW" :family "Ttyp0"))))
- '(bold ((t (:inverse-video t :weight bold))))
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "#000000" :foreground "#ccc" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 120 :width normal :foundry "V.R." :family "Bm437 IBM VGA 9x16"))))
+ '(bold ((t (:inverse-video t :weight normal))))
  '(custom-button-unraised ((t (:foreground "blue" :background "gray" :inherit underline))))
  '(custom-state ((t (:foreground "yellow"))))
  '(custom-variable-tag ((t (:foreground "cyan" :inherit bold))))
  '(fringe ((t (:background "black" :foreground "#ffffff"))))
+ '(highlight ((t (:inherit bold))))
  '(mode-line ((t (:box nil :foreground "black" :background "dark gray" :inherit modus-themes-ui-variable-pitch))))
  '(mode-line-highlight ((t (:background "dark magenta" :foreground "#ffffff" :box nil))))
  '(mode-line-inactive ((t (:box nil :inverse-video t :foreground "black" :background "dark gray" :inherit modus-themes-ui-variable-pitch))))
