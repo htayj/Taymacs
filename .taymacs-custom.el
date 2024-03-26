@@ -3,6 +3,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-bold-is-bright t)
  '(ansi-color-names-vector
    ["#303030" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
  '(auth-source-save-behavior nil)
@@ -45,6 +46,7 @@
  '(helm-completion-style 'helm)
  '(helm-minibuffer-history-key "M-p")
  '(helm-reuse-last-window-split-state t)
+ '(lsp-eldoc-render-all t)
  '(lsp-metals-treeview-show-when-views-received nil t)
  '(org-agenda-files '("~/notes/notes.org"))
  '(org-capture-templates
@@ -75,8 +77,8 @@
      ("\\.mm\\'" . default)
      ("\\.x?html?\\'" . "firefox %s")
      ("\\.pdf\\'" . default)))
- '(org-journal-date-format "%A, %d %B %Y" nil nil "Customized with use-package org-journal")
- '(org-journal-dir "~/notes/journal/" nil nil "Customized with use-package org-journal")
+ '(org-journal-date-format "%A, %d %B %Y")
+ '(org-journal-dir "~/notes/journal/")
  '(org-structure-template-alist
    '(("el" "emacs-lisp")
      ("a" . "export ascii")
@@ -116,13 +118,14 @@
  '(tramp-chunksize 500)
  '(tramp-default-method "scp")
  '(tramp-default-proxies-alist '(("192.168.1.137" "pi" "pi")))
+ '(vterm-set-bold-hightbright t)
  '(window-divider-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :background "#000000" :foreground "#ccc" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 120 :width normal :foundry "V.R." :family "Bm437 IBM VGA 9x16"))))
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "#000000" :foreground "#ccc" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 128 :width normal :foundry "UNKN" :family "default8x16"))))
  '(bold ((t (:inverse-video t :weight normal))))
  '(custom-button-unraised ((t (:foreground "blue" :background "gray" :inherit underline))))
  '(custom-state ((t (:foreground "yellow"))))
