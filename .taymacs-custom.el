@@ -20,6 +20,8 @@
  '(eaf-find-alternate-file-in-dired t t)
  '(eaf-wm-focus-fix-wms
    '("i3" "/usr/share/xsessions/i3" "qtile" "/usr/share/xsessions/qtile" "emacs" "wmctrl -m"))
+ '(ement-room-compose-method 'compose-buffer)
+ '(ement-save-sessions t)
  '(eval-expression-print-length 1200)
  '(evil-insert-state-modes nil)
  '(evil-motion-state-modes nil)

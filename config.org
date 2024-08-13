@@ -532,7 +532,10 @@ automatic cheat sheet once you press part of a key series
 ** matrix
 #+BEGIN_SRC emacs-lisp
   (use-package ement
-      :straight (ement :type git :host github :repo "alphapapa/ement.el"))
+    :straight (ement :type git :host github :repo "alphapapa/ement.el")
+    :config (ement-connect :user-id "@tay:vexillomancy.org" :uri-prefix "http://localhost:8008" :password (auth-source-pick-first-password
+             :host "matrix.vexillomancy.org"
+             :user "tay")))
 #+END_SRC
 ** irc
 *** circe
@@ -1276,6 +1279,22 @@ M-x all-the-icons-install-fonts
     (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
     (global-undo-tree-mode))
 #+END_SRC
+** evil key mods
+M - can be replaced with major mode leaders - middle line
+H - can be replaced with backwards - first line
+L - can be replaced with forwards - last line
+K - replace with read man command
+{,} - can be replaced with back/forward paragraph
+
+s - can be replaced - rarely used, shortcut for `cl`
+R - can be replaced - never used, trouble with `C-g`
+Z - can be replaced - duplicated with emacs keys
+X - can be replaced - never used, odd behavior
+
+U - undefined
+
+yy is the same as Y? shouldnt Y be rest of line?
+
 
 ** Basic Interface Settings
 These are setting that do not depend on packages and are built-in enhancements to the UI.
@@ -1376,6 +1395,8 @@ This makes sure that everything can be a project.
                '((tsx-mode) "typescript-language-server" "--stdio"))
   (add-to-list 'eglot-server-programs
                '((tsx-ts-mode) "typescript-language-server" "--stdio"))
+  (add-to-list 'eglot-server-programs
+               '((js-json-mode) "vscode-json-languageserver" "--stdio"))
 
 
   ;;LSPMODE
