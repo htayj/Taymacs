@@ -1389,7 +1389,10 @@ This makes sure that everything can be a project.
 *** lsp
 #+BEGIN_SRC emacs-lisp
   ;;EGLOT
-  (use-package eglot)
+  ;; after emacs 29
+  (require eglot)
+  ;; before emacs 29
+  ;; (use-package eglot)
 
   (add-to-list 'eglot-server-programs
                '((tsx-mode) "typescript-language-server" "--stdio"))
@@ -1472,7 +1475,7 @@ This makes sure that everything can be a project.
 
   (require 'treesit)
 #+END_SRC
-*** COMMENT paredit
+*** paredit
 #+BEGIN_SRC emacs-lisp
   (use-package paredit
     :straight t
@@ -1484,6 +1487,28 @@ This makes sure that everything can be a project.
     (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
     (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
     (add-hook 'scheme-mode-hook           #'enable-paredit-mode))
+#+END_SRC
+*** symex
+#+BEGIN_SRC emacs-lisp
+  (use-package symex
+    :straight t
+    :config
+    (setq symex--user-evil-keyspec
+          '(("h" . symex-go-down)
+            ("l" . symex-go-up)
+            ("j" . symex-go-forward)
+            ("k" . symex-go-backward)
+            ("M-h" . symex-descend-branch)
+            ("M-l" . symex-climb-branch)
+            ("C-M-h" . symex-goto-lowest)
+            ("C-M-l" . symex-goto-highest)))
+    
+    (symex-initialize)
+    (global-set-key (kbd "s-;") 'symex-mode-interface)
+    (evil-define-key 'insert symex-mode-map
+      (kbd "C-g") 'symex-mode-interface)
+    :hook
+    '(elisp-mode clojure-mode common-lisp-mode))
 #+END_SRC
 
 *** TODO COMMENT yasnippet
@@ -1900,13 +1925,16 @@ Requires libclang to be installed.
   ;;   ;; Refer to Typescript documentation for syntactic differences between normal and TSX
   ;;   ;; variants of Typescript.")
 
-  (use-package flymake-eslint
-    :straight t
-    :config
-    (add-hook 'typescript-tsx-mode 
-              (lambda ()
-                (flymake-eslint-enable)))
-    )
+  ;; (use-package flymake-eslint
+  ;;   :straight t
+  ;;   :config
+  ;;   (add-hook 'tsxs-mode
+  ;;             (lambda ()
+  ;;               (flymake-eslint-enable)))
+  ;;   (add-hook 'tsx-ts-mode
+  ;;             (lambda ()
+  ;;               (flymake-eslint-enable)))
+  ;;   )
     ;; (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-tsx-mode))
     ;; (defun typescript-tsx-mode-fix-tree-sitter()
     ;;    (set (make-local-variable 'tree-sitter-hl-use-font-lock-keywords) nil))
@@ -1944,16 +1972,11 @@ Requires libclang to be installed.
     :straight t
     :config
     (apheleia-global-mode +1)
+    (cl-pushnew '(eslint-typescript . ("~/eslint_d.sh" file)) apheleia-formatters :test #'equal)
     (setf (alist-get 'tsx-mode apheleia-mode-alist)
-          '(prettier-typescript))
+          '(eslint-typescript))
     (setf (alist-get 'tsx-ts-mode apheleia-mode-alist)
-          '(prettier-typescript)))
-
-  ;; (use-package eslint-fix
-  ;;   :straight t
-  ;;   :config
-  ;;   (add-hook 'tsx-mode-hook #'eslint-fix-auto-mode)
-  ;;   (add-hook 'tsx-ts-mode-hook #'eslint-fix-auto-mode))
+          '(eslint-typescript)))
 
   ;; typescript repl
   (use-package ts-comint
