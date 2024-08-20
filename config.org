@@ -1390,7 +1390,7 @@ This makes sure that everything can be a project.
 #+BEGIN_SRC emacs-lisp
   ;;EGLOT
   ;; after emacs 29
-  (require eglot)
+  (require 'eglot)
   ;; before emacs 29
   ;; (use-package eglot)
 
