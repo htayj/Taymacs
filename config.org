@@ -27,7 +27,6 @@ this config was based off of uncle daves emacs who i am forever grateful to for 
   (setq org-confirm-babel-evaluate nil)
   (setq org-export-with-smart-quotes t)
   (setq org-src-window-setup 'current-window)
-  (add-hook 'org-mode-hook 'org-indent-mode)
 #+END_SRC
 ** org journal
 #+BEGIN_SRC emacs-lisp
@@ -1606,6 +1605,18 @@ in favor of =company=, and it turns out to have been a great decision.
 
 Each category also has additional settings.
 
+**** rust
+
+#+BEGIN_SRC emacs-lisp
+  (use-package rust-mode
+    :straight t
+    :hook
+    (eglot-ensure)
+    :init
+    (setq rust-mode-treesitter-derive t))
+
+
+#+END_SRC
 **** c/c++
 ***** COMMENT yasnippet
 #+BEGIN_SRC emacs-lisp
