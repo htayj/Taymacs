@@ -121,6 +121,9 @@ The only time I actually had to use comments, this is for ease of removal if you
     ;; emacs as a daemon, use "emacsclient <filename>" to seamlessly edit files from the terminal directly in the exwm instance
     (server-start)
 
+    ;; fix slack window parenting issues
+    (add-to-list 'exwm-manage-configurations '((equal exwm-class-name "Slack") managed t))
+
     ;; this fixes issues with ido mode, if you use helm, get rid of it
     ;;      (exwm-config-ido)
 
