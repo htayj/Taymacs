@@ -61,7 +61,7 @@ edit the stuff in a src block with proper modes
   (global-set-key (kbd "C-c '") 'org-edit-src-code)
 #+END_SRC
 
-** Org Bullets
+** COMMENT Org Bullets
 change astrisks to bullets
 #+BEGIN_SRC emacs-lisp
   (use-package org-bullets
@@ -239,6 +239,13 @@ https://github.com/ch11ng/exwm/issues/889
 *** TODO exwm-xsettings
 *** Multi monitor
 #+BEGIN_SRC emacs-lisp
+#+END_SRC
+*** exwm desktop environment
+#+BEGIN_SRC emacs-lisp
+  (use-package desktop-environment
+    :straight t
+    :config
+    (desktop-environment-mode))
 #+END_SRC
 *** exwm edit
 #+BEGIN_SRC emacs-lisp
@@ -441,13 +448,108 @@ Pretty self-explanatory, useful as hell if you use exwm.
               (exwm-workspace-rename-buffer exwm-class-name)))
 #+END_SRC
 
+*** posframe to help manage popups
+#+BEGIN_SRC emacs-lisp
+  ;; Posframe is a pop-up tool that must be manually installed for dap-mode
+  (use-package posframe
+    :straight t)
+  ;; (use-package helm-posframe
+  ;;   :config
+  ;;   (helm-posframe-enable))
+  (use-package ivy-posframe
+    :config
+    (ivy-posframe-enable))
+  ;; (when (posframe-workable-p)
+  ;;   (posframe-show " *my-posframe-buffer*"
+  ;;                  :string "This is a test"
+  ;;                  :position (point)))
+#+END_SRC
 ** system admin
 #+BEGIN_SRC emacs-lisp
   (use-package helm-system-packages
     :straight t)
 #+END_SRC
 * Command Completion
-** helm
+** ivy
+
+#+BEGIN_SRC emacs-lisp
+  (use-package counsel
+    :config
+    (counsel-mode))
+
+  ;; (message  counsel-switch-buffer-preview-virtual-buffers)
+  (use-package ivy
+    :bind
+    ("C-c C-r" . 'ivy-resume)
+    ("<f6>" . 'ivy-resume)
+    ("M-x" . 'counsel-M-x)
+    ("C-x C-f" . 'counsel-find-file)
+    ("C-x C-b"  . 'ivy-switch-buffer)
+    ("C-c g" . 'counsel-git)
+    ("C-c j" . 'counsel-git-grep)
+    ("C-c k" . 'counsel-ag)
+    ("C-x l" . 'counsel-locate)
+    ("s-SPC" . 'counsel-linux-app)
+    (:map ivy-minibuffer-map ; make it more like helm
+     ("C-m" . ivy-alt-done)
+     ("C-j" . ivy-done)
+     ("C-l" . ivy-backward-kill-word))
+    ;; ("C-j" . ivy-next-line)
+    ;; ("C-k" . ivy-previous-line)
+    ;; :map ivy-switch-buffer-map
+    ;; ("C-k" . ivy-previous-line)
+    ;; ("C-l" . ivy-done)
+    ;; ("C-d" . ivy-switch-buffer-kill)
+    ;; :map ivy-reverse-i-search-map
+    ;; ("C-k" . ivy-previous-line)
+    ;; ("C-d" . ivy-reverse-i-search-kill))
+    :config
+    (ivy-mode)
+    (setq ivy-use-virtual-buffers t)
+    (setq enable-recursive-minibuffers t)
+    ;; enable this if you want `swiper' to use it
+    ;; (setq search-default-mode #'char-fold-to-regexp)
+    ;; (global-set-key "\C-s" 'swiper)
+    ;; (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+    ;; (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+    ;; (global-set-key (kbd "<f1> o") 'counsel-describe-symbol)
+    ;; (global-set-key (kbd "<f1> l") 'counsel-find-library)
+    ;; (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+    ;; (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+    ;; (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+    ;; (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+    )
+
+  (use-package ivy-posframe
+    :config
+    (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
+
+    ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+    (ivy-posframe-mode 1))
+
+  (use-package ivy-rich
+    :after ivy
+    :init
+    (ivy-rich-mode 1)
+    :config
+    (setq ivy-format-function #'ivy-format-function-line)
+    (setq ivy-rich-display-transformers-list
+          (plist-put ivy-rich-display-transformers-list
+                     'ivy-switch-buffer
+                     '(:columns
+                       ((ivy-rich-candidate (:width 40))
+                        (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right)); return the buffer indicators
+                        (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))          ; return the major mode info
+                        (ivy-rich-switch-buffer-project (:width 15 :face success))             ; return project name using `projectile'
+                        (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))  ; return file path relative to project root or `default-directory' if project is nil
+                       :predicate
+                       (lambda (cand)
+                         (if-let ((buffer (get-buffer cand)))
+                             ;; Don't mess with EXWM buffers
+                             (with-current-buffer buffer
+                               (not (derived-mode-p 'exwm-mode)))))))))
+#+END_SRC
+** COMMENT helm
 #+BEGIN_SRC emacs-lisp
   (use-package helm
     :straight t
@@ -478,6 +580,7 @@ Pretty self-explanatory, useful as hell if you use exwm.
     ;;       helm-ff-search-library-in-sexp t
     ;;       helm-scroll-amount 8 
     ;;       helm-echo-input-in-header-line t)
+    ;; :custom (helm-display-function 'helm-display-buffer-in-own-frame)
     :init
     (helm-mode 1))
   ;; never truncate buffer names
@@ -518,8 +621,12 @@ automatic cheat sheet once you press part of a key series
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
     :straight t
+    :bind
+    ("C-h W" . 'which-key-show-full-keymap)
     :config
     (which-key-mode))
+
+  ;; (which-key-show-full-keymap 'ivy-minibuffer-map)
 #+END_SRC
 * Applications
 ** youtube-dl
@@ -1137,6 +1244,13 @@ sometimes need better than ansi-term
     :straight t)
 
 #+END_SRC
+** eat
+similar to vterm
+#+BEGIN_SRC emacs-lisp
+  (use-package eat
+    :straight t)
+
+#+END_SRC
 ** Git integration
 *** magit
 #+BEGIN_SRC emacs-lisp
@@ -1376,9 +1490,9 @@ This makes sure that everything can be a project.
     :config (helm-projectile-on))
   (use-package helm-rg
     :straight t)
-  ;; (use-package counsel-projectile
-  ;;   :straight t
-  ;;   :config (counsel-projectile-mode))
+  (use-package counsel-projectile
+    :straight t
+    :config (counsel-projectile-mode))
   ;; (setq projectile-project-search-path '("~/ttui/" "~/terminus/" ))
 #+END_SRC
 
@@ -1902,10 +2016,6 @@ Requires libclang to be installed.
   ;;   :straight t)
 
   ;; Use the Debug Adapter Protocol for running tests and debugging
-  (use-package posframe
-    :straight t
-    ;; Posframe is a pop-up tool that must be manually installed for dap-mode
-    )
   ;; (use-package dap-mode
   ;;   :straight t
   ;;   :hook
@@ -1988,6 +2098,8 @@ Requires libclang to be installed.
     (apheleia-global-mode +1)
     (cl-pushnew '(eslint-typescript . ("~/eslint_d.sh" file)) apheleia-formatters :test #'equal)
     (setf (alist-get 'tsx-mode apheleia-mode-alist)
+          '(eslint-typescript))
+    (setf (alist-get 'js-json-mode apheleia-mode-alist)
           '(eslint-typescript))
     (setf (alist-get 'tsx-ts-mode apheleia-mode-alist)
           '(eslint-typescript)))
