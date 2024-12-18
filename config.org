@@ -469,6 +469,21 @@ Pretty self-explanatory, useful as hell if you use exwm.
   (use-package helm-system-packages
     :straight t)
 #+END_SRC
+* help
+** helpful
+#+BEGIN_SRC emacs-lisp
+  (use-package helpful
+    :straight t
+    :bind
+    ("C-h f" . #'helpful-callable)
+    ("C-h v" . #'helpful-variable)
+    ("C-h k" . #'helpful-key)
+    ("C-h x" . #'helpful-command)
+    ("C-c C-d" . #'helpful-at-point)
+    :config
+    (setq counsel-describe-function-function #'helpful-callable)
+    (setq counsel-describe-variable-function #'helpful-variable))
+#+END_SRC
 * Command Completion
 ** ivy
 
@@ -522,32 +537,42 @@ Pretty self-explanatory, useful as hell if you use exwm.
 
   (use-package ivy-posframe
     :config
-    (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
-
-    ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+    ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
+    (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+    ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-point)))
     (ivy-posframe-mode 1))
+  (setq ivy-posframe-parameters
+        '((left-fringe . 8)
+          (right-fringe . 8)))
+
+  ;; (use-package ivy-rich
+  ;;   :after ivy
+  ;;   :init
+  ;;   (ivy-rich-mode 1)
+  ;;   :config
+  ;;   (setq ivy-format-function #'ivy-format-function-line)
+  ;;   (setq ivy-rich-display-transformers-list
+  ;;         (plist-put ivy-rich-display-transformers-list
+  ;;                    'ivy-switch-buffer
+  ;;                    '(:columns
+  ;;                      ((ivy-rich-candidate (:width 40))
+  ;;                       (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right)); return the buffer indicators
+  ;;                       (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))          ; return the major mode info
+  ;;                       (ivy-rich-switch-buffer-project (:width 15 :face success))             ; return project name using `projectile'
+  ;;                       (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))  ; return file path relative to project root or `default-directory' if project is nil
+  ;;                      :predicate
+  ;;                      (lambda (cand)
+  ;;                        (if-let ((buffer (get-buffer cand)))
+  ;;                            ;; Don't mess with EXWM buffers
+  ;;                            (with-current-buffer buffer
+  ;;                              (not (derived-mode-p 'exwm-mode)))))))))
+
+
 
   (use-package ivy-rich
     :after ivy
     :init
-    (ivy-rich-mode 1)
-    :config
-    (setq ivy-format-function #'ivy-format-function-line)
-    (setq ivy-rich-display-transformers-list
-          (plist-put ivy-rich-display-transformers-list
-                     'ivy-switch-buffer
-                     '(:columns
-                       ((ivy-rich-candidate (:width 40))
-                        (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right)); return the buffer indicators
-                        (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))          ; return the major mode info
-                        (ivy-rich-switch-buffer-project (:width 15 :face success))             ; return project name using `projectile'
-                        (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))  ; return file path relative to project root or `default-directory' if project is nil
-                       :predicate
-                       (lambda (cand)
-                         (if-let ((buffer (get-buffer cand)))
-                             ;; Don't mess with EXWM buffers
-                             (with-current-buffer buffer
-                               (not (derived-mode-p 'exwm-mode)))))))))
+    (ivy-rich-mode 1))
 #+END_SRC
 ** COMMENT helm
 #+BEGIN_SRC emacs-lisp
@@ -623,6 +648,7 @@ automatic cheat sheet once you press part of a key series
     :straight t
     :bind
     ("C-h W" . 'which-key-show-full-keymap)
+    ("C-h C-w" . 'which-key-show-full-major-mode)
     :config
     (which-key-mode))
 
@@ -1247,8 +1273,18 @@ sometimes need better than ansi-term
 ** eat
 similar to vterm
 #+BEGIN_SRC emacs-lisp
-  (use-package eat
-    :straight t)
+  ;; (use-package eat
+  ;;   :straight t)
+  (straight-use-package
+   '(eat :type git
+         :host codeberg
+         :repo "akib/emacs-eat"
+         :files ("*.el" ("term" "term/*.el") "*.texi"
+                 "*.ti" ("terminfo/e" "terminfo/e/*")
+                 ("terminfo/65" "terminfo/65/*")
+                 ("integration" "integration/*")
+                 (:exclude ".dir-locals.el" "*-tests.el"))))
+
 
 #+END_SRC
 ** Git integration
@@ -1686,7 +1722,7 @@ shows box with documentation instead of minibuffer
 
 
 #+END_SRC
-*** corfu mode
+*** COMMENT corfu mode
 #+BEGIN_SRC emacs-lisp
   (use-package corfu
     :straight t
