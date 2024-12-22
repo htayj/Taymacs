@@ -3,6 +3,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ConTeXt-Mark-version "IV")
  '(ansi-color-bold-is-bright t)
  '(ansi-color-names-vector
    ["#303030" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
@@ -22,6 +23,8 @@
  '(eaf-find-alternate-file-in-dired t t)
  '(eaf-wm-focus-fix-wms
    '("i3" "/usr/share/xsessions/i3" "qtile" "/usr/share/xsessions/qtile" "emacs" "wmctrl -m"))
+ '(eat-term-shell-integration-directory "/home/tay/.emacs.d/straight/repos/eat/integration")
+ '(eat-term-terminfo-directory "/home/tay/.emacs.d/straight/repos/eat/terminfo")
  '(ement-room-compose-method 'compose-buffer)
  '(ement-save-sessions t)
  '(eval-expression-print-length 1200)
@@ -81,8 +84,9 @@
      ("\\.mm\\'" . default)
      ("\\.x?html?\\'" . "firefox %s")
      ("\\.pdf\\'" . default)))
- '(org-journal-date-format "%A, %d %B %Y")
- '(org-journal-dir "~/notes/journal/")
+ '(org-journal-date-format "%A, %d %B %Y" nil nil "Customized with use-package org-journal")
+ '(org-journal-dir "~/notes/journal/" nil nil "Customized with use-package org-journal")
+ '(org-startup-with-inline-images t)
  '(org-structure-template-alist
    '(("el" "emacs-lisp")
      ("a" . "export ascii")
@@ -106,12 +110,7 @@
  '(projectile-project-root-files-top-down-recurring nil)
  '(rmail-primary-inbox-list '("/var/spool/mail/tay"))
  '(safe-local-variable-values
-   '((flymake-eslint-project-root . "/home/tay/terminus/gui")
-     (projectile-project-test-cmd . "npm test")
-     (projectile-project-package-cmd . "../script/build")
-     (projectile-project-configure-cmd . "npx lerna run clean && npm run bootstrap && npx lerna run compile")
-     (projectile-project-run-cmd . "killall node; cd ~/terminus/gui/ ; nvm use v16.5.0; npm run electron:dev-quick")
-     (eval progn
+   '((eval progn
            (add-to-list 'exec-path
                         (concat
                          (locate-dominating-file default-directory ".dir-locals.el")
@@ -145,14 +144,16 @@
  '(ansi-color-white ((t (:background "#aaaaaa" :foreground "#aaaaaa"))))
  '(ansi-color-yellow ((t (:background "#aa5500" :foreground "#aa5500"))))
  '(bold ((t (:weight bold))))
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "#000000" :foreground "#ffffff" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight medium :height 321 :width normal :foundry "DIGITAL" :family "vt220"))))
+ '(bold ((t (:inverse-video t :weight normal))))
  '(custom-button-unraised ((t (:foreground "blue" :background "gray" :inherit underline))))
  '(custom-state ((t (:foreground "yellow"))))
  '(custom-variable-tag ((t (:foreground "cyan" :inherit bold))))
  '(fringe ((t (:background "black" :foreground "#ffffff"))))
  '(highlight ((t (:inherit bold))))
- '(mode-line ((t (:box nil :foreground "black" :background "dark gray" :inherit modus-themes-ui-variable-pitch))))
+ '(mode-line ((t (:box nil :foreground "forest green" :background "black" :inherit modus-themes-ui-variable-pitch))))
  '(mode-line-highlight ((t (:background "dark magenta" :foreground "#ffffff" :box nil))))
  '(mode-line-inactive ((t (:box nil :inverse-video t :foreground "black" :background "dark gray" :inherit modus-themes-ui-variable-pitch))))
- '(window-divider ((t (:foreground "dark gray" :box nil))))
- '(window-divider-first-pixel ((t (:foreground "dark gray" :inherit window-divider))))
- '(window-divider-last-pixel ((t (:foreground "dark gray")))))
+ '(window-divider ((t (:foreground "black" :box nil))))
+ '(window-divider-first-pixel ((t (:foreground "black" :inherit window-divider))))
+ '(window-divider-last-pixel ((t (:foreground "black")))))

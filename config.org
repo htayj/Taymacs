@@ -27,6 +27,8 @@ this config was based off of uncle daves emacs who i am forever grateful to for 
   (setq org-confirm-babel-evaluate nil)
   (setq org-export-with-smart-quotes t)
   (setq org-src-window-setup 'current-window)
+  ;; (add-hook 'org-mode-hook 'org-indent-mode)
+  ;; (remove-hook 'org-mode-hook 'org-indent-mode)
 #+END_SRC
 ** org journal
 #+BEGIN_SRC emacs-lisp
@@ -42,7 +44,36 @@ this config was based off of uncle daves emacs who i am forever grateful to for 
   (use-package htmlize
     :straight t)
 #+END_SRC
+** mermaid diagrams
+#+BEGIN_SRC emacs-lisp
+  (use-package ob-mermaid
+    :straight t
+    :config
+    (setq ob-mermaid-cli-path "/usr/bin/mmdc")
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((mermaid . t)
+       (scheme . t))
+     )
+    (add-to-list 'org-structure-template-alist
+                 '("mer" . "src mermaid :file name.png\n"))
+   )
+#+END_SRC
 
+** plantuml diagrams
+#+begin_src emacs-lisp
+  (use-package plantuml-mode
+    :custom
+    (plantuml-executable-path "/usr/bin/plantuml")
+    (plantuml-default-exec-mode 'executable)
+    (org-plantuml-executable-path "/usr/bin/plantuml")
+    (org-plantuml-default-exec-mode 'executable)
+    :config
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((plantuml . t))) ; this line activates plantuml
+  )
+#+end_src
 ** Line wrapping
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook
@@ -75,6 +106,7 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'org-structure-template-alist
                '("el" . "src emacs-lisp\n"))
+
 #+END_SRC
 
 ** Exporting options
@@ -130,6 +162,7 @@ The only time I actually had to use comments, this is for ease of removal if you
     ;; a number between 1 and 9, exwm creates workspaces dynamically so I like starting out with 1
     (setq exwm-workspace-number 5)
 
+    (add-to-list 'exwm-manage-configurations '((equal exwm-class-name "Slack") managed t))
     ;; make x buffers available on all workspaces
     (setq exwm-workspace-show-all-buffers t)
     (setq exwm-layout-show-all-buffers t)
@@ -221,11 +254,11 @@ The only time I actually had to use comments, this is for ease of removal if you
       (cl-pushnew k exwm-input-prefix-keys))
 
     (require 'exwm-randr)
-    (setq exwm-randr-workspace-monitor-plist '(0 "eDP-1" 1 "eDP-1" 2 "HDMI-1"  3 "HDMI-1"  4 "HDMI-1"  5 "HDMI-1"   ))
+    (setq exwm-randr-workspace-monitor-plist '(0 "DP-0" 1 "DP-0" 2 "DP-0"  3 "DP-0"    ))
     (add-hook 'exwm-randr-screen-change-hook
               (lambda ()
                 (start-process-shell-command
-                 "xrandr" nil "xrandr --output HDMI-1 --mode 1920x1080 --pos 0x0 --rotate normal --output eDP-1 --primary --mode 1920x1200 --pos 1920x300 --rotate normal")))
+                 "xrandr" nil " xrandr --output HDMI-0 --off --output DP-0 --mode 5120x1440 -r 240 --pos 0x0 --rotate normal --output DP-1 --off --output DP-2 --off --output DP-3 --off --output DP-4 --off --output DP-5 --off")))
     (exwm-randr-enable)
     ;; this just enables exwm, it started automatically once everything is ready
     (exwm-enable))'
@@ -862,7 +895,7 @@ You can also change those if you'd like, but I highly recommend keeping 'em the 
   (use-package elpher
     :straight t)
 #+END_SRC
-*** w3m
+*** COMMENT w3m
 #+BEGIN_SRC emacs-lisp
   (use-package w3m
     :straight t)
@@ -1101,19 +1134,19 @@ I use eww for most browsing, and I use qutebrowser when I need to open something
 
 shrface for eww that is more like org mode
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package shrface
-  ;;   :defer t
-  ;;   :straight t
-  ;;   :config
-  ;;   (shrface-basic)
-  ;;   (shrface-trial)
-  ;;   (setq shrface-href-versatile t))
+  (use-package shrface
+    :defer t
+    :straight t
+    :config
+    (shrface-basic)
+    (shrface-trial)
+    (setq shrface-href-versatile t))
 
-  ;; (use-package eww
-  ;;   :init
-  ;;   (add-hook 'eww-after-render-hook #'shrface-mode)
-  ;;   :config
-  ;;   (require 'shrface))
+  (use-package eww
+    :init
+    (add-hook 'eww-after-render-hook #'shrface-mode)
+    :config
+    (require 'shrface))
 
 #+END_SRC
 
@@ -1285,7 +1318,6 @@ similar to vterm
                  ("integration" "integration/*")
                  (:exclude ".dir-locals.el" "*-tests.el"))))
 
-
 #+END_SRC
 ** Git integration
 *** magit
@@ -1366,9 +1398,9 @@ similar to vterm
 #+BEGIN_SRC emacs-lisp
   ;; Set default font
   (set-face-attribute 'default nil
-                      :foundry "UW" :family "Ttyp0"
+                      :foundry "DIGITAL" :family "vt220"
                       :height 110
-                      :weight 'bold)
+                     :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant 'normal :weight 'medium :height 321 :width 'normal  )
   ;; set fallback font for emoji
   (set-fontset-font t nil (font-spec :size 20 :name "Unifont"))
 
@@ -1394,6 +1426,13 @@ M-x all-the-icons-install-fonts
     :straight t)
 #+END_SRC
 * Text Editor
+** built in tree sit and eglot
+
+#+BEGIN_SRC emacs-lisp
+
+  (require 'treesit)
+  (require 'eglot)
+#+END_SRC
 ** evil
 #+BEGIN_SRC emacs-lisp
   (use-package evil
@@ -1481,7 +1520,7 @@ Besides, it's only used for programming.
 
 **** visual bell
 #+BEGIN_SRC emacs-lisp
-  (setq visible-bell t)
+  (setq visible-bell nil)
 #+END_SRC
 
 
@@ -1538,7 +1577,19 @@ This makes sure that everything can be a project.
 #+END_SRC
 
 ** Programming
-*** lsp
+
+#+BEGIN_SRC emacs-lisp
+  (use-package apheleia
+    :straight t
+    :config
+    (apheleia-global-mode +1)
+    (setf (alist-get 'tsx-mode apheleia-mode-alist)
+          '(prettier-typescript))
+    (setf (alist-get 'tsx-ts-mode apheleia-mode-alist)
+          '(prettier-typescript)))
+#+END_SRC
+*** COMMENT lsp
+
 #+BEGIN_SRC emacs-lisp
   ;;EGLOT
   ;; after emacs 29
@@ -1562,45 +1613,46 @@ This makes sure that everything can be a project.
   ;;          (lsp-mode . lsp-lens-mode)
   ;;   :config (setq lsp-prefer-flymake nil))
 
-  ;; (use-package lsp-mode
-  ;;   :custom
-  ;;   (lsp-completion-provider :none) ;; we use Corfu!
-  ;;   :init
-  ;;   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-  ;;   (setq lsp-keymap-prefix "C-c l")
-  ;;   (defun my/orderless-dispatch-flex-first (_pattern index _total)
-  ;;     (and (eq index 0) 'orderless-flex))
+  (use-package lsp-mode
+    :custom
+    (lsp-completion-provider :none) ;; we use Corfu!
+    :init
+    ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+    (setq lsp-keymap-prefix "C-c l")
+    (defun my/orderless-dispatch-flex-first (_pattern index _total)
+      (and (eq index 0) 'orderless-flex))
 
-  ;;   (defun my/lsp-mode-setup-completion ()
-  ;;     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-  ;;           '(orderless))
-  ;;     ;; Optionally configure the first word as flex filtered.
-  ;;     (add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local)
-  ;;     ;; Optionally configure the cape-capf-buster.
-  ;;     (setq-local completion-at-point-functions (list (cape-capf-buster #'lsp-completion-at-point))))
-  ;;   :straight t
-  ;;   :after evil
-  ;;   :vbind (( :map ( lsp-mode-map . normal )
-  ;;               ("gr" . lsp-find-references)
-  ;;               ("glo" . lsp-organize-imports)
-  ;;               ("gt" . lsp-find-type-definition) ))
-  ;;   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-  ;;          (lsp-completion-mode . my/lsp-mode-setup-completion)
-  ;;          (scala-mode . lsp)
-  ;;          (tsx-mode . lsp)
-  ;;          (tsx-ts-mode . lsp)
-  ;;          (typescript-ts-mode . lsp)
-  ;;          ;; lens mode
-  ;;          (lsp-mode . lsp-lens-mode)
-  ;;          ;; if you want which-key integration
-  ;;          (lsp-mode . lsp-enable-which-key-integration))
-  ;;   :commands lsp)
+    (defun my/lsp-mode-setup-completion ()
+      (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+            '(orderless))
+      ;; Optionally configure the first word as flex filtered.
+      (add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local)
+      ;; Optionally configure the cape-capf-buster.
+      (setq-local completion-at-point-functions (list (cape-capf-buster #'lsp-completion-at-point))))
+    :straight t
+    :after evil
+    :vbind (( :map ( lsp-mode-map . normal )
+                ("gr" . lsp-find-references)
+                ("glo" . lsp-organize-imports)
+                ("gt" . lsp-find-type-definition) ))
+    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+           (lsp-completion-mode . my/lsp-mode-setup-completion)
+           (scala-mode . lsp)
+           (tsx-mode . lsp)
+           (tsx-ts-mode . lsp)
+           (typescript-ts-mode . lsp)
+           ;; lens mode
+           (lsp-mode . lsp-lens-mode)
+           ;; if you want which-key integration
+           (lsp-mode . lsp-enable-which-key-integration))
+    :commands lsp)
 
-  ;;    ;; optionally
+     ;; optionally
   ;; (use-package lsp-ui :straight t :commands lsp-ui-mode)
-  ;;    ;; if you are helm user
+  ;;
+  ;; if you are helm user
   ;; (use-package helm-lsp :straight t :commands helm-lsp-workspace-symbol)
-  ;;    ;; if you are ivy user
+     ;; if you are ivy user
   ;; (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 
   ;;    ;; optionally if you want to use debugger
@@ -1673,7 +1725,7 @@ This makes sure that everything can be a project.
     (yas-reload-all))
 #+END_SRC
 
-*** flycheck
+*** COMMENT flycheck
 #+BEGIN_SRC emacs-lisp
 
   (use-package flycheck
@@ -1769,6 +1821,12 @@ Each category also has additional settings.
     (setq rust-mode-treesitter-derive t))
 
 
+**** bbcode
+#+BEGIN_SRC emacs-lisp
+  (use-package bbcode-mode)
+**** bbcode
+#+BEGIN_SRC emacs-lisp
+  (use-package bbcode-mode)
 #+END_SRC
 **** c/c++
 ***** COMMENT yasnippet
@@ -1848,6 +1906,12 @@ Requires libclang to be installed.
     (add-hook 'python-mode-hook 'python-mode-company-init))
 #+END_SRC
 
+**** clojure
+
+#+BEGIN_SRC emacs-lisp
+  (use-package cider
+    :straight t)
+#+END_SRC
 **** emacs-lisp
 ***** eldoc
 #+BEGIN_SRC emacs-lisp
@@ -1867,7 +1931,8 @@ Requires libclang to be installed.
     :straight t
     :config
     (setq inferior-lisp-program "/usr/bin/sbcl")
-    (setq slime-contribs '(slime-fancy)))
+    (setq slime-contribs '(slime-fancy))
+    (setq slime-lisp-host "localhost"))
 
   (use-package slime-company
     :straight t
@@ -2018,24 +2083,24 @@ Requires libclang to be installed.
 
 **** scala
 #+BEGIN_SRC emacs-lisp
-  (use-package scala-mode
-    :straight t
-    :interpreter
-    ("scala" . scala-mode))
+  ;; (use-package scala-mode
+  ;;   :straight t
+  ;;   :interpreter
+  ;;   ("scala" . scala-mode))
 
-  (use-package sbt-mode
-    :commands sbt-start sbt-command
-    :straight t
-    :config
-    ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
-    ;; allows using SPACE when in the minibuffer
-    (substitute-key-definition
-     'minibuffer-complete-word
-     'self-insert-command
-     minibuffer-local-completion-map)
-     ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
-     (setq sbt:program-options '("-Dsbt.supershell=false"))
-  )
+  ;; (use-package sbt-mode
+  ;;   :commands sbt-start sbt-command
+  ;;   :straight t
+  ;;   :config
+  ;;   ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
+  ;;   ;; allows using SPACE when in the minibuffer
+  ;;   (substitute-key-definition
+  ;;    'minibuffer-complete-word
+  ;;    'self-insert-command
+  ;;    minibuffer-local-completion-map)
+  ;;    ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
+  ;;    (setq sbt:program-options '("-Dsbt.supershell=false"))
+  ;; )
 
 
   ;; Add metals backend for lsp-mode
@@ -2067,19 +2132,19 @@ Requires libclang to be installed.
 
   (use-package origami
     :straight t)
-  (use-package css-in-js-mode
-    :straight (css-in-js-mode :type git :host github :repo "orzechowskid/tree-sitter-css-in-js"))
+  ;; (use-package css-in-js-mode
+  ;;   :straight (css-in-js-mode :type git :host github :repo "orzechowskid/tree-sitter-css-in-js"))
     ;; (require 'css-in-js)
 
   (use-package markdown-mode) ;; required for eglot eldoc
-  (use-package tsx-mode
-    :straight (tsx-mode :type git :host github :repo "orzechowskid/tsx-mode.el" :branch "emacs29")
-    ;; :after eglot
-    :config 
-    (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . tsx-mode))
-    (add-to-list 'auto-mode-alist '("\\.ts?\\'" . tsx-mode)))
+  ;; (use-package tsx-mode
+  ;;   :straight (tsx-mode :type git :host github :repo "orzechowskid/tsx-mode.el" :branch "emacs29")
+  ;;   :after eglot
+  ;;   :config 
+  ;;   (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . tsx-mode))
+  ;;   (add-to-list 'auto-mode-alist '("\\.ts?\\'" . tsx-mode)))
 
-  ;; (define-derived-mode typescript-tsx-mode typescript-mode "TSX"
+  ;; ;; (define- derived-mode typescript-tsx-mode typescript-mode "TSX"
   ;;   "Major mode for editing TSX files.
 
   ;;   ;; Refer to Typescript documentation for syntactic differences between normal and TSX
@@ -2141,23 +2206,23 @@ Requires libclang to be installed.
           '(eslint-typescript)))
 
   ;; typescript repl
-  (use-package ts-comint
-    :straight t
-    :config
-    (add-hook 'tsx-mode-hook
-            (lambda ()
-              (local-set-key (kbd "C-x C-e") 'ts-send-last-sexp)
-              (local-set-key (kbd "C-M-x") 'ts-send-last-sexp-and-go)
-              (local-set-key (kbd "C-c b") 'ts-send-buffer)
-              (local-set-key (kbd "C-c C-b") 'ts-send-buffer-and-go)
-              (local-set-key (kbd "C-c l") 'ts-load-file-and-go)))
-    (add-hook 'tsx-ts-mode-hook
-            (lambda ()
-              (local-set-key (kbd "C-x C-e") 'ts-send-last-sexp)
-              (local-set-key (kbd "C-M-x") 'ts-send-last-sexp-and-go)
-              (local-set-key (kbd "C-c b") 'ts-send-buffer)
-              (local-set-key (kbd "C-c C-b") 'ts-send-buffer-and-go)
-              (local-set-key (kbd "C-c l") 'ts-load-file-and-go))))
+  ;; (use-package ts-comint
+  ;;   :straight t
+  ;;   :config
+  ;;   (add-hook 'tsx-mode-hook
+  ;;           (lambda ()
+  ;;             (local-set-key (kbd "C-x C-e") 'ts-send-last-sexp)
+  ;;             (local-set-key (kbd "C-M-x") 'ts-send-last-sexp-and-go)
+  ;;             (local-set-key (kbd "C-c b") 'ts-send-buffer)
+  ;;             (local-set-key (kbd "C-c C-b") 'ts-send-buffer-and-go)
+  ;;             (local-set-key (kbd "C-c l") 'ts-load-file-and-go)))
+  ;;   (add-hook 'tsx-ts-mode-hook
+  ;;           (lambda ()
+  ;;             (local-set-key (kbd "C-x C-e") 'ts-send-last-sexp)
+  ;;             (local-set-key (kbd "C-M-x") 'ts-send-last-sexp-and-go)
+  ;;             (local-set-key (kbd "C-c b") 'ts-send-buffer)
+  ;;             (local-set-key (kbd "C-c C-b") 'ts-send-buffer-and-go)
+  ;;             (local-set-key (kbd "C-c l") 'ts-load-file-and-go))))
 #+END_SRC
 ***** TODO add something to automatically delete all unused imports
 
@@ -2233,16 +2298,30 @@ Requires libclang to be installed.
 
 #+END_SRC
 
-*** COMMENT LaTeX
+*** LaTeX
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package tex			;
-  ;;   :defer t
-  ;;   :straight auctex
-  ;;   :config
-  ;;   (setq TeX-auto-save t))
-  ;; (use-package auctex
-  ;; :straight t)
+  ;; (use-package acutex)
+  (use-package tex			;
+    :defer t
+    :straight auctex
+    :config
+    (setq TeX-auto-save t))
+  (use-package auctex
+  :straight t)
 
+  (setq ConTeXt-Mark-version "IV")
+  (add-hook 'ConTeXt-mode-hook
+            (lambda()
+              (setq TeX-command-default "ConTeXt Full")))
+  (add-to-list 'auto-mode-alist '("\\.mkiv\\'" . ConTeXt-mode))
+  (add-to-list 'auto-mode-alist '("\\.mkvi\\'" . ConTeXt-mode))
+  (with-eval-after-load "context"
+    (add-to-list 'TeX-file-extensions "mkvi" t)
+    (add-to-list 'TeX-file-extensions "mkiv" t))
+
+  (add-to-list 'exec-path "/home/tay/context/tex/texmf-linux-64/bin")
+
+  ;; (setenv PATH "/home/tay/context/tex/texmf-linux-64/bin:/home/tay/.pyenv/shims:/home/tay/context/tex/texmf-linux-64/bin:/usr/bin:/usr/condabin:/usr/local/sbin:/usr/local/bin:/usr/bin:/opt/cuda/bin:/opt/cuda/nsight_compute:/opt/cuda/nsight_systems/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl")
 #+END_SRC
 
 ** Tabs
