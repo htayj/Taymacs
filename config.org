@@ -236,7 +236,11 @@ The only time I actually had to use comments, this is for ease of removal if you
        ([?\M-j] . left)
        ([?\M-\\] . prior)
        ([?\M-'] . next)))
-
+    (add-hook 'exwm-manage-finish-hook
+              (lambda ()
+                (when (and exwm-class-name
+                           (string= exwm-class-name "XTerm"))
+                  (exwm-input-set-local-simulation-keys '(([?\C-c ?\C-c] . ?\C-c))))))
     ;; this little bit will make sure that XF86 keys work in exwm buffers as well
     (dolist (k '(XF86AudioLowerVolume
                  XF86AudioRaiseVolume
@@ -1311,7 +1315,8 @@ similar to vterm
   (straight-use-package
    '(eat :type git
          :host codeberg
-         :repo "akib/emacs-eat"
+         :repo "htayj/emacs-eat"
+         :branch "bold-is-bright-option"
          :files ("*.el" ("term" "term/*.el") "*.texi"
                  "*.ti" ("terminfo/e" "terminfo/e/*")
                  ("terminfo/65" "terminfo/65/*")
@@ -1409,8 +1414,23 @@ similar to vterm
 #+END_SRC
 *** ansi color names
 #+BEGIN_SRC emacs-lisp
-(setq ansi-color-names-vector
-   ["#303030" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
+  (setq ansi-color-names-vector
+     ["#303030" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
+
+  ;; (setq ansi-color-blue ((t (:background "#0000aa" :foreground "#0000aa"))))
+  ;; (setq ansi-color-bright-black ((t (:background "#555555" :foreground "#555555"))))
+  ;; (setq ansi-color-bright-blue ((t (:background "#5555ff" :foreground "#5555ff"))))
+  ;; (setq ansi-color-bright-cyan ((t (:background "#55ffff" :foreground "#55ffff"))))
+  ;; (setq ansi-color-bright-green ((t (:background "#55ff55" :foreground "#55ff55"))))
+  ;; (setq ansi-color-bright-magenta ((t (:background "#ff55ff" :foreground "#ff55ff"))))
+  ;; (setq ansi-color-bright-red ((t (:background "#ff5555" :foreground "#ff5555"))))
+  ;; (setq ansi-color-bright-yellow ((t (:background "#ffff55" :foreground "#ffff55"))))
+  ;; (setq ansi-color-cyan ((t (:background "#00aaaa" :foreground "#00aaaa"))))
+  ;; (setq ansi-color-green ((t (:background "#00aa00" :foreground "#00aa00"))))
+  ;; (setq ansi-color-magenta ((t (:background "#aa00aa" :foreground "#aa00aa"))))
+  ;; (setq ansi-color-red ((t (:background "#aa0000" :foreground "#aa0000"))))
+  ;; (setq ansi-color-white ((t (:background "#aaaaaa" :foreground "#aaaaaa"))))
+  ;; (setq ansi-color-yellow ((t (:background "#aa5500" :foreground "#aa5500"))))
 #+END_SRC
 ** emojis
 add emoji rendering
