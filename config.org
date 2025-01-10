@@ -140,130 +140,134 @@ Everything regarding the WM or DE-like functionality is bundled here
 The only time I actually had to use comments, this is for ease of removal if you happen to not like exwm.
 **** Installation
 #+BEGIN_SRC emacs-lisp
-    (use-package exwm
-      :straight (exwm :type git :host github :repo "emacs-straight/exwm" :files ("*" (:exclude ".git")))
-      :config
+  (use-package exwm
+    :straight (exwm :type git :host github :repo "emacs-straight/exwm" :files ("*" (:exclude ".git")))
+    :config
 
-      ;; necessary to configure exwm manually
-      ;; (require 'exwm-config)
+    ;; necessary to configure exwm manually
+    ;; (require 'exwm-config)
 
-      ;; fringe size, most people prefer 1 
-      (fringe-mode 3)
+    ;; fringe size, most people prefer 1 
+    (fringe-mode 3)
 
-      ;; emacs as a daemon, use "emacsclient <filename>" to seamlessly edit files from the terminal directly in the exwm instance
-      (server-start)
+    ;; emacs as a daemon, use "emacsclient <filename>" to seamlessly edit files from the terminal directly in the exwm instance
+    (server-start)
 
-      ;; fix slack window parenting issues
-      (add-to-list 'exwm-manage-configurations '((equal exwm-class-name "Slack") managed t))
+    ;; fix slack window parenting issues
+    (add-to-list 'exwm-manage-configurations '((equal exwm-class-name "Slack") managed t))
 
-      ;; this fixes issues with ido mode, if you use helm, get rid of it
-      ;;      (exwm-config-ido)
+    ;; this fixes issues with ido mode, if you use helm, get rid of it
+    ;;      (exwm-config-ido)
 
-      ;; a number between 1 and 9, exwm creates workspaces dynamically so I like starting out with 1
-      (setq exwm-workspace-number 5)
+    ;; a number between 1 and 9, exwm creates workspaces dynamically so I like starting out with 1
+    (setq exwm-workspace-number 5)
 
-      (add-to-list 'exwm-manage-configurations '((equal exwm-class-name "Slack") managed t))
-      ;; make x buffers available on all workspaces
-      (setq exwm-workspace-show-all-buffers t)
-      (setq exwm-layout-show-all-buffers t)
+    (add-to-list 'exwm-manage-configurations '((equal exwm-class-name "Slack") managed t))
+    ;; make x buffers available on all workspaces
+    (setq exwm-workspace-show-all-buffers t)
+    (setq exwm-layout-show-all-buffers t)
 
-      ;; this is a way to declare truly global/always working keybindings
-      ;; this is a nifty way to go back from char mode to line mode without using the mouse
-      (exwm-input-set-key (kbd "s-r") #'exwm-reset)
-      (exwm-input-set-key (kbd "s-k") #'exwm-workspace-delete)
-      (exwm-input-set-key (kbd "s-w") #'exwm-workspace-swap)
-      (exwm-input-set-key (kbd "s-n") 'ibuffer)
-      (exwm-input-set-key (kbd "s-m") 'next-buffer)
-      (exwm-input-set-key (kbd "s-,") 'previous-buffer)
-      (exwm-input-set-key (kbd "s-/") 'kill-current-buffer) 
+    ;; this is a way to declare truly global/always working keybindings
+    ;; this is a nifty way to go back from char mode to line mode without using the mouse
+    (exwm-input-set-key (kbd "s-r") #'exwm-reset)
+    (exwm-input-set-key (kbd "s-k") #'exwm-workspace-delete)
+    (exwm-input-set-key (kbd "s-w") #'exwm-workspace-swap)
+    (exwm-input-set-key (kbd "s-n") 'ibuffer)
+    (exwm-input-set-key (kbd "s-m") 'next-buffer)
+    (exwm-input-set-key (kbd "s-,") 'previous-buffer)
+    (exwm-input-set-key (kbd "s-/") 'kill-current-buffer) 
 
-      (exwm-input-set-key (kbd "s-h") 'windmove-left)
-      (exwm-input-set-key (kbd "s-j") 'windmove-down)
-      (exwm-input-set-key (kbd "s-k") 'windmove-up)
-      (exwm-input-set-key (kbd "s-l") 'windmove-right) 
-      (exwm-input-set-key (kbd "s-;") 'delete-window) 
+    (exwm-input-set-key (kbd "s-h") 'windmove-left)
+    (exwm-input-set-key (kbd "s-j") 'windmove-down)
+    (exwm-input-set-key (kbd "s-k") 'windmove-up)
+    (exwm-input-set-key (kbd "s-l") 'windmove-right) 
+    (exwm-input-set-key (kbd "s-;") 'delete-window) 
 
 
-      (exwm-input-set-key (kbd "s-s h") 'split-window-right)
-      (exwm-input-set-key (kbd "s-s j") 'split-window-below)
-      (exwm-input-set-key (kbd "s-s k") 'split-and-follow-horizontally)
-      (exwm-input-set-key (kbd "s-s l") 'split-and-follow-vertically)
+    (exwm-input-set-key (kbd "s-s h") 'split-window-right)
+    (exwm-input-set-key (kbd "s-s j") 'split-window-below)
+    (exwm-input-set-key (kbd "s-s k") 'split-and-follow-horizontally)
+    (exwm-input-set-key (kbd "s-s l") 'split-and-follow-vertically)
 
-      ;; the next loop will bind s-<number> to switch to the corresponding workspace
-      (dotimes (i 10)
-        (exwm-input-set-key (kbd (format "s-%d" i))
-                            `(lambda ()
-                               (interactive)
-                               (exwm-workspace-switch-create ,i))))
+    ;; the next loop will bind s-<number> to switch to the corresponding workspace
+    (dotimes (i 10)
+      (exwm-input-set-key (kbd (format "s-%d" i))
+                          `(lambda ()
+                             (interactive)
+                             (exwm-workspace-switch-create ,i))))
 
-      ;; the simplest launcher, I keep it in only if dmenu eventually stopped working or something
-      (exwm-input-set-key (kbd "s-&")
-                          (lambda (command)
-                            (interactive (list (read-shell-command "$ ")))
-                            (start-process-shell-command command nil command)))
+    ;; the simplest launcher, I keep it in only if dmenu eventually stopped working or something
+    (exwm-input-set-key (kbd "s-&")
+                        (lambda (command)
+                          (interactive (list (read-shell-command "$ ")))
+                          (start-process-shell-command command nil command)))
 
-      ;; an easy way to make keybindings work *only* in line mode
-      (push ?\C-q exwm-input-prefix-keys)
-      (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
+    ;; an easy way to make keybindings work *only* in line mode
+    (push ?\C-q exwm-input-prefix-keys)
+    (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
 
-      ;; simulation keys are keys that exwm will send to the exwm buffer upon inputting a key combination
-      (exwm-input--set-simulation-keys
-       '(
-         ;; movement
-         ([?\C-b] . left)
-         ([?\M-b] . C-left)
-         ([?\C-f] . right)
-         ([?\M-f] . C-right)
-         ([?\C-p] . up)
-         ([?\C-n] . down)
-         ([?\C-a] . home)
-         ([?\C-e] . end)
-         ([?\M-v] . prior)
-         ([?\C-v] . next)
-         ([?\C-d] . delete)
-         ([?\C-k] . (S-end delete))
-         ;; cut/paste
-         ([?\C-w] . ?\C-x)
-         ([?\M-w] . ?\C-c)
-         ([?\C-y] . ?\C-v)
-         ;; search
-         ([?\C-f] . ?\C-f)
-         ;; movement
-         ([?\M-h] . return)
-         ([?\M-m] . return)
-         ([?\M-l] . right)
-         ([?\M-k] . down)
-         ([?\M-j] . left)
-         ([?\M-\\] . prior)
-         ([?\M-'] . next)))
+    ;; simulation keys are keys that exwm will send to the exwm buffer upon inputting a key combination
+    (exwm-input--set-simulation-keys
+     '(
+       ;; movement
+       ([?\C-b] . left)
+       ([?\M-b] . C-left)
+       ([?\C-f] . right)
+       ([?\M-f] . C-right)
+       ([?\C-p] . up)
+       ([?\C-n] . down)
+       ([?\C-a] . home)
+       ([?\C-e] . end)
+       ([?\M-v] . prior)
+       ([?\C-v] . next)
+       ([?\C-d] . delete)
+       ([?\C-k] . (S-end delete))
+       ;; cut/paste
+       ([?\C-w] . ?\C-x)
+       ([?\M-w] . ?\C-c)
+       ([?\C-y] . ?\C-v)
+       ;; search
+       ([?\C-f] . ?\C-f)
+       ;; movement
+       ([?\M-h] . return)
+       ([?\M-m] . return)
+       ([?\M-l] . right)
+       ([?\M-k] . down)
+       ([?\M-j] . left)
+       ([?\M-\\] . prior)
+       ([?\M-'] . next)))
+    (add-hook 'exwm-manage-finish-hook
+              (lambda ()
+                (when (and exwm-class-name
+                           (string= exwm-class-name "XTerm"))
+                  (exwm-input-set-local-simulation-keys '(([?\C-c ?\C-c] . ?\C-c))))))
+    ;; this little bit will make sure that XF86 keys work in exwm buffers as well
+    (dolist (k '(XF86AudioLowerVolume
+                 XF86AudioRaiseVolume
+                 XF86PowerOff
+                 XF86AudioMute
+                 XF86AudioPlay
+                 XF86AudioStop
+                 XF86AudioPrev
+                 XF86AudioNext
+                 XF86ScreenSaver
+                 XF68Back
+                 XF86Forward
+                 Scroll_Lock
+                 print))
+      (cl-pushnew k exwm-input-prefix-keys))
 
-      ;; this little bit will make sure that XF86 keys work in exwm buffers as well
-      (dolist (k '(XF86AudioLowerVolume
-                   XF86AudioRaiseVolume
-                   XF86PowerOff
-                   XF86AudioMute
-                   XF86AudioPlay
-                   XF86AudioStop
-                   XF86AudioPrev
-                   XF86AudioNext
-                   XF86ScreenSaver
-                   XF68Back
-                   XF86Forward
-                   Scroll_Lock
-                   print))
-        (cl-pushnew k exwm-input-prefix-keys))
-
-      (require 'exwm-randr)
-      (setq exwm-randr-workspace-monitor-plist '(0 "DP-0" 1 "DP-0" 2 "DP-0"  3 "DP-0"    ))
-      (add-hook 'exwm-randr-screen-change-hook
-                (lambda ()
-                  (start-process-shell-command
-                   "xrandr" nil "xrandr --output HDMI-1 --mode 1920x1080 --pos 0x0 --rotate normal --output eDP-1 --primary --mode 1920x1200 --pos 1920x300 --rotate normal")))
-      ;; (exwm-randr-enable)
-      (exwm-randr-mode 1)
-      ;; this just enables exwm, it started automatically once everything is ready
-      (exwm-enable))'
-    ;; (shell-command "picom --config ~/.config/picom.conf -b")
+    (require 'exwm-randr)
+    (setq exwm-randr-workspace-monitor-plist '(0 "DP-0" 1 "DP-0" 2 "DP-0"  3 "DP-0"    ))
+    (add-hook 'exwm-randr-screen-change-hook
+              (lambda ()
+                (start-process-shell-command
+                 "xrandr" nil "xrandr --output HDMI-1 --mode 1920x1080 --pos 0x0 --rotate normal --output eDP-1 --primary --mode 1920x1200 --pos 1920x300 --rotate normal")))
+    ;; (exwm-randr-enable)
+    (exwm-randr-mode 1)
+    ;; this just enables exwm, it started automatically once everything is ready
+    (exwm-enable))'
+  ;; (shell-command "picom --config ~/.config/picom.conf -b")
 #+END_SRC
 *** Fix change workspace not taking focus
 https://github.com/ch11ng/exwm/issues/889
@@ -1310,7 +1314,8 @@ similar to vterm
   (straight-use-package
    '(eat :type git
          :host codeberg
-         :repo "akib/emacs-eat"
+         :repo "htayj/emacs-eat"
+         :branch "bold-is-bright-option"
          :files ("*.el" ("term" "term/*.el") "*.texi"
                  "*.ti" ("terminfo/e" "terminfo/e/*")
                  ("terminfo/65" "terminfo/65/*")
@@ -1408,8 +1413,23 @@ similar to vterm
 #+END_SRC
 *** ansi color names
 #+BEGIN_SRC emacs-lisp
-(setq ansi-color-names-vector
-   ["#303030" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
+  (setq ansi-color-names-vector
+     ["#303030" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
+
+  ;; (setq ansi-color-blue ((t (:background "#0000aa" :foreground "#0000aa"))))
+  ;; (setq ansi-color-bright-black ((t (:background "#555555" :foreground "#555555"))))
+  ;; (setq ansi-color-bright-blue ((t (:background "#5555ff" :foreground "#5555ff"))))
+  ;; (setq ansi-color-bright-cyan ((t (:background "#55ffff" :foreground "#55ffff"))))
+  ;; (setq ansi-color-bright-green ((t (:background "#55ff55" :foreground "#55ff55"))))
+  ;; (setq ansi-color-bright-magenta ((t (:background "#ff55ff" :foreground "#ff55ff"))))
+  ;; (setq ansi-color-bright-red ((t (:background "#ff5555" :foreground "#ff5555"))))
+  ;; (setq ansi-color-bright-yellow ((t (:background "#ffff55" :foreground "#ffff55"))))
+  ;; (setq ansi-color-cyan ((t (:background "#00aaaa" :foreground "#00aaaa"))))
+  ;; (setq ansi-color-green ((t (:background "#00aa00" :foreground "#00aa00"))))
+  ;; (setq ansi-color-magenta ((t (:background "#aa00aa" :foreground "#aa00aa"))))
+  ;; (setq ansi-color-red ((t (:background "#aa0000" :foreground "#aa0000"))))
+  ;; (setq ansi-color-white ((t (:background "#aaaaaa" :foreground "#aaaaaa"))))
+  ;; (setq ansi-color-yellow ((t (:background "#aa5500" :foreground "#aa5500"))))
 #+END_SRC
 ** emojis
 add emoji rendering
